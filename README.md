@@ -2,17 +2,26 @@
 
 ## Initalize new codespace:
 
+
+REM install npm in vue folder:
 ```cmd
-REM install npm in client folder (root):
+cd client
 npm i
+```
 REM install npm in sanity folder:
-cd mamon
+```cmd
+cd functions
 npm i
 ```
 
-## Steps to run in codespace:
+## Steps to run in development:
 Start Sanity:
 ```cmd
-cd mamon
+cd functions
 npx @sanity/cli start
+```
+Start Vue:
+```cmd
+cd client
+npm run dev
 ```
