@@ -1,14 +1,16 @@
 # Mamon
 
 ## Initalize new codespace:
+### Requirements
+- node.js installed on the computer (https://nodejs.org/en/)
 
-
-### Install npm in vue folder:
+### Install 
+- ...npm in vue folder:
 ```cmd
 cd client
 npm i
 ```
-### Install npm in sanity folder:
+- ...npm in sanity folder:
 ```cmd
 cd functions
 npm i
