@@ -3,25 +3,28 @@
 ## Initalize new codespace:
 
 
-REM install npm in vue folder:
+### Install npm in vue folder:
 ```cmd
 cd client
 npm i
 ```
-REM install npm in sanity folder:
+### Install npm in sanity folder:
 ```cmd
 cd functions
 npm i
 ```
 
 ## Steps to run in development:
-Start Sanity:
+### Start Sanity:
 ```cmd
 cd functions
 npx @sanity/cli start
 ```
-Start Vue:
+### Start Vue:
 ```cmd
 cd client
 npm run dev
 ```
+
+## Deploy:
+Set up Pull Request to ```main```
