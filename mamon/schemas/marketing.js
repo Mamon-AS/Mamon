@@ -9,6 +9,11 @@ export default {
         title: 'Title'
       },
       {
+        name: 'excerpt',
+        type: 'text',
+        title: 'Excerpt'
+      },
+      {
         name: 'image',
         type: 'image',
         title: 'Image'
