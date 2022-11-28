@@ -28,5 +28,11 @@ cd client
 npm run dev
 ```
 
-## Deploy:
+<!-- 
+## Deploy
+- ...to test:
+Set up Pull Request to ```test```
+
+- ...to prod:
 Set up Pull Request to ```main```
+-->
