@@ -22,7 +22,7 @@ npm i
 cd functions
 npx @sanity/cli start
 ```
-### Start Vue:
+### Start Vue and Tailwind:
 ```cmd
 cd client
 npm run dev
