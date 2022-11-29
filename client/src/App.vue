@@ -6,7 +6,7 @@ import { RouterLink, RouterView } from 'vue-router'
   <header>
     <div class="nav-wrapper">
       <nav>
-        <!-- Routerlinks in nav should get links from Sanity -->
+        <!-- Routerlinks in nav should get content from Sanity -->
         <RouterLink to="/">Hjem</RouterLink>
       </nav>
     </div>
