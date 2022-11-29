@@ -6,12 +6,17 @@ import { RouterLink, RouterView } from 'vue-router'
   <header>
     <div class="nav-wrapper">
       <nav>
-        <RouterLink to="/">Home</RouterLink>
+        <!-- Routerlinks in nav should get links from Sanity -->
+        <RouterLink to="/">Hjem</RouterLink>
       </nav>
     </div>
   </header>
 
   <RouterView />
+
+  <footer>
+    <!-- Create footer here -->
+  </footer>
 </template>
 
 <style scoped>
