@@ -1,6 +1,6 @@
 export default {
     name: 'header',
-    type: 'Document',
+    type: 'document',
       title: 'Site header',
     fields: [
       {
