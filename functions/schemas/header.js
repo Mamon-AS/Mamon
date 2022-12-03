@@ -4,14 +4,16 @@ export default {
       title: 'Site header',
     fields: [
       {
-        name: 'menu',
         type: 'array',
-        title: 'Menu'
-      },
-      {
-        name: 'companyinfo',
-        type: 'companyinfo',
-        title: 'Company info'
-      },
+        name: 'menu',
+        title: 'Menu',
+        of: [
+          {
+            name: 'companyinfo',
+            type: 'companyinfo',
+            title: 'Company info'
+          }
+        ]
+      }
     ]
   }
