@@ -1,33 +1,103 @@
-
 <template>
-    <header class="bg-gray-600 sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3">
-      <div class="flex items-center justify-between px-4 py-3 sm:p-0">
-        <div>
-          <img class="h-8" src="../images/manon_logo.svg" alt="Manon Logo">
+  <header class="flex w-full items-center justify-center p-4">
+      <div
+        :class="`menu-toggle relative z-50 ${
+          menu_is_active 
+          ? 'is-active' 
+          : ''
+        }`"
+        @click="ToggleMenu">
+
+        <div class="hamburger">
+          <span></span>
         </div>
-        <div class="sm:hidden">
-          <button @click="isOpen = !isOpen" type="button" class="block text-gray-500 hover:text-white focus:text-white focus:outline-none">
-            <svg class="h-6 w-6 fill-current" viewBox="0 0 24 24">
-              <path v-if="isOpen" fill-rule="evenodd" d="M18.278 16.864a1 1 0 0 1-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 0 1-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 0 1 1.414-1.414l4.829 4.828 4.828-4.828a1 1 0 1 1 1.414 1.414l-4.828 4.829 4.828 4.828z"/>
-              <path v-if="!isOpen" fill-rule="evenodd" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"/>
-            </svg>
-          </button>
-        </div>
+
       </div>
-      <nav :class="isOpen ? 'block' : 'hidden'" class="px-2 pt-2 pb-4 sm:flex sm:p-0">
-        <a href="#" class="block px-2 py-1 text-white font-semibold rounded hover:bg-gray-800">Eksempel A</a>
-        <a href="#" class="mt-1 block px-2 py-1 text-white font-semibold rounded hover:bg-gray-800 sm:mt-0 sm:ml-2">Eksempel B</a>
-        <a href="#" class="mt-1 block px-2 py-1 text-white font-semibold rounded hover:bg-gray-800 sm:mt-0 sm:ml-2">Eksempel C</a>
-      </nav>
-    </header>
-  </template>
+      <h1 class="text-center text-2xl uppercase font-light tracking-widest">
+        Sanity Test
+      </h1>
 
-<!-- <template>
-    <header>
-        <div class="w-24 min-w-full hover:min-w-0"></div>
-            <h1>Just like that!</h1>
-        </div>
-    </header>
-
+  </header>
 </template>
- -->
+
+<script>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+export default {
+  setup() {
+      const store = useStore()
+
+      const ToggleMenu = () => store.dispatch('ToggleMenu')
+      
+      
+      return {
+        menu_is_active: computed(() => store.state.menu_is_active),
+        ToggleMenu
+      }
+  }
+}
+</script>
+
+<style scoped>
+.menu-toggle {
+	position: absolute;
+	top: 1rem;
+	left: 1rem;
+	width: 32px;
+	height: 32px;
+	cursor: pointer;
+}
+
+.menu-toggle .hamburger {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 32px;
+	height: 32px;
+}
+
+.menu-toggle .hamburger span {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 100%;
+	height: 4px;
+	border-radius: 99px;
+	background-color: white;
+	transition: all 0.3s ease-in-out;
+}
+
+.menu-toggle .hamburger span::before,
+.menu-toggle .hamburger span::after {
+	content: '';
+	position: absolute;
+	width: 100%;
+	height: 4px;
+	border-radius: 99px;
+	background-color: white;
+	transition: all 0.3s ease-in-out;
+}
+
+.menu-toggle .hamburger span::after {
+	top: -8px;
+}
+
+.menu-toggle .hamburger span::before {
+	top: 8px;
+}
+
+
+.menu-toggle.is-active .hamburger > span {
+  transform: rotate(45deg);
+}
+.menu-toggle.is-active .hamburger > span::before {
+  top: 0;
+  transform: rotate(0deg);
+}
+.menu-toggle.is-active .hamburger > span::after {
+  top: 0;
+  transform: rotate(90deg);
+}
+</style>
