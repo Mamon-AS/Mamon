@@ -3,7 +3,7 @@
     <AppHeader />
     <SidebarNav />
     <router-view/>
-    <button class="btn">Micheal btn</button>
+    <button class="btn"></button>
   </div>
 
 

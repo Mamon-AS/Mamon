@@ -1,7 +1,7 @@
 export default {
     name: 'companyinfo',
     type: 'object',
-      title: 'Company info',
+    title: 'Company info',
     fields: [
       {
         name: 'name',
