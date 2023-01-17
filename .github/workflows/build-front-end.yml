@@ -15,7 +15,7 @@ jobs:
       
       - name: build client folder
         run: |
-          cd Client
+          cd $GITHUB_WORKSPACE/Client
           npm build
           
   deploy:
