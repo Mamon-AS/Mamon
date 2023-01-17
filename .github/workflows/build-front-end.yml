@@ -1,27 +1,16 @@
-name: CI
-
+name: Build Vue
 on:
   push:
     branches: [ "main" ]
-  
-  workflow_dispatch:
-
 jobs:
-  build:
+  build_vue:
     runs-on: ubuntu-latest
+    name: Build Vue
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-      
-      - name: build client folder
-        run: |
-          cd $GITHUB_WORKSPACE/Client
-          npm build
-          
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: deploy client folder
-        uses: actions/upload-artifact@v3.1.2
-        with:
-          name: artifact
+    - uses: actions/checkout@v2
+    - id: Build-Vue
+      uses: xRealNeon/VuePagesAction@1.0.1
+      with:
+        username: 'msingstad'
+        reponame: 'Mamon'
+        token: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
