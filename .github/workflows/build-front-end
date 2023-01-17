@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      
+      - name: build client folder
+        run: |
+          cd Client
+          npm build
+          
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy client folder
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: artifact
