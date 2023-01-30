@@ -21,8 +21,6 @@ export default createStore({
 			}
 		},
 		SET_MARKETING (state, marketing) {
-			console.log("marketing")
-			console.log(marketing)
 			state.marketing = marketing
 		}
 	},
@@ -37,6 +35,15 @@ export default createStore({
 			sanity.fetch(query).then(marketing => {
 				commit('SET_MARKETING', marketing)
 			})
+		},
+		UpdateMarketing({ commit }, post) {
+			commit('SET_MARKETING', this.state.marketing.map(p => p._id === post._id ? post : p))
+		},
+		AddNewMarketing({ commit }, post) {
+			commit('SET_MARKETING', [...this.state.marketing, post])
+		},
+		RemoveMarketing ({ commit }, id) {
+			commit('SET_MARKETING', this.state.marketing.filter(p => p._id !== id))
 		}
 	},
 
