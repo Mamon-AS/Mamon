@@ -13,11 +13,8 @@
                         {{ FormatDate(marketing._createdAt) }}
                     </p>
                 </div>
- 
             </div>
-
         </div>
-        <!--       -->
     </div>
 </template>
 <script>
@@ -29,6 +26,7 @@ export default {
             type:Object,
             required: true
         }
+
     },
     setup () {
         return {
