@@ -37,15 +37,26 @@ export default {
       subscription.value = sanity
       .listen(query)
       .subscribe(update => {
+
         switch ( update.transition) {
           case 'update':
             console.log("Marketing posts updated", update);
+            sanity.getDocument(update.result)
+              store.dispatch('UpdateMarketing', {
+                ...update.result
+            })
+            
             break;
           case 'appear':
             console.log("Marketing posts appeared", update);
+            sanity.getDocument(update.result)
+              store.dispatch('AddNewMarketing', {
+                ...update.result
+            })
             break;
           case 'disappear':
             console.log("Marketing posts disappeared", update);
+            store.dispatch("RemoveMarketing", update.documentId)
             break;
         }
       })
