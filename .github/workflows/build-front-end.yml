@@ -9,9 +9,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - id: Build-Vue
-      working-directory: client
       uses: xRealNeon/VuePagesAction@1.0.1
       with:
         username: "msingstad"
         reponame: "Mamon"
+        working-directory: client
         token: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
