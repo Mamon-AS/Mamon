@@ -13,5 +13,4 @@ jobs:
       with:
         username: "msingstad"
         reponame: "Mamon"
-        working-directory: client
         token: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
