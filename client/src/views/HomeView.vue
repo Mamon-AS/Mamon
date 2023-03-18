@@ -6,6 +6,13 @@
       <div class="grad gap-4">
         <PostCard v-for="(marketing, i) in posts" :key="i" :marketing="marketing" />
       </div>
+
+        <button 
+          v-if="$store.state.total_marketing > posts.length"
+          @click="$store.dispatch('LoadMoreMarketing', 1)"
+          class="btn mt-8">
+          Load more ({{ $store.state.total_marketing - posts.length }})
+        </button>
     </section>
   </main>
 </template>
@@ -28,8 +35,9 @@ export default {
     const posts = computed(() =>  store.getters.marketing)
     
     onMounted(() => {
-      
-      store.dispatch("FetchMarketing")
+      // Hvor mange marketing posts skal vi hente?  
+
+      store.dispatch("FetchMarketing", 2)
       
    
       // Listen for changes in the Sanity studio and subscribe to it

@@ -13,6 +13,7 @@
                         {{ FormatDate(marketing._createdAt) }}
                     </p>
                 </div>
+            <router-link :to="`/post/${ marketing._id }`" class="btn">Read more</router-link>
             </div>
         </div>
     </div>

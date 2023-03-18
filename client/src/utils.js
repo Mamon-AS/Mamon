@@ -11,3 +11,7 @@ export const CreateURL = (source, width = 300, height = 300) => {
 export const FormatDate = (date) => {
     return new Date(date).toLocaleDateString()
 }
+// finn newline og bytt ut med <br>
+export const TextToHTML = (text) => {
+    return text.replace(/\n/g, '<br>')
+}
