@@ -1,6 +1,6 @@
 <template>
     <router-link :to="to" class="flex items-center p-4 border-r-4 border-transparent text-gray-100
-    hover:text-white hover:bg-gray-900">
+    hover:text-white hover:bg-orange-400">
         <slot />
 
     </router-link>
@@ -14,6 +14,6 @@ export default {
 
 <style scoped>
 .router-link-exact-active {
-    @apply border-green-500 bg-gray-900
+    @apply border-green-500 bg-orange-300
 }
 </style>

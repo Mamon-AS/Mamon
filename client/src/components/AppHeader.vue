@@ -1,5 +1,5 @@
 <template>
-  <header class="flex w-full items-center justify-center p-4">
+  <header class="flex w-full items-center justify-between p-4">
       <div
         :class="`menu-toggle relative z-50 ${
           menu_is_active 
@@ -13,9 +13,10 @@
         </div>
 
       </div>
-      <h1 class="text-center text-2xl uppercase font-light tracking-widest">
-        Sanity Test
-      </h1>
+      <div class="flex items-center">
+        <img src="../images/Mamon-logos_white.png" alt="Logo" class="h-8 w-auto">
+        <h1 class="text-white text-xl font-semibold ml-2">Mamon</h1>
+      </div>
 
   </header>
 </template>

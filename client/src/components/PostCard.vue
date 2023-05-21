@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-gray-800 rounded-lg p-4 flex flex-col sm:flex-row">
+    <div class="bg-orange-200 rounded-lg p-4 flex flex-col sm:flex-row mb-4">
         <img v-if="marketing.image" :src="CreateURL(marketing.image, 480, 320)" class="block w-full sm:max-w-xs mr-4 
         object-cover mb-4 sm:mb-0" /> 
         <div class="flex-1 flex flex-col">
@@ -13,7 +13,7 @@
                         {{ FormatDate(marketing._createdAt) }}
                     </p>
                 </div>
-            <router-link :to="`/post/${ marketing._id }`" class="btn">Read more</router-link>
+            <router-link :to="`/post/${ marketing._id }`" class="btn">Les mer</router-link>
             </div>
         </div>
     </div>
