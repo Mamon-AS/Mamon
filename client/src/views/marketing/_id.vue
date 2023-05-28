@@ -8,7 +8,7 @@
             <button
                 @click="$router.back()"
                 class="flex-items-center text-lg text-green-500 hover:text-green-600 duration-300 mb-4">
-                <span class="material-icons text-lg mr-1">keyboard_double_arrow_left</span> Back
+                <span class="material-icons text-lg mr-1">keyboard_double_arrow_left</span> Tilbake
             </button>
 
             <h1 class="text-white text-4xl md:text-5xl mb-8 font-bold">

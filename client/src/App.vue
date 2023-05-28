@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-700 min-h-screen text-white">
+  <div class="bg-orange-300 min-h-screen text-white">
     <AppHeader />
     <SidebarNav />
     <router-view/>
