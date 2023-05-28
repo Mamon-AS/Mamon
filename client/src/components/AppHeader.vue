@@ -13,9 +13,10 @@
         </div>
 
       </div>
+     
       <div class="flex items-center">
-        <img src="../images/Mamon-logos_white.png" alt="Logo" class="h-8 w-auto">
-        <h1 class="text-white text-xl font-semibold ml-2">Mamon</h1>
+        <!-- <img src="../images/Mamon-logos_white.png" alt="Logo" class="h-8 w-auto"> -->
+        <h1 class="text-white text-xl font-semibold ml-10">Mamon</h1>
       </div>
 
   </header>
