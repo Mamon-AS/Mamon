@@ -9,7 +9,7 @@
 
         <button 
           v-if="$store.state.total_marketing > posts.length"
-          @click="$store.dispatch('LoadMoreMarketing', 1)"
+          @click="$store.dispatch('LoadMoreMarketing', 2)"
           class="btn mt-8">
           Last mer ({{ $store.state.total_marketing - posts.length }})
         </button>
@@ -49,18 +49,20 @@ export default {
         switch ( update.transition) {
           case 'update':
             console.log("Marketing posts updated", update);
-            sanity.getDocument(update.result)
+            sanity.getDocument(update.result.author._ref).then(author => {
               store.dispatch('UpdateMarketing', {
-                ...update.result
+                ...update.result, author
+              })
             })
-            
             break;
           case 'appear':
             console.log("Marketing posts appeared", update);
-            sanity.getDocument(update.result)
+            sanity.getDocument(update.result.author._ref).then(author => {
               store.dispatch('AddNewMarketing', {
-                ...update.result
+                ...update.result, author
+              })
             })
+
             break;
           case 'disappear':
             console.log("Marketing posts disappeared", update);

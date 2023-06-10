@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import CardView from '../views/CardView.vue'
 import HomeView from '../views/HomeView.vue'
+import store from '../store'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,6 +12,11 @@ const router = createRouter({
       component: HomeView
     },
     {
+      path: '/authors',
+      name: 'author',
+      component: () => import('../views/AuthorView.vue')
+    },
+    {
       path: '/card',
       name: 'card',
       component: CardView
@@ -19,6 +25,11 @@ const router = createRouter({
       path: '/post/:id',
       name: 'post',
       component: () => import('../views/marketing/_id.vue')
+    },
+    {
+      path: '/author/:id',
+      name: 'Author',
+      component: () => import('../views/author/_id.vue'),
     }
     /* {
       path: '/about',
@@ -30,5 +41,14 @@ const router = createRouter({
     } */
   ]
 })
+
+router.afterEach((to, from) => {
+  if (from.name) {
+    document.documentElement.scrollTop = 0
+    store.dispatch('CloseMenu')
+  }
+
+ 
+  })
 
 export default router

@@ -18,10 +18,19 @@
             <p class="text-gray-500-italic mb-8">{{ post.excerpt }}</p>
 
             <p v-html="TextToHTML(post.body)">  </p>
+            <div class="flex items-center mb-8" v-if="post.author">
+				<img 
+					:src="CreateURL(post.author.avatar, 300, 300)" 
+					class="inline-block rounded-full w-10 h-10 mr-4"  />
+
+				<h1 class="text-gray-500 text-lg">
+					{{ post.author.full_name }}
+				</h1>
+			</div>
         </section>
         <section v-else>
             <p class="text-white italic text-2xl">
-                Loading...
+                Laster inn...
             </p>
         </section>
 
@@ -41,7 +50,8 @@ export default  {
         const post = ref(null)
 
         onMounted(() => {
-            const query = '*[_type == "marketing" && _id == $id][0]'
+            const query = '*[_type == "marketing" && _id == $id][0] {..., author->}'
+       
             const params = { id: id.value }
 
             sanity.fetch(query, params).then(data => {

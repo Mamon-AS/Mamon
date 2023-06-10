@@ -7,6 +7,7 @@ import schemaTypes from 'all:part:@sanity/base/schema-type'
 import marketing from './marketing'
 import companyinfo from './companyinfo'
 import header from './header'
+import author from './author'
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -14,6 +15,7 @@ export default createSchema({
   types: schemaTypes.concat([
     marketing,
     companyinfo,
-    header
+    header,
+    author
   ]),
 })

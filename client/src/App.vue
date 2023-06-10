@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-orange-300 min-h-screen text-white">
+  <div class="lightblue min-h-screen text-white">
     <AppHeader />
     <SidebarNav />
     <router-view/>
@@ -21,6 +21,9 @@ export default {
 
 </script>
 <style>
+.lightblue {
+    background-color: #289DD2
+}
 .btn {
 	@apply bg-green-600 duration-300 font-bold py-2 px-4 rounded-lg inline-block;
 }
