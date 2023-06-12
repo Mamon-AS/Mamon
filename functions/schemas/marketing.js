@@ -13,6 +13,12 @@ export default {
         ]
       },
       {
+        title: 'Author',
+        name: 'author',
+        type: 'reference',
+        to: [{type: 'author'}]
+      },
+      {
         name: 'excerpt',
         type: 'text',
         title: 'Excerpt',

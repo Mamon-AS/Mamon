@@ -14,9 +14,11 @@
 
       </div>
      
-      <div class="flex items-center">
-        <!-- <img src="../images/Mamon-logos_white.png" alt="Logo" class="h-8 w-auto"> -->
+      <div class="flex items-center ml-auto">
         <h1 class="text-white text-xl font-semibold ml-10">Mamon</h1>
+        <a href="/"> 
+          <img src="../images/High_Resolution_Image_11.jpg" alt="Logo" class="h-8 w-auto logo">
+        </a>
       </div>
 
   </header>
@@ -42,6 +44,10 @@ export default {
 </script>
 
 <style scoped>
+
+.logo {
+  margin-left: auto;
+}
 .menu-toggle {
 	position: absolute;
 	top: 1rem;

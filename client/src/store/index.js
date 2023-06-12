@@ -7,7 +7,8 @@ export default createStore({
 		menu_is_active: false,
 		marketing: [],
 		excerpts: [],
-		total_marketing: 0
+		total_marketing: 0,
+		authors: []
 	},
 
 	mutations: {
@@ -29,6 +30,9 @@ export default createStore({
 		},
 		INCREMENT_TOTAL_MARKETING (state, increment = 1) {
 			state.total_marketing += increment
+		},
+		SET_AUTHORS (state, authors) {
+			state.authors = authors
 		}
 	},
 	
@@ -36,10 +40,14 @@ export default createStore({
 		ToggleMenu ({ commit }) {
 			commit('TOGGLE_MENU')
 		},
+		CloseMenu ({ commit }) {
+			commit('TOGGLE_MENU', 'close')
+		},
 		FetchMarketing ({ commit }, limit = null) {
 			// const query = `*[_type == "marketing"] ${limit ? `[0...${limit}]` : ''}`
 			// (We need the | operator here in front of the order()-function, because sanity
-			const query = `*[_type == "marketing" ] | order(_createdAt desc) ${limit ? `[0...${limit}]` : ''}`
+			const query = `*[_type == "marketing"] { ..., author-> } | order(_createdAt desc) ${limit ? `[0...${limit}]` : ''}`
+			
 			sanity.fetch(query).then(marketing => {
 				commit('SET_MARKETING', marketing)
 			})
@@ -63,17 +71,26 @@ export default createStore({
 			commit('INCREMENT_TOTAL_MARKETING', -1)
 		},
 		LoadMoreMarketing ({ commit }, limit = 10)  {
-			const query = `*[_type == "marketing"] | order(_createdAt desc) [${this.state.marketing.length}...${this.state.marketing.length + limit}]`
+			const query = `*[_type == "marketing"] { ..., author-> } | order(_createdAt desc) [${this.state.marketing.length}...${this.state.marketing.length + limit}]`
 
 			sanity.fetch(query).then(marketing => {
 				commit('SET_MARKETING', [...this.state.marketing, ...marketing])
+			})
+		},
+		FetchAuthors({ commit }) {
+			const query = `*[_type == "author"] | order(full_name)`
+
+			sanity.fetch(query).then(authors => {
+				console.log(authors)
+				commit('SET_AUTHORS', authors)
 			})
 		}
 	},
 
 	getters: {
 		marketing: state => state.marketing.sort((a,b) => new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
-		)
+		),
+		authors: state => state.authors
 	}
 		
 })
