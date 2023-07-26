@@ -14,14 +14,15 @@
       </div>
 
      
-      <div v-if="!loggedIn" class="flex items-center ml-auto">
+      <div class="flex items-center ml-auto">
         <h1 class="text-white text-xl font-semibold ml-10">Mamon</h1>
         <a href="/"> 
           <img src="../images/High_Resolution_Image_11.jpg" alt="Logo" class="h-8 w-auto logo">
         </a>
       </div>
-      
-      <div v-if="loggedIn" class="flex items-center ml-auto">
+      <button @click="handleSignOut" v-if="isLoggedIn"> Logg av</button>
+      <!-- v-if="loggedIn" -->
+      <!-- <div class="flex items-center ml-auto">
       <div class="flex items-center ml-4">
         <h2 class="text-white text-xl font-semibold">{{ user.name }}</h2>
         <img :src="user.picture" :alt="user.name" class="h-10 w-10 rounded-full ml-2" />
@@ -29,102 +30,71 @@
       <button @click="logout" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded">
         Logout
       </button>
-    </div>
-
-      <div v-else>
-        <button id="loginButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded">
-          Ny her?
+    </div> -->
+      <!-- v-else -->
+      <div v-if="!isLoggedIn">
+          <router-link 
+            :to="`/register`" 
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded" 
+            >Ny her?
+          </router-link>
           <span class="material-icons mr-2">account_circle</span>
-        </button>
+          <router-link 
+            :to="`/sign-in`" 
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded" 
+            >Logg inn?
+          </router-link>
+          <span class="material-icons mr-2">account_circle</span>
       </div>
+      
   </header>
   
-<div class="modal" id="loginModal">
-  <div class="modal-content">
-    <!--  prompt auto-login -->
-    <GoogleLogin :callback="callback" prompt auto-login/>
-  </div>
-</div>
 </template>
 
 <script>
-import { computed } from 'vue'
-import { useStore } from 'vuex'
-import { decodeCredential, googleLogout } from 'vue3-google-login'
+import { computed, onMounted, ref } from 'vue';
+import { useStore } from 'vuex';
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import router from '../router';
+
+const isLoggedIn = ref(false);
+let auth;
 
 export default {
-  data() {
-    return {
-      loggedIn: false,
-      user:null,
-
-      callback:(response) => {
-          console.log("logged in");
-          this.loggedIn = true;
-          this.user = decodeCredential(response.credential);
-
-          const loginModal = document.getElementById('loginModal');
-          loginModal.style.display = 'none';
-      }
-    }
-  },
-  methods: {
-    logout() {
-      googleLogout();
-      this.loggedIn = false;
-    }
-  },
+  
   setup() {
-      const store = useStore()
+    const store = useStore();
 
-      const ToggleMenu = () => store.dispatch('ToggleMenu')
-      
-      return {
-        menu_is_active: computed(() => store.state.menu_is_active),
-        ToggleMenu
-      }
-  },
-  mounted() {
-    // JavaScript to show/hide the modal
-    const loginButton = document.getElementById('loginButton');
-    const loginModal = document.getElementById('loginModal');
+    const ToggleMenu = () => store.dispatch('ToggleMenu');
 
-    loginButton.addEventListener('click', () => {
-      loginModal.style.display = 'block';
+    const handleSignOut = () => {
+
+      signOut(auth).then(() => {
+        router.push('/');
+      });
+    };
+
+    onMounted(() => {
+      auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        isLoggedIn.value = !!user;
+      });
     });
 
-    // Close the modal when the user clicks anywhere outside of it
-    window.addEventListener('click', (event) => {
-      if (event.target === loginModal) {
-        loginModal.style.display = 'none';
-      }
-    });
+    return {
+      menu_is_active: computed(() => store.state.menu_is_active),
+      ToggleMenu,
+      isLoggedIn,
+      handleSignOut
+    };
   },
 };
+
+
+
 </script>
 <style scoped>
  
-  .modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1;
-  }
-
- 
-  .modal-content {
-    background-color: #f4f4f4;
-    margin: 10% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 300px;
-    border-radius: 5px;
-  }
-
 .logo {
   margin-left: auto;
 }
