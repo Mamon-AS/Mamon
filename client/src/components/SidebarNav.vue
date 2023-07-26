@@ -23,6 +23,10 @@
                     <span class="material-icons mr-2 ">people</span>
                     Bedrifter
                 </MenuItem>
+                <MenuItem to="/user">
+                    <span class="material-icons mr-2">face</span>
+                    Min bruker
+                </MenuItem>
             </div>
             
         </div>
