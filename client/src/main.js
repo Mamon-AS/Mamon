@@ -25,3 +25,12 @@ const app = createApp(App)
 app.use(router)
 app.use(store)
 app.mount('#app')
+
+
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.getElementsByTagName("html")[0].classList.add("dark");
+}
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+  if (event.matches == "dark") document.getElementsByTagName("html")[0].classList.toggle("dark");
+});
