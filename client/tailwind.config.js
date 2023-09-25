@@ -12,7 +12,15 @@ module.exports = {
       'lg': '1024px',
       'xl': '1280px',
     },
-    extend: {},
+    extend: {
+      colors: {
+        'lightblue': '#289DD2',
+        'yellow': '#fde68a',
+        'teal': '#a7f3d0',
+        'lime': '#86efac',
+        'sky': '#5eead4',
+      },
+    },
   },
   plugins: [],
 }
