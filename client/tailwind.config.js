@@ -19,6 +19,7 @@ module.exports = {
         'teal': '#a7f3d0',
         'lime': '#86efac',
         'sky': '#5eead4',
+        'mamonblue': '#096191',
       },
     },
   },
