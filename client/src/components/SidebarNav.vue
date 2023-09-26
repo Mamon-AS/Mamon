@@ -20,7 +20,7 @@
                     <span class="material-icons mr-2 ">people</span>
                     Bedrifter
                 </MenuItem>
-                <MenuItem to="/user">
+                <MenuItem v-if="isLoggedIn" to="/user">
                     <span class="material-icons mr-2">face</span>
                     Min bruker
                 </MenuItem>
@@ -37,6 +37,7 @@ import { useStore } from 'vuex'
 import MenuItem from './MenuItem.vue'
 
 export default {
+    props: ['isLoggedIn', 'auth'],
     components: {
         MenuItem
     },
