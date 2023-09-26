@@ -1,8 +1,8 @@
 <template>
-    <div class="my-font">
     <main class="home-page">
+        <FullHero />
         
-        <section class="lightblue">
+        <!-- <section class="bg-lightblue">
             <h1 class="text-lg md:text-2xl font-bold mb-4">Om Mamon</h1>
             <p>Vi prøvde å fortelle om andres opplevelse, og fortelle om det gjennom annonser og innlegg i sosiale medier uten å få resultatet vi ønsket oss. Annonsene viste mange som så innleggene våre, og klikket inn på nettsiden vår uten å bestille noe. De fleste av oss prøver ikke noe nytt med mindre noen av de rundt oss gjør det, eller anbefaler oss å gjøre det.</p>
             <div class="waves">
@@ -11,28 +11,35 @@
                 </svg>
             </div>
         </section>
-        <section class="yellow">
+        <section class="bg-yellow">
             <h1>nice curves</h1>
             <p>Labore, et. Esse cupiditate dolore dicta quod quo! Tenetur hic voluptatem beatae itaque repellat, omnis minima nulla unde officia eaque ad quod illo distinctio explicabo numquam assumenda incidunt totam sit!</p>
         </section>
 
-        <section class="lime">
+        <section class="bg-lime">
             <h1>nice curves</h1>
             <p>Voluptates, provident. Quasi nam minus doloremque! Minus tenetur ipsa ex quas deleniti necessitatibus, minima facilis vero corporis! Doloribus, doloremque nesciunt cupiditate, corporis ut quae eligendi aperiam quis veniam rem explicabo.</p>
             
-        </section>
+        </section> -->
         <footer class="text-center">
-            <p>© 2023 Mamon. All rights reserved.</p>
+            <p>© {{ new Date().getFullYear() }} Mamon. All rights reserved.</p>
         </footer>
     </main>
-    </div>
-  </template>
+</template>
 
+<script>
+import FullHero from '../components/FullHero.vue';
+export default {
+  components: {
+    FullHero
+  }
+}
+
+</script>
 <style>
 
 body {
     margin: 0;
-    font-family: 'Roboto Mono', monospace;
 }
 section {
     position: relative;
@@ -42,21 +49,7 @@ section {
     min-height: 400px;
     padding: 100px 20vw;
 }
-.lightblue {
-    background-color: #289DD2
-}
-.yellow {
-    background-color: #fde68a;
-}
-.teal {
-    background-color: #a7f3d0;
-}
-.lime {
-    background-color: #86efac;
-}
-.sky {
-    background-color: #5eead4;
-}
+
 .waves {
     position: absolute;
     bottom: 0;

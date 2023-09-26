@@ -8,6 +8,7 @@ import marketing from './marketing'
 import companyinfo from './companyinfo'
 import header from './header'
 import author from './author'
+import siteSettings from './siteSettings'
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -16,6 +17,7 @@ export default createSchema({
     marketing,
     companyinfo,
     header,
-    author
+    author,
+    siteSettings,
   ]),
 })

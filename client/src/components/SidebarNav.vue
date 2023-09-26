@@ -1,14 +1,11 @@
 <template>
     <aside
-        :class="`fixed top-0 left-0 min-h-screen pt-16 z-40 w-full max-w-xs transform duration-300 darkerblue ${
+        :class="`fixed top-0 left-0 min-h-screen pt-16 z-40 w-full max-w-xs transform duration-300 bg-lightblue ${
             menu_is_active
             ? 'translate-x-0'
             : '-translate-x-full'
         }`">
         <div class="p-4">
-            <h2 class="text-gray-100 text-lg font-bold uppercase mb-2">
-                Meny
-            </h2>
             <!-- Ikoner og div fra https://fonts.google.com/icons -->
             <div class="mx-4">
                 <MenuItem to="/">
@@ -17,13 +14,13 @@
                 </MenuItem>
                 <MenuItem to="/card">
                     <span class="material-icons mr-2 ">domain</span>
-                    Annonser
+                    Tilbud
                 </MenuItem>
                 <MenuItem to="/authors">
                     <span class="material-icons mr-2 ">people</span>
                     Bedrifter
                 </MenuItem>
-                <MenuItem to="/user">
+                <MenuItem v-if="isLoggedIn" to="/user">
                     <span class="material-icons mr-2">face</span>
                     Min bruker
                 </MenuItem>
@@ -40,6 +37,7 @@ import { useStore } from 'vuex'
 import MenuItem from './MenuItem.vue'
 
 export default {
+    props: ['isLoggedIn', 'auth'],
     components: {
         MenuItem
     },
@@ -53,11 +51,3 @@ export default {
   }
 }
 </script>
-<style>
-.lightblue {
-    background-color: #289DD2
-}
-.darkerblue {
-    background-color: #096191
-}
-</style>

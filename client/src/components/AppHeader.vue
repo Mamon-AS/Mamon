@@ -1,5 +1,8 @@
 <template>
-  <header class="flex w-full items-center justify-between p-4">
+  <header :class="`flex w-full items-center justify-between p-4 z-5 ${
+    full_hero_is_active
+    ? ''
+    : 'bg-mamonblue'}`">
       <div
         :class="`menu-toggle relative z-50 ${
           menu_is_active 
@@ -14,37 +17,31 @@
       </div>
 
      
-      <div class="flex items-center ml-auto">
-        <h1 class="text-white text-xl font-semibold ml-10">Mamon</h1>
+      <div class="flex items-center ml-[3rem]">
         <a href="/"> 
-          <img src="../images/High_Resolution_Image_11.jpg" alt="Logo" class="h-8 w-auto logo">
+          <img :src="`${
+            full_hero_is_active
+            ? '../src/images/High_Resolution_Image_4_cropped.png'
+            : '../src/images/Transparent_Image_11_cropped.png'
+            }`"
+            alt="Logo" class="h-8 w-auto logo">
         </a>
       </div>
-      <button @click="handleSignOut" v-if="isLoggedIn"> Logg av</button>
-      <!-- v-if="loggedIn" -->
-      <!-- <div class="flex items-center ml-auto">
-      <div class="flex items-center ml-4">
-        <h2 class="text-white text-xl font-semibold">{{ user.name }}</h2>
-        <img :src="user.picture" :alt="user.name" class="h-10 w-10 rounded-full ml-2" />
-      </div>
-      <button @click="logout" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded">
-        Logout
-      </button>
-    </div> -->
-      <!-- v-else -->
-      <div v-if="!isLoggedIn">
-          <router-link 
-            :to="`/register`" 
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded" 
-            >Ny her?
-          </router-link>
-          <span class="material-icons mr-2">account_circle</span>
-          <router-link 
-            :to="`/sign-in`" 
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-4 rounded" 
-            >Logg inn?
-          </router-link>
-          <span class="material-icons mr-2">account_circle</span>
+      
+      <div>
+        <router-link v-if="!isLoggedIn"
+          :to="`/register`" 
+          class="bg-lightblue text-white border border-lightblue hover:bg-white hover:border-mamonblue hover:text-mamonblue py-1 px-4 ml-4 rounded transition"
+          >Ny her?
+        </router-link>
+        <router-link v-if="!isLoggedIn"
+          :to="`/sign-in`" 
+          class="bg-lightblue text-white border border-lightblue hover:bg-white hover:border-mamonblue hover:text-mamonblue py-1 px-4 ml-4 rounded transition" 
+          >Logg inn
+        </router-link>
+        <a @click="handleSignOut" v-if="isLoggedIn" class="bg-lightblue text-white hover:bg-red-500 py-1 px-4 ml-4 rounded transition"
+          >Logg ut
+        </a>
       </div>
       
   </header>
@@ -54,43 +51,31 @@
 <script>
 import { computed, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import router from '../router';
-
-const isLoggedIn = ref(false);
-let auth;
-
+ref
 export default {
-  
-  setup() {
+  props: ['isLoggedIn', 'auth', 'siteSettings'],
+  setup(props) {
+    /* const heroActive = props.siteSettings.fullHero; */
     const store = useStore();
 
     const ToggleMenu = () => store.dispatch('ToggleMenu');
 
     const handleSignOut = () => {
-
-      signOut(auth).then(() => {
+      signOut(getAuth()).then(() => {
         router.push('/');
       });
     };
 
-    onMounted(() => {
-      auth = getAuth();
-      onAuthStateChanged(auth, (user) => {
-        isLoggedIn.value = !!user;
-      });
-    });
-
     return {
       menu_is_active: computed(() => store.state.menu_is_active),
+      /* full_hero_is_active: computed(() => heroActive), */
       ToggleMenu,
-      isLoggedIn,
       handleSignOut
     };
   },
 };
-
-
 
 </script>
 <style scoped>
@@ -109,7 +94,7 @@ export default {
 
 .menu-toggle .hamburger {
 	position: absolute;
-	top: 50%;
+	top: 60%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	width: 32px;

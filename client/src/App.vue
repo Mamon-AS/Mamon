@@ -1,18 +1,37 @@
 <template>
-  <div class="lightblue min-h-screen text-white">
-    <AppHeader />
-    <SidebarNav />
-    <router-view/>
-  </div>
-
-
-
+  <AppHeader :is-logged-in=isLoggedIn :site-settings=settings />
+  <SidebarNav :is-logged-in=isLoggedIn />
+  <router-view/>
 </template>
 
 <script>
+import { onMounted, ref } from 'vue';
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import AppHeader from './components/AppHeader.vue'
 import SidebarNav from './components/SidebarNav.vue';
+import sanity from './client';
+
+const isLoggedIn = ref(false);
+const settings = ref(null);
+
 export default {
+  setup() {
+    onMounted(() => {
+      onAuthStateChanged(getAuth(), (user) => {
+        isLoggedIn.value = !!user;
+      });
+
+      const query = `*[_type == 'siteSettings']`
+			sanity.fetch(query).then(data => {
+        console.log("data: " + data);
+        settings.value = data;
+			})
+    });
+    return {
+      isLoggedIn,
+      settings
+    }
+  },
   components: {
     AppHeader,
     SidebarNav
@@ -21,9 +40,7 @@ export default {
 
 </script>
 <style>
-.lightblue {
-    background-color: #289DD2
-}
+
 .btn {
 	@apply bg-green-600 duration-300 font-bold py-2 px-4 rounded-lg inline-block;
 }
