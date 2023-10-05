@@ -18,7 +18,7 @@
         <p v-if="errorMessage" class="bg-red-500 text-white p-2">{{ errorMessage }}</p>
         <button class="w-full px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600" @click.prevent="register">Logg inn</button>
         <button class="w-full mt-4 px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600" @click.prevent="signInWithGoogle">Logg inn med Google</button>
-        <button class="w-full mt-4 px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600" @click.prevent="signInWithFacebook">Logg inn med Facebook</button>
+        <button class="w-full mt-4 px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600" @click.prevent="signInWithFacebookSDK">Logg inn med Facebook</button>
       </form>
     </div>
   </template>
@@ -27,11 +27,14 @@
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, FacebookAuthProvider } from "firebase/auth";
+import { useStore } from 'vuex'
+
 
 const email = ref('');
 const password = ref('');
 const router = useRouter();
 const errorMessage = ref() 
+const store = useStore()
 
 const register = () => {
     const auth = getAuth();
@@ -76,11 +79,12 @@ const signInWithGoogle = () => {
 };
 
 const signInWithFacebook = async () => {
-  console.log("hei");
   const provider = new FacebookAuthProvider();
   signInWithPopup(getAuth(), provider)
   .then((result) => {
-    console.log(result);
+    console.log(result.user.accessToken);
+    const accessToken = result.user.accessToken;
+    store.dispatch("setAccessToken", accessToken)
     router.push('/');
   })
   .catch((error) => {
@@ -89,4 +93,30 @@ const signInWithFacebook = async () => {
   });
 
 }
+const signInWithFacebookSDK = async () => {
+  try {
+    const response = await new Promise((resolve, reject) => {
+      FB.login(function (response) {
+        if (response.authResponse) {
+          resolve(response);
+        } else {
+          reject({ message: 'Facebook login failed' });
+        }
+      });
+    });
+
+    console.log(response);
+    FB.getLoginStatus(function(response) {
+      if (response.status === 'connected') {
+        console.log(response.authResponse.accessToken);
+      } 
+    } );
+    // Assuming FB.login was successful, you can proceed here
+    console.log('Facebook login successful');
+    router.push('/');
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
+};
 </script>
