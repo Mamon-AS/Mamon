@@ -16,7 +16,6 @@
   <body>
     <div id="app"> </div>
     <script>
-      // console.log(import.meta.env.VITE_FB_APP_ID);
       const fbApiKey = "264286999684301"
       window.fbAsyncInit = function () {
         console.log("fbAsyncInit =)");
@@ -29,13 +28,6 @@
         });
         console.log("finna load sdk script =)");
         };
-
-        document.getElementById('share-button').addEventListener('click', function(){
-          FB.ui({
-            method: 'share',
-            href: 'https://developers.facebook.com/docs/'
-          }, function(response){});
-        })
 
       (function (d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
