@@ -20,6 +20,10 @@
                     <span class="material-icons mr-2 ">people</span>
                     Bedrifter
                 </MenuItem>
+                <MenuItem to="/privacy">
+                    <span class="material-icons mr-2 ">lock</span>
+                    Personvern
+                </MenuItem>
                 <MenuItem v-if="isLoggedIn" to="/user">
                     <span class="material-icons mr-2">face</span>
                     Min bruker
