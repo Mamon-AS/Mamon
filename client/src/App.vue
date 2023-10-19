@@ -47,5 +47,19 @@ export default {
 .btn:hover {
 	@apply bg-green-700;
 }
+
+main {
+  @apply mx-auto max-w-4xl my-8 px-4;
+  .user {
+    @apply bg-white shadow-md rounded-lg p-8;
+    h1 {
+      @apply text-2xl font-bold;
+    }
+    p {
+      @apply text-gray-700;
+    }
+  }
+}
+
 </style>
 
