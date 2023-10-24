@@ -2,8 +2,11 @@
     <main class="user">
         <div class="name">
             <h1>{{ name ? name : "Justin Timberlake, er det deg?" }}</h1>
-            <input type="text" class="border rounded transition hidden w-0 opacity-0"> 
-            <button v-if="provider == 'password'" class="edit" @click="editName">Endre navn</button>
+            <form @submit.prevent="editName">
+                <input type="text" class="border rounded transition hidden w-0 opacity-0"> 
+                <p v-if="editName.error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">{{ editName.error }}</p>
+                <button type="submit" v-if="provider == 'password'" class="edit">Endre navn</button>
+            </form>
         </div>
 
         <div class="photo">
@@ -22,14 +25,13 @@
 <script>
 import { getAuth, updateProfile } from 'firebase/auth';
 
-
 export default {
     setup() {
         const provider = getAuth().currentUser.providerData[0].providerId;
         const photoUrl = getAuth().currentUser.photoURL;
         const name = getAuth().currentUser.displayName;
         const email = getAuth().currentUser.email;
-        const editName = () => {
+        const editName = (event) => {
             console.log("edit name dialog started");
             ['hidden', 'w-0', 'opacity-0'].map(className => 
                 document.querySelector(".name input").classList.toggle(className)
@@ -39,24 +41,23 @@ export default {
             if (button.innerHTML == "Endre navn") {
                 button.innerHTML = "OK";
             } else {
-                while (input =! '') {
-                    button.innerHTML = "Endre";
-                    console.log(input);
-                    if (!input || !input.match(/^[\wæøå ]+/) ) {
-                        alert("Navnet ditt kan ikke være tomt eller inneholde tall eller spesialtegn");
-                        button.innerHTML = "Endre";
-                        break;
-                    }
+                if (input =! '') {
                     updateProfile(getAuth().currentUser, {
                     displayName: input
                     }).then(() => {
                         console.log("name updated");
-                    }).catch((error) => {
-                        console.log(error);
+                        input = '';
+                        ['hidden', 'w-0', 'opacity-0'].map(className => 
+                            document.querySelector(".name input").classList.toggle(className)
+                        );
+                    }).catch((e) => {
+                        editName.error = e.message;
+                        console.log(e);
                     });
-                    input = '';
+                    button.innerHTML = "Endre navn";
+                } else {
+                    editName.error = "Navn kan ikke være tomt";
                 }
-                
             }
         };
         const editPhoto = () => {
