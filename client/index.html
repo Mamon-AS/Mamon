@@ -18,15 +18,12 @@
     <script>
       const fbApiKey = "264286999684301"
       window.fbAsyncInit = function () {
-        console.log("fbAsyncInit =)");
-        // const FB = window.FB;
         FB.init({
             appId: fbApiKey,
             autoLogAppEvents: true,
             xfbml: true,
             version: 'v18.0'
         });
-        console.log("finna load sdk script =)");
         };
 
       (function (d, s, id) {
@@ -34,7 +31,6 @@
             if (d.getElementById(id)) { return; }
             js = d.createElement(s); js.id = id;
             js.src = "https://connect.facebook.net/en_US/sdk.js";   //#version=v2.2&appId=264286999684301&xfbml=true&autoLogAppEvents=true
-            console.log("ayoo =)");
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));    
     </script>

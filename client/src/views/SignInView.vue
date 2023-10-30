@@ -96,13 +96,16 @@ const signInWithFacebook = async () => {
 const signInWithFacebookSDK = async () => {
   try {
     const response = await new Promise((resolve, reject) => {
+
       FB.login(function (response) {
         if (response.authResponse) {
           resolve(response);
         } else {
           reject({ message: 'Facebook login failed' });
         }
-      });
+      },{scope: 'public_profile,email, instagram_basic'});
+
+
     });
 
     console.log(response);
