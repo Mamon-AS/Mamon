@@ -12,9 +12,8 @@
 
 <script>
 import sanity from "../client";
-import { ref, onMounted } from 'vue';
-
 import { CreateURL } from '../utils';
+import { ref, onMounted } from 'vue'
 
 export default {
     setup() {
