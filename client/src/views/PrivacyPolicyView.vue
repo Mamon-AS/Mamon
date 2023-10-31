@@ -1,89 +1,26 @@
 <template>
-    <p>
-        Privacy Policy for Mamon
-At Mamon, accessible from mamon-stage.netlify.app, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Mamon and how we use it.
+    <p>Privacy Policy 
+This Privacy Policy is prepared by Mamon and whose registered address is [COMPANY ADDRESS] (“We”) are committed to protecting and preserving the privacy of our visitors when visiting our site or communicating electronically with us.
+This policy sets out how we process any personal data we collect from you or that you provide to us through our website and social media sites. We confirm that we will keep your information secure and comply fully with all applicable Norway Data Protection legislation and regulations. Please read the following carefully to understand what happens to personal data that you choose to provide to us, or that we collect from you when you visit our sites. By submitting information you are accepting and consenting to the practices described in this policy.
+Types of information we may collect from you
+We may collect, store and use the following kinds of personal information about individuals who visit and use our website and social media sites:
+Information you supply to us. You may supply us with information about you by filling in forms on our website or social media. This includes information you provide when you submit a contact/inquiry form. The information you give us may include but is not limited to, your name, address, e-mail address, and phone number.
+How we may use the information we collect
+We use the information in the following ways:
+Information you supply to us. We will use this information:
+to provide you with information and/or services that you request from us;
+To contact you to provide the information requested.
+Disclosure of your information
+Any information you provide to us will either be emailed directly to us or may be stored on a secure server.
+We do not rent, sell or share personal information about you with other people or non-affiliated companies.
+We will use all reasonable efforts to ensure that your personal data is not disclosed to regional/national institutions and authorities unless required by law or other regulations.
+Unfortunately, the transmission of information via the internet is not completely secure. Although we will do our best to protect your personal data, we cannot guarantee the security of your data transmitted to our site; any transmission is at your own risk. Once we have received your information, we will use strict procedures and security features to try to prevent unauthorized access.
+Your rights – access to your personal data
+You have the right to ensure that your personal data is being processed lawfully (“Subject Access Right”). Your subject access right can be exercised in accordance with data protection laws and regulations. Any subject access request must be made in writing to Sondre@mamon.no. We will provide your personal data to you within the statutory time frames. To enable us to trace any of your personal data that we may be holding, we may need to request further information from you. If you complain about how we have used your information, you have the right to complain to the Information Commissioner’s Office (ICO).
+Changes to our privacy policy
+Any changes we may make to our privacy policy in the future will be posted on this page and, where appropriate, notified to you by e-mail. Please check back frequently to see any updates or changes to our privacy policy.
+Contact
+Questions, comments, and requests regarding this privacy policy are welcomed and should be addressed to Sondre at Sondre@mamon.no
 
-If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us.
-
-This Privacy Policy applies only to our online activities and is valid for visitors to our website with regards to the information that they shared and/or collect in Mamon. This policy is not applicable to any information collected offline or via channels other than this website.
-
-Consent
-By using our website, you hereby consent to our Privacy Policy and agree to its terms.
-
-Information we collect
-The personal information that you are asked to provide, and the reasons why you are asked to provide it, will be made clear to you at the point we ask you to provide your personal information.
-
-If you contact us directly, we may receive additional information about you such as your name, email address, phone number, the contents of the message and/or attachments you may send us, and any other information you may choose to provide.
-
-When you register for an Account, we may ask for your contact information, including items such as name, company name, address, email address, and telephone number.
-
-How we use your information
-We use the information we collect in various ways, including to:
-
-Provide, operate, and maintain our website
-Improve, personalize, and expand our website
-Understand and analyze how you use our website
-Develop new products, services, features, and functionality
-Communicate with you, either directly or through one of our partners, including for customer service, to provide you with updates and other information relating to the website, and for marketing and promotional purposes
-Send you emails
-Find and prevent fraud
-Log Files
-Mamon follows a standard procedure of using log files. These files log visitors when they visit websites. All hosting companies do this and a part of hosting services' analytics. The information collected by log files include internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the number of clicks. These are not linked to any information that is personally identifiable. The purpose of the information is for analyzing trends, administering the site, tracking users' movement on the website, and gathering demographic information.
-
-Cookies and Web Beacons
-Like any other website, Mamon uses "cookies". These cookies are used to store information including visitors' preferences, and the pages on the website that the visitor accessed or visited. The information is used to optimize the users' experience by customizing our web page content based on visitors' browser type and/or other information.
-
-Advertising Partners Privacy Policies
-You may consult this list to find the Privacy Policy for each of the advertising partners of Mamon.
-
-Third-party ad servers or ad networks uses technologies like cookies, JavaScript, or Web Beacons that are used in their respective advertisements and links that appear on Mamon, which are sent directly to users' browser. They automatically receive your IP address when this occurs. These technologies are used to measure the effectiveness of their advertising campaigns and/or to personalize the advertising content that you see on websites that you visit.
-
-Note that Mamon has no access to or control over these cookies that are used by third-party advertisers.
-
-Third Party Privacy Policies
-Mamon's Privacy Policy does not apply to other advertisers or websites. Thus, we are advising you to consult the respective Privacy Policies of these third-party ad servers for more detailed information. It may include their practices and instructions about how to opt-out of certain options.
-
-You can choose to disable cookies through your individual browser options. To know more detailed information about cookie management with specific web browsers, it can be found at the browsers' respective websites.
-
-CCPA Privacy Rights (Do Not Sell My Personal Information)
-Under the CCPA, among other rights, California consumers have the right to:
-
-Request that a business that collects a consumer's personal data disclose the categories and specific pieces of personal data that a business has collected about consumers.
-
-Request that a business delete any personal data about the consumer that a business has collected.
-
-Request that a business that sells a consumer's personal data, not sell the consumer's personal data.
-
-If you make a request, we have one month to respond to you. If you would like to exercise any of these rights, please contact us.
-
-GDPR Data Protection Rights
-We would like to make sure you are fully aware of all of your data protection rights. Every user is entitled to the following:
-
-The right to access – You have the right to request copies of your personal data. We may charge you a small fee for this service.
-
-The right to rectification – You have the right to request that we correct any information you believe is inaccurate. You also have the right to request that we complete the information you believe is incomplete.
-
-The right to erasure – You have the right to request that we erase your personal data, under certain conditions.
-
-The right to restrict processing – You have the right to request that we restrict the processing of your personal data, under certain conditions.
-
-The right to object to processing – You have the right to object to our processing of your personal data, under certain conditions.
-
-The right to data portability – You have the right to request that we transfer the data that we have collected to another organization, or directly to you, under certain conditions.
-
-If you make a request, we have one month to respond to you. If you would like to exercise any of these rights, please contact us.
-
-Children's Information
-Another part of our priority is adding protection for children while using the internet. We encourage parents and guardians to observe, participate in, and/or monitor and guide their online activity.
-
-Mamon does not knowingly collect any Personal Identifiable Information from children under the age of 13. If you think that your child provided this kind of information on our website, we strongly encourage you to contact us immediately and we will do our best efforts to promptly remove such information from our records.
-
-Changes to This Privacy Policy
-We may update our Privacy Policy from time to time. Thus, we advise you to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page. These changes are effective immediately, after they are posted on this page.
-
-Our Privacy Policy was created with the help of the Privacy Policy Generator.
-
-Contact Us
-If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us.
-    </p>
+ </p>
 </template>

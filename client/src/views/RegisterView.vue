@@ -59,7 +59,6 @@ const signInWithGoogle = () => {
 };
 
 const signInWithFacebook = async () => {
-  console.log("hei");
   const provider = new FacebookAuthProvider();
   signInWithPopup(getAuth(), provider)
   .then((result) => {

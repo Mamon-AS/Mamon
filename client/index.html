@@ -5,16 +5,33 @@
     <link rel="icon" href="/src/images/mamon-icon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mamon</title>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Icons"
-      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <script src="
-    https://cdn.jsdelivr.net/npm/kute.js@2.2.4/dist/kute.min.js
-    "></script>
+    <script src="https://cdn.jsdelivr.net/npm/kute.js@2.2.4/dist/kute.min.js"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app"/>
+    <script>
+      const fbApiKey = "264286999684301"
+      window.fbAsyncInit = function () {
+        FB.init({
+            appId: fbApiKey,
+            autoLogAppEvents: true,
+            xfbml: true,
+            version: 'v18.0'
+        });
+        };
+
+      (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";   //#version=v2.2&appId=264286999684301&xfbml=true&autoLogAppEvents=true
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));    
+    </script>
     <script type="module" src="./src/main.js"></script>
   </body>
 </html>
