@@ -1,24 +1,36 @@
 <template>
     <main class="user">
         <div class="name">
-            <h1>{{ name ? name : "Justin Timberlake, er det deg?" }}</h1>
+            <h1 class="text-2xl text-bold">{{ name ? name : "Justin Timberlake, er det deg?" }}</h1>
             <form @submit.prevent="editName">
                 <input type="text" class="border rounded transition hidden w-0 opacity-0"> 
                 <p v-if="editName.error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">{{ editName.error }}</p>
-                <button type="submit" v-if="provider == 'password'" class="edit">Endre navn</button>
+                <button type="submit" v-if="provider == 'password'" class="hover:text-underline">Endre navn</button>
             </form>
         </div>
 
         <div class="photo">
             <img v-if="photoUrl" :src="photoUrl" alt="profilbilde" class="max-h-40 w-auto">
-            <button class="edit" @click="editPhoto">{{ photoUrl ? "Endre" : "Legg til" }} bilde</button>
+            <form @submit.prevent="editPhoto">
+                <input class="transition hidden w-0 opacity-0" type="file" name="profile">
+                <button type="submit" class="hover:text-underline">Endre bilde</button>
+            </form>
         </div>
         
         <div class="email">
             <p>E-post: {{ email }}</p>
-            <button v-if="provider == 'password'" class="edit" @click="editEmail">Endre</button>
+            <form @submit.prevent="editEmail">
+                <input type="text" class="border rounded transition hidden w-0 opacity-0"> 
+                <p v-if="editEmail.error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">{{ editEmail.error }}</p>
+                <button v-if="provider == 'password'" class="hover:text-underline">Endre e-post</button>
+            </form>
         </div>
-        <button v-if="provider == 'password'" class="edit password" @click="editPassword">Endre passord</button>
+
+        <form @submit.prevent="editPassword">
+            <input type="text" class="border rounded transition hidden w-0 opacity-0"> 
+            <p v-if="editPassword.error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">{{ editPassword.error }}</p>
+            <button v-if="provider == 'password'" class="hover:text-underline password">Endre passord</button>
+        </form>
     </main>
 </template>
 
@@ -38,12 +50,14 @@ export default {
             );
             let button = document.querySelector(".name button");
             let input = document.querySelector(".name input").value;
+            console.log('input: ' + input);
+            console.log(typeof input);
             if (button.innerHTML == "Endre navn") {
                 button.innerHTML = "OK";
             } else {
                 if (input =! '') {
                     updateProfile(getAuth().currentUser, {
-                    displayName: input
+                        displayName: input,
                     }).then(() => {
                         console.log("name updated");
                         input = '';
@@ -61,13 +75,13 @@ export default {
             }
         };
         const editPhoto = () => {
-            console.log("edit photo dialog started");
+            alert("edit photo dialog started");
         };
         const editEmail = () => {
-            console.log("edit email dialog started");
+            alert("edit email dialog started");
         };
         const editPassword = () => {
-            console.log("edit password dialog started");
+            alert("edit password dialog started");
         };
         return {
             provider,
