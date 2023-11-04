@@ -6,7 +6,7 @@
 
 <script>
 import { onMounted, ref } from 'vue';
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import AppHeader from './components/AppHeader.vue'
 import SidebarNav from './components/SidebarNav.vue';
 import sanity from './client';

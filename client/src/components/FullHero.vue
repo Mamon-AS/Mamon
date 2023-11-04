@@ -12,8 +12,8 @@
 
 <script>
 import sanity from "../client";
-
 import { CreateURL } from '../utils';
+import { ref, onMounted } from 'vue'
 
 export default {
     setup() {
@@ -22,8 +22,8 @@ export default {
         onMounted(() => {
 			const query = `*[_type == 'siteSettings']`
 			sanity.fetch(query).then(data => {
-                console.log(data);
-                settings.value = data;
+                console.log(data[0]);
+                settings.value = data[0]
 			})
 		})
 
