@@ -135,7 +135,7 @@ setup() {
             // Now that we have the accessToken we need to fetch the pageID in order to find the Instagram Business Account ID (dont ask why its like this) 
             // this pic explains the flow: https://miro.medium.com/v2/resize:fit:720/format:webp/1*eWKoYEesv8Mj679bAM23wA.png
 
-            // Fetching pageID
+                 // Fetching pageID
                 let response = await axios.get(`https://graph.facebook.com/v18.0/me/accounts`, {
                     params: {
                         "access_token": FBaccessToken
