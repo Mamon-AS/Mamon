@@ -93,6 +93,7 @@ const signInWithFacebook = async () => {
   });
 
 }
+// see permissions here https://developers.facebook.com/docs/instagram-api/guides/content-publishing/
 const signInWithFacebookSDK = async () => {
   try {
     const response = await new Promise((resolve, reject) => {
@@ -103,7 +104,7 @@ const signInWithFacebookSDK = async () => {
         } else {
           reject({ message: 'Facebook login failed' });
         }
-      },{scope: 'public_profile,email, instagram_basic'});
+      },{scope: 'public_profile,email, instagram_basic, ads_management, business_management, instagram_content_publish, pages_read_engagement'});
 
 
     });
@@ -114,7 +115,6 @@ const signInWithFacebookSDK = async () => {
         console.log(response.authResponse.accessToken);
       } 
     } );
-    // Assuming FB.login was successful, you can proceed here
     console.log('Facebook login successful');
     router.push('/');
   } catch (error) {
