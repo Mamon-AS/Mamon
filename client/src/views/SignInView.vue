@@ -26,15 +26,13 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, FacebookAuthProvider } from "firebase/auth";
-import { useStore } from 'vuex'
-
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, FacebookAuthProvider, signInWithCredential } from "firebase/auth";
 
 const email = ref('');
 const password = ref('');
 const router = useRouter();
 const errorMessage = ref() 
-const store = useStore()
+
 
 const register = () => {
     const auth = getAuth();
@@ -78,21 +76,6 @@ const signInWithGoogle = () => {
   });
 };
 
-const signInWithFacebook = async () => {
-  const provider = new FacebookAuthProvider();
-  signInWithPopup(getAuth(), provider)
-  .then((result) => {
-    console.log(result.user.accessToken);
-    const accessToken = result.user.accessToken;
-    store.dispatch("setAccessToken", accessToken)
-    router.push('/');
-  })
-  .catch((error) => {
-    alert(error.message);
-    console.log(error.message);
-  });
-
-}
 // see permissions here https://developers.facebook.com/docs/instagram-api/guides/content-publishing/
 const signInWithFacebookSDK = async () => {
   try {
@@ -105,20 +88,31 @@ const signInWithFacebookSDK = async () => {
           reject({ message: 'Facebook login failed' });
         }
       },{scope: 'public_profile,email, instagram_basic, ads_management, business_management, instagram_content_publish, pages_read_engagement'});
-
-
     });
-
-    console.log(response);
     FB.getLoginStatus(function(response) {
       if (response.status === 'connected') {
         console.log(response.authResponse.accessToken);
       } 
-    } );
-    console.log('Facebook login successful');
-    router.push('/');
+    });
+
+    const facebookAccessToken = response.authResponse.accessToken;
+    console.log('Facebook login successful', facebookAccessToken);
+
+    const firebaseCredential = FacebookAuthProvider.credential(facebookAccessToken);
+
+    const auth = getAuth();
+    signInWithCredential(auth, firebaseCredential)
+      .then((firebaseResult) => {
+        console.log('Firebase sign-in successful', firebaseResult);
+        router.push('/');
+      })
+      .catch((firebaseError) => {
+        console.error('Firebase sign-in error', firebaseError);
+        alert(firebaseError.message);
+      });
+    
   } catch (error) {
-    console.error(error);
+    console.error('Facebook SDK login error', error);
     alert(error.message);
   }
 };

@@ -29,11 +29,11 @@
       </div>
       
       <div>
-        <router-link v-if="!isLoggedIn"
+        <!-- <router-link v-if="!isLoggedIn"
           :to="`/register`" 
           class="bg-lightblue text-white border border-lightblue hover:bg-white hover:border-mamonblue hover:text-mamonblue py-1 px-4 ml-4 rounded transition"
           >Ny her?
-        </router-link>
+        </router-link> -->
         <router-link v-if="!isLoggedIn"
           :to="`/sign-in`" 
           class="bg-lightblue text-white border border-lightblue hover:bg-white hover:border-mamonblue hover:text-mamonblue py-1 px-4 ml-4 rounded transition" 
