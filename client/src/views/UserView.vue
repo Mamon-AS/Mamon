@@ -77,8 +77,35 @@ export default {
         const editPhoto = () => {
             alert("edit photo dialog started");
         };
-        const editEmail = () => {
-            alert("edit email dialog started");
+        const editEmail = (event) => {
+            console.log("edit email dialog started");
+            ['hidden', 'w-0', 'opacity-0'].map(className => 
+                document.querySelector(".email input").classList.toggle(className)
+            );
+            let button = document.querySelector(".email button");
+            let input = document.querySelector(".email input").value;
+            console.log('input: ' + input);
+            console.log(typeof input);
+            if (button.innerHTML == "Endre epost") {
+                button.innerHTML = "OK";
+            } else {
+                if (input =! '') {
+                    updateProfile(getAuth().currentUser, input)
+                    .then(() => {
+                        console.log("email updated");
+                        input = '';
+                        ['hidden', 'w-0', 'opacity-0'].map(className => 
+                            document.querySelector(".name input").classList.toggle(className)
+                        );
+                    }).catch((e) => {
+                        editEmail.error = e.message;
+                        console.log(e);
+                    });
+                    button.innerHTML = "Endre epost";
+                } else {
+                    editName.error = "Epost kan ikke være tom";
+                }
+            }
         };
         const editPassword = () => {
             alert("edit password dialog started");
