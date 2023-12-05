@@ -30,31 +30,4 @@ section {
     padding: 100px 20vw;
 }
 
-.waves {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    overflow: hidden;
-    line-height: 0;
-}
-
-.waves svg {
-    position: relative;
-    display: block;
-    width: calc(106% + 1.3px);
-    height: 148px;
-}
-
-.waves .shape-fill {
-    fill: #fde68a;
-}
-
-.spacer {
-    aspect-ratio: 960/300;
-    width: 100%;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-}
 </style>
