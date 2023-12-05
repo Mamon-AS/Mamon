@@ -1,14 +1,29 @@
 <template>
-    <p>sjekk</p>
-    <section v-if="settings && settings.fullHero" class="full-hero h-screen w-screen relative" style="margin-top: -63px; padding: unset;">
-        <img  v-if="settings.heroImage" :src="CreateURL(settings.heroImage, 1024, 1024)" alt="Hero image Mamon" loading="lazy" class="object-cover h-screen w-screen -z-10">
-        <div v-if="settings.heroTitle" class="absolute h-screen w-screen justify-center bg-white-100 text-black rounded">
-            <h1>{{ settings.heroTitle }}</h1>
-            <p>{{ settings.heroText }}</p>
-            <a v-if="settings.heroButtonBool" :href="`${settings.heroButtonLink}`">{{ settings.heroButtonText }}</a>
+    <section v-if="settings && settings.fullHero" class="flex justify-center xl:grid">
+        <div v-if="settings.heroTitle" class="flex-col w-full mx-auto">
+            
+            <div class="mb-4">
+                <h1 class="font-extrabold text-2xl lg:text-4xl">
+                    {{ settings.heroTitle }}
+                </h1>
+            </div>
+
+            <div>
+                <p class="text-xl md:text-1xl xl:min-w-[500px]">
+                    {{ settings.heroText }}
+                </p>
+            </div>
+
+            <a v-if="settings.heroButtonBool" :href="`${settings.heroButtonLink}`" class="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
+                {{ settings.heroButtonText }}
+            </a>
+
         </div>
     </section>
 </template>
+
+
+
 
 <script>
 import sanity from "../client";
@@ -22,7 +37,6 @@ export default {
         onMounted(() => {
 			const query = `*[_type == 'siteSettings']`
 			sanity.fetch(query).then(data => {
-                console.log(data[0]);
                 settings.value = data[0]
 			})
 		})

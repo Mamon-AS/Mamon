@@ -21,8 +21,8 @@
         <a href="/"> 
           <img :src="`${
             full_hero_is_active
-            ? '../src/images/High_Resolution_Image_4_cropped.png'
-            : '../src/images/Transparent_Image_11_cropped.png'
+            ? '/images/High_Resolution_Image_4_cropped.png'
+            : '/images/Transparent_Image_11_cropped.png'
             }`"
             alt="Logo" class="h-8 w-auto logo">
         </a>
