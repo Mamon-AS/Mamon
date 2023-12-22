@@ -13,11 +13,11 @@
                     {{ settings.heroText }}
                 </p>
             </div>
-
-            <a v-if="settings.heroButtonBool" :href="`${settings.heroButtonLink}`" class="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
-                {{ settings.heroButtonText }}
-            </a>
-
+            <div class="mt-9">
+                <a v-if="settings.heroButtonBool" :href="`${settings.heroButtonLink}`" class="mt-8 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
+                    {{ settings.heroButtonText }}
+                </a>
+            </div>
         </div>
     </section>
 </template>
@@ -27,7 +27,6 @@
 
 <script>
 import sanity from "../client";
-import { CreateURL } from '../utils';
 import { ref, onMounted } from 'vue'
 
 export default {
@@ -43,7 +42,6 @@ export default {
 
         return {
             settings,
-            CreateURL
         }
     }
 }

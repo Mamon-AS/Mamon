@@ -23,7 +23,6 @@ export default {
 
       const query = `*[_type == 'siteSettings']`
 			sanity.fetch(query).then(data => {
-        console.log("data: " + data);
         settings.value = data;
 			})
     });
