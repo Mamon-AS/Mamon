@@ -26,6 +26,15 @@
             </form>
         </div>
 
+        <div class="reviews">
+            <h2 class="text-xl font-bold">Mine anmeldelser</h2>
+            <ul>
+            <li v-for="review in reviews" :key="review._id">
+                {{ review.reviewedItem }} - {{ review.rating }} stjerner
+            </li>
+            </ul>
+        </div>
+
         <form @submit.prevent="editPassword">
             <input type="text" class="border rounded transition hidden w-0 opacity-0"> 
             <p v-if="editPassword.error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">{{ editPassword.error }}</p>
@@ -36,6 +45,8 @@
 
 <script>
 import { getAuth, updateProfile } from 'firebase/auth';
+
+import sanity from '../client';
 
 export default {
     setup() {
@@ -94,15 +105,32 @@ export default {
             editPassword
         }
     },
-    components: {
-        
-    }
+
+    data() {
+        return {
+            reviews: [],
+        }
+    },
+
+    created() {
+        this.fetchUserReviews();
+    },
+
+    methods: {
+    fetchUserReviews() {
+        const userId = getAuth().currentUser.uid;
+
+        sanity.fetch(
+        `*[_type == "review" && userId == $userId]`,
+        { userId }
+        ).then((data) => {
+        this.reviews = data;
+        }).catch((error) => {
+        console.error('Error fetching reviews:', error);
+        });
+    },
+    },
 };
 
 
 </script>
-<style scoped>
-.edit {
-  
-}
-</style>

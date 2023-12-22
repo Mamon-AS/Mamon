@@ -15,7 +15,8 @@ const router = createRouter({
     { path: '/register', name: 'register',component: () => import('../views/RegisterView.vue') },
     { path: '/user', name: 'user',component: () => import('../views/UserView.vue'), meta: { requiresAuth: true } },
     { path: '/sign-in', name: 'sign-in',component: () => import('../views/SignInView.vue') },
-    { path: '/privacy', name: 'privacy',component: () => import('../views/PrivacyPolicyView.vue') }
+    { path: '/privacy', name: 'privacy',component: () => import('../views/PrivacyPolicyView.vue') },
+    { path: '/review', name: 'review',component: () => import('../views/ReviewView.vue') }
     /* {
       path: '/about',
       name: 'about',
