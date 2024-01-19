@@ -1,6 +1,7 @@
 <template>
     <main class="home-page">
         <FullHero />
+        <ReviewCardView />
         <footer class="text-center">
             <p>© {{ new Date().getFullYear() }} Mamon. All rights reserved.</p>
         </footer>
@@ -9,9 +10,11 @@
 
 <script>
 import FullHero from '../components/FullHero.vue';
+import ReviewCardView from '../views/ReviewCardView.vue';
 export default {
   components: {
-    FullHero
+    FullHero,
+    ReviewCardView
   }
 }
 
@@ -22,12 +25,9 @@ body {
     margin: 0;
 }
 section {
-    position: relative;
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    min-height: 400px;
-    padding: 100px 20vw;
+    min-height: 200px;
+    padding: 50px 20vw;
 }
 
 </style>

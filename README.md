@@ -28,6 +28,10 @@ cd client
 npm run dev
 ```
 
+### Start Netlify server-side functions:
+```cmd
+netlify dev 
+```
 <!-- 
 ## Deploy
 - ...to test:

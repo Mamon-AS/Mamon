@@ -8,7 +8,9 @@ export default createStore({
 		marketing: [],
 		excerpts: [],
 		total_marketing: 0,
-		authors: []
+		authors: [],
+		reviewItems: [],
+		total_reviews: 0,
 	},
 
 	mutations: {
@@ -22,6 +24,7 @@ export default createStore({
 				state.menu_is_active = !state.menu_is_active
 			}
 		},
+		// Posts
 		SET_MARKETING (state, marketing) {
 			state.marketing = marketing
 		},
@@ -31,9 +34,20 @@ export default createStore({
 		INCREMENT_TOTAL_MARKETING (state, increment = 1) {
 			state.total_marketing += increment
 		},
+		// Authors
 		SET_AUTHORS (state, authors) {
 			state.authors = authors
-		}
+		},
+		// Reviews
+		SET_REVIEWS (state, reviewItems) {
+			state.reviewItems = reviewItems
+		},
+		SET_TOTAL_REVIEWS (state, total_reviews) {
+			state.total_reviews = total_reviews
+		},
+		INCREMENT_TOTAL_REVIEWS (state, increment = 1) {
+			state.total_reviews += increment
+		},
 	},
 	
 	actions: { 
@@ -43,6 +57,7 @@ export default createStore({
 		CloseMenu ({ commit }) {
 			commit('TOGGLE_MENU', 'close')
 		},
+		// Posts
 		FetchMarketing ({ commit }, limit = null) {
 			// const query = `*[_type == "marketing"] ${limit ? `[0...${limit}]` : ''}`
 			// (We need the | operator here in front of the order()-function, because sanity
@@ -77,6 +92,7 @@ export default createStore({
 				commit('SET_MARKETING', [...this.state.marketing, ...marketing])
 			})
 		},
+		// Authors
 		FetchAuthors({ commit }) {
 			const query = `*[_type == "author"] | order(full_name)`
 
@@ -84,13 +100,50 @@ export default createStore({
 				console.log(authors)
 				commit('SET_AUTHORS', authors)
 			})
-		}
+		},
+		// Reviews
+		FetchReviews ({ commit }, limit = null) {
+			const query = `*[_type == "review"] | order(_createdAt desc) ${limit ? `[0...${limit}]` : ''}`
+
+			sanity.fetch(query).then(reviewItems => {
+				console.log(reviewItems)
+				commit('SET_REVIEWS', reviewItems)
+			})
+
+			const count_query = 'count(*[_type == "review"])'
+			
+			sanity.fetch(count_query).then(count => {
+				commit('SET_TOTAL_REVIEWS', count)
+			})
+		},
+
+		AddNewReviews({ commit }, post) {
+			console.log("whipping that money")
+			console.log(post)
+			commit('SET_REVIEWS', [...this.state.reviewItems, post])
+			commit('INCREMENT_TOTAL_REVIEWS')
+		},
+
+		RemoveReviews ({ commit }, id) {
+			commit('SET_REVIEWS', this.state.reviewItems.filter(p => p._id !== id))
+			commit('INCREMENT_TOTAL_REVIEWS', -1)
+		},
+		LoadReviews ({ commit }, limit = 10)  {
+			const query = `*[_type == "review"] | order(_createdAt desc) [${this.state.reviewItems.length}...${this.state.reviewItems.length + limit}]`
+
+			sanity.fetch(query).then(reviewItems => {
+				commit('SET_REVIEWS', [...this.state.reviewItems, ...reviewItems])
+			})
+		},
+
 	},
 
 	getters: {
 		marketing: state => state.marketing.sort((a,b) => new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
 		),
-		authors: state => state.authors
+		authors: state => state.authors,
+		reviewItems: state => state.reviewItems.sort((a,b) => new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime(),
+		),
 	}
 		
 })

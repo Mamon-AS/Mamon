@@ -14,6 +14,14 @@ export default defineConfig({
     }
   },
    server: {
+    proxy: {
+      '/.netlify/functions': {
+        target: 'http://localhost:8888',
+        changeOrigin: true,
+        secure: false,
+        // // rewrite: (path) => path.replace(/^\/\.netlify\/functions/, '')
+      }
+    },
      https: {
        key: 'localhost.key',
        cert:'localhost.crt'

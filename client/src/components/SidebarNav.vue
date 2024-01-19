@@ -6,20 +6,24 @@
             : '-translate-x-full'
         }`">
         <div class="p-4">
-            <!-- Ikoner og div fra https://fonts.google.com/icons -->
+            <!-- Ikoner og div fra https://fonts.google.com/icons eller https://materializecss.com/icons.html -->
             <div class="mx-4">
                 <MenuItem to="/">
                 <span class="material-icons mr-2">home</span>
                     Hjem
                 </MenuItem>
-                <MenuItem to="/card">
+                <!-- <MenuItem to="/card">
                     <span class="material-icons mr-2 ">domain</span>
                     Tilbud
                 </MenuItem>
                 <MenuItem to="/authors">
                     <span class="material-icons mr-2 ">people</span>
                     Bedrifter
-                </MenuItem>
+                </MenuItem> -->
+                <MenuItem to="/review">
+                    <span class="material-icons mr-2 ">child_care</span>
+                    Anmeldelser
+                </MenuItem> 
                 <MenuItem to="/privacy">
                     <span class="material-icons mr-2 ">lock</span>
                     Personvern

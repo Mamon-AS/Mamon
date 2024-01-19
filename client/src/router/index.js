@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import CardView from '../views/CardView.vue'
+// import CardView from '../views/CardView.vue'
 import HomeView from '../views/HomeView.vue'
 import store from '../store'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -8,10 +8,10 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/', name: 'home', component: HomeView },
-    { path: '/authors', name: 'author',component: () => import('../views/AuthorView.vue') },
-    { path: '/card', name: 'card', component: CardView},
-    { path: '/post/:id', name: 'post', component: () => import('../views/marketing/_id.vue') },
-    { path: '/author/:id', name: 'Author',component: () => import('../views/author/_id.vue') },
+    // { path: '/authors', name: 'author',component: () => import('../views/AuthorView.vue') },
+    // { path: '/card', name: 'card', component: CardView},
+    // { path: '/post/:id', name: 'post', component: () => import('../views/marketing/_id.vue') },
+    // { path: '/author/:id', name: 'Author',component: () => import('../views/author/_id.vue') },
     { path: '/register', name: 'register',component: () => import('../views/RegisterView.vue') },
     { path: '/user', name: 'user',component: () => import('../views/UserView.vue'), meta: { requiresAuth: true } },
     { path: '/sign-in', name: 'sign-in',component: () => import('../views/SignInView.vue') },
