@@ -41,14 +41,14 @@ export default {
 <style>
 
 .btn {
-	@apply bg-green-600 duration-300 font-bold py-2 px-4 rounded-lg inline-block;
+	@apply  bg-blue-500 text-white font-bold py-2 px-4 rounded  transition duration-300
 }
 .btn:hover {
-	@apply bg-green-700;
+	@apply hover:bg-blue-700;
 }
 
 main {
-  @apply mx-auto max-w-4xl my-8 px-4;
+  @apply mx-auto max-w-6xl my-8 px-4;
   .user {
     @apply bg-white shadow-md rounded-lg p-8;
     h1 {
