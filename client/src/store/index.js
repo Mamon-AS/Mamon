@@ -118,8 +118,6 @@ export default createStore({
 		},
 
 		AddNewReviews({ commit }, post) {
-			console.log("whipping that money")
-			console.log(post)
 			commit('SET_REVIEWS', [...this.state.reviewItems, post])
 			commit('INCREMENT_TOTAL_REVIEWS')
 		},
