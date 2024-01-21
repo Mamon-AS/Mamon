@@ -16,7 +16,7 @@ const router = createRouter({
     { path: '/user', name: 'user',component: () => import('../views/UserView.vue'), meta: { requiresAuth: true } },
     { path: '/sign-in', name: 'sign-in',component: () => import('../views/SignInView.vue') },
     { path: '/privacy', name: 'privacy',component: () => import('../views/PrivacyPolicyView.vue') },
-    { path: '/review', name: 'review',component: () => import('../views/ReviewView.vue') }
+    { path: '/review', name: 'review',component: () => import('../views/ReviewView.vue'), meta: { requiresAuth: true } },
     /* {
       path: '/about',
       name: 'about',
@@ -42,7 +42,7 @@ const getCurrentUser = () => {
   };
 // navigation guard for å sjekke innlogga brukere 
 router.beforeEach(async(to, from, next) => {
-  if (to.name === 'user') { // trengs bare på /user
+  if (to.name === 'user' || to.name === 'review') { // trengs bare på /user og /review
     if (await getCurrentUser()) {
       next();
     } else {

@@ -20,7 +20,7 @@
                     <span class="material-icons mr-2 ">people</span>
                     Bedrifter
                 </MenuItem> -->
-                <MenuItem to="/review">
+                <MenuItem v-if="isLoggedIn" to="/review">
                     <span class="material-icons mr-2 ">child_care</span>
                     Anmeldelser
                 </MenuItem> 
