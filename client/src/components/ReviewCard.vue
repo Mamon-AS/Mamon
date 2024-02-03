@@ -1,27 +1,34 @@
 <template>
-    <div class="darkblue rounded-lg p-4 mb-4 "> 
-         <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4" />
-    
-
-            <h3 class="text-lg md:text-2xl font-bold mb-4"> {{ reviewItems.reviewedItem }}</h3>
-            <p class="text-white md:text-lg mb-4 flex-1">
-                {{ reviewItems.description }}
-            </p>
-            <div class="flex justify-between items-end">
-                <div class="flex items-center">
-                    <div class="stars-outer">
-                        <div class="stars-inner" :style="{ width: stars }"></div>
-                        <div class="stars-background"></div>
-                    </div>
-                </div>
-                <p class="text-white text-sm">
-                    {{ FormatDate(reviewItems._createdAt) }}
-                </p> 
-            </div>         
-    </div>
+  <div class="darkblue rounded-lg p-4 mb-4 flex flex-col justify-between"> 
+      <div class="content-wrapper">
+          <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
+          <h3 class="text-lg md:text-2xl font-bold mb-4"> {{ reviewItems.reviewedItem }}</h3>
+          <p class="text-white md:text-lg mb-4 flex-1">
+              {{ reviewItems.description }}
+          </p>
+          <p class="text-white md:text-lg mb-4 flex-1">
+             Skrevet av {{ reviewItems.userName }}
+          </p>
+          <div class="flex justify-between items-end">
+              <div class="flex items-center">
+                  <div class="stars-outer">
+                      <div class="stars-inner" :style="{ width: stars }"></div>
+                      <div class="stars-background"></div>
+                  </div>
+              </div>
+              <p class="text-white text-sm">
+                  {{ FormatDate(reviewItems._createdAt) }}
+              </p> 
+          </div>
+      </div> 
+      <img v-if="photoUrl" :src="photoUrl" alt="profilbilde" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mt-4 self-end" />   
+  </div>
 </template>
+
 <script>
-import { computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { getStorage, ref as firebaseRef, getDownloadURL } from 'firebase/storage'
+
 import {FormatDate, CreateURL} from '../utils'
 
 export default {
@@ -33,17 +40,28 @@ export default {
   },
 
   setup(props) {
+    const photoUrl = ref("");
+    const storage = getStorage();
+
     const stars = computed(() => {
         const starTotal = 5;
         const starPercentage = (props.reviewItems.rating / starTotal) * 100;
         const starPercentageRounded = `${(Math.round(starPercentage / 10) * 10)}%`;
         return starPercentageRounded
     })
-
+    onMounted(() => {
+      const storageRef = firebaseRef(storage, 'users/' + props.reviewItems.userId + '/profilePicture.png');
+      getDownloadURL(storageRef).then((url) => {
+        photoUrl.value = url;
+      }).catch((error) => {
+        console.log(error);
+      });
+    })
     return {
       stars,
       FormatDate,
-      CreateURL
+      CreateURL,
+      photoUrl
     };
     
   },

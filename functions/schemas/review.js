@@ -30,6 +30,11 @@ export default {
         description: 'ID of the user who wrote the review',
         validation: Rule => Rule.required().error('Missing user ID')
       }, 
+      {name: 'userName',
+      title: 'User Name',
+      type: 'string',
+      description: 'Name of the user who wrote the review',
+    }, 
       {
         name: 'reviewedImage',
         title: 'Image of Reviewed Item',
