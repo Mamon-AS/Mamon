@@ -7,7 +7,7 @@
               {{ reviewItems.description }}
           </p>
           <p class="text-white md:text-lg mb-4 flex-1">
-             Skrevet av {{ reviewItems.userName }}
+             Skrevet av {{ reviewItems.userName ? reviewItems.userName : "Anonym"}}
           </p>
           <div class="flex justify-between items-end">
               <div class="flex items-center">
@@ -21,7 +21,8 @@
               </p> 
           </div>
       </div> 
-      <img v-if="photoUrl" :src="photoUrl" alt="profilbilde" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mt-4 self-end" />   
+      <img v-if="photoUrl" :src="photoUrl" alt="profilbilde" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mt-4 self-end" />  
+      <img v-else :src="defaultPhotoUrl" alt="profilbilde" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mt-4 self-end" />    
   </div>
 </template>
 
@@ -42,7 +43,7 @@ export default {
   setup(props) {
     const photoUrl = ref("");
     const storage = getStorage();
-
+    const defaultPhotoUrl = '/images/frosk.png';
     const stars = computed(() => {
         const starTotal = 5;
         const starPercentage = (props.reviewItems.rating / starTotal) * 100;
@@ -61,7 +62,8 @@ export default {
       stars,
       FormatDate,
       CreateURL,
-      photoUrl
+      photoUrl,
+      defaultPhotoUrl
     };
     
   },
