@@ -155,7 +155,7 @@
       if (!uploadedImageRef) {
         throw new Error('Failed to upload image to Sanity');
       }
-
+      const name = getAuth().currentUser.displayName;
       console.log('Uploaded image to Sanity:', uploadedImageRef);
       console.log(this.review.reviewedItemDescription)
 
@@ -166,6 +166,7 @@
         reviewedItem: this.review.fetchedTitle,
         rating: this.review.rating,
         userId: this.review.userId,
+        userName: name,
         description: this.review.reviewedItemDescription,
         reviewedImage: {
           _type: 'image',
