@@ -7,7 +7,10 @@
               {{ reviewItems.description }}
           </p>
           <p class="text-white md:text-lg mb-4 flex-1">
-             Skrevet av {{ reviewItems.userName ? reviewItems.userName : "Anonym"}}
+             Skrevet av 
+             <router-link :to="{ name: 'UserProfile', params: { userId: reviewItems.userId }}">
+              <span style="text-decoration:underline;">{{ reviewItems.userName ? reviewItems.userName : "Anonym"}}</span>
+            </router-link>
           </p>
           <div class="flex justify-between items-end">
               <div class="flex items-center">
@@ -21,9 +24,7 @@
               </p> 
           </div>
       </div> 
-      <img v-if="photoUrl" :src="photoUrl" alt="profilbilde" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mt-4 self-end" />  
-      <img v-else :src="defaultPhotoUrl" alt="profilbilde" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mt-4 self-end" />    
-  </div>
+      <img v-if="photoUrl" :src="photoUrl" alt="profilbilde" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mt-4 self-end" />    </div>
 </template>
 
 <script>
@@ -43,7 +44,6 @@ export default {
   setup(props) {
     const photoUrl = ref("");
     const storage = getStorage();
-    const defaultPhotoUrl = '/images/frosk.png';
     const stars = computed(() => {
         const starTotal = 5;
         const starPercentage = (props.reviewItems.rating / starTotal) * 100;
@@ -52,18 +52,21 @@ export default {
     })
     onMounted(() => {
       const storageRef = firebaseRef(storage, 'users/' + props.reviewItems.userId + '/profilePicture.png');
-      getDownloadURL(storageRef).then((url) => {
-        photoUrl.value = url;
-      }).catch((error) => {
-        console.log(error);
-      });
+      getDownloadURL(storageRef)
+        .then((url) => {
+          photoUrl.value = url;
+        })
+        .catch((error) => {
+          console.log("File does not exist or could not fetch the download URL:", error);
+          photoUrl.value = '/images/frosk.png'; 
+        });
     })
     return {
       stars,
       FormatDate,
       CreateURL,
       photoUrl,
-      defaultPhotoUrl
+    
     };
     
   },
