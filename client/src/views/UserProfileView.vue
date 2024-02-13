@@ -4,7 +4,6 @@
       :userId="userId"
       :photoUrl="userProfile.photoUrl"
       :name="userProfile.name"
-      :email="userProfile.email"
       :isCurrentUser="userProfile.isCurrentUser"
       :reviews="userProfile.reviews"
       />

@@ -55,7 +55,6 @@ exports.handler = async (event) => {
             body: JSON.stringify({
                 userId: userRecord.uid,
                 name: userRecord.displayName,
-                email: userRecord.email,
                 photoUrl: photoUrl,
 
             }),

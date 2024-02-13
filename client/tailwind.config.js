@@ -1,7 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./index.html", "./src/**/*.{vue,js,html}",
+    "./index.html", 
+    "./src/**/*.{vue,js,html}",
     "./components/**/*.{vue,js, html}",
 ],
 
@@ -11,6 +12,7 @@ module.exports = {
       'md': '768px',
       'lg': '1024px',
       'xl': '1280px',
+      '2xl': '1536px',
     },
     extend: {
       colors: {
@@ -20,6 +22,9 @@ module.exports = {
         'lime': '#86efac',
         'sky': '#5eead4',
         'mamonblue': '#096191',
+      },
+      minWidth: {
+        'custom-600': '600px',
       },
     },
   },
