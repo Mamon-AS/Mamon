@@ -2,11 +2,10 @@
     <UserProfile 
         :photoUrl="photoUrl" 
         :name="name" 
-        :email="email" 
         :reviews="reviews" 
         :isCurrentUser="true" 
         :handleFileInputChange="handleFileInputChange" 
-        :updateUserProfile="updateUserProfile" 
+        :updateUserProfile="updateUserProfile"
         />
 
     <div class="container mx-auto p-4">
@@ -19,7 +18,7 @@
 
 <script>
 import { getAuth, updateProfile } from 'firebase/auth';
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL  } from "firebase/storage";
 import { ref as vueRef, onMounted } from 'vue';
 
 import sanity from '../client';
@@ -38,8 +37,8 @@ export default {
         const defaultPhotoUrl = '/images/frosk.png';
         const photoUrl = vueRef(auth.currentUser?.photoURL || defaultPhotoUrl);
         const name = vueRef(auth.currentUser?.displayName);
-        const email = vueRef(auth.currentUser?.email);
         const reviews = vueRef([]);
+
 
 
 
@@ -78,6 +77,7 @@ export default {
                 console.error('Error uploading file:', error);
             }
         };
+
         const updateUserProfile = async (photoURL) => {
         try {
             await updateProfile(auth.currentUser, { photoURL });
@@ -85,14 +85,13 @@ export default {
             photoUrl.value = photoURL;
         } catch (error) {
             console.error('Error updating profile picture:', error);
-        }
+            }
         };
 
         return {
             provider,
             photoUrl,
             name,
-            email,
             reviews,
             handleFileInputChange,
             updateUserProfile,

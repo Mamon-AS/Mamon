@@ -6,12 +6,6 @@
           <p class="text-white md:text-lg mb-4 flex-1">
               {{ reviewItems.description }}
           </p>
-          <p class="text-white md:text-lg mb-4 flex-1">
-             Skrevet av 
-             <router-link :to="{ name: 'UserProfile', params: { userId: reviewItems.userId }}">
-              <span style="text-decoration:underline;">{{ reviewItems.userName ? reviewItems.userName : "Anonym"}}</span>
-            </router-link>
-          </p>
           <div class="flex justify-between items-end">
               <div class="flex items-center">
                   <div class="stars-outer">
@@ -24,12 +18,24 @@
               </p> 
           </div>
       </div> 
-      <img v-if="photoUrl" :src="photoUrl" alt="profilbilde" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mt-4 self-end" />    </div>
+      <div class="flex items-center mt-4">
+          <img c v-if="photoUrl" :src="photoUrl" alt="Profile picture" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mr-2 cursor-pointer"
+            @click="navigateToProfile(reviewItems.userId)"
+             />
+          <p class="text-white md:text-lg">
+              <span style="text-decoration:underline; cursor:pointer;" @click="navigateToProfile(reviewItems.userId)">
+                  {{ reviewItems.userName ? reviewItems.userName : "Anonymous"}}
+              </span>
+          </p>
+      </div>
+    </div>
 </template>
 
 <script>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { getStorage, ref as firebaseRef, getDownloadURL } from 'firebase/storage'
+import { getAuth } from "firebase/auth";
 
 import {FormatDate, CreateURL} from '../utils'
 
@@ -42,6 +48,18 @@ export default {
   },
 
   setup(props) {
+    const router = useRouter();
+    const navigateToProfile = async (userId) => {
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+      const currentUserId = currentUser ? currentUser.uid : null;
+
+      if (userId === currentUserId) {
+        router.push({ name: 'user' });
+      } else {
+        router.push({ name: 'UserProfile', params: { userId } });
+      }
+    };
     const photoUrl = ref("");
     const storage = getStorage();
     const stars = computed(() => {
@@ -66,6 +84,7 @@ export default {
       FormatDate,
       CreateURL,
       photoUrl,
+      navigateToProfile
     
     };
     
