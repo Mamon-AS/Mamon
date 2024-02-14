@@ -13,7 +13,8 @@ const router = createRouter({
     { path: '/users/:userId', name: 'UserProfile',component: () => import('../views/UserProfileView.vue'), meta: { requiresAuth: true }, props: true},
     { path: '/sign-in', name: 'sign-in',component: () => import('../views/SignInView.vue') },
     { path: '/privacy', name: 'privacy',component: () => import('../views/PrivacyPolicyView.vue') },
-    { path: '/review', name: 'review',component: () => import('../views/ReviewView.vue'), meta: { requiresAuth: true } },   { path: '/user', name: 'user',component: () => import('../views/UserView.vue'), meta: { requiresAuth: true }, props: true},
+    { path: '/review', name: 'review',component: () => import('../views/ReviewView.vue'), meta: { requiresAuth: true } },   
+    { path: '/followers/:userId', name: 'followers', component: () => import('../views/FollowersView.vue'), meta: { requiresAuth: true }, props: true },
   ]
 })
 
@@ -31,7 +32,7 @@ const getCurrentUser = () => {
   };
 // navigation guard for å sjekke innlogga brukere 
 router.beforeEach(async(to, from, next) => {
-  if (to.name === 'user' || to.name === 'review' || to.name === 'UserProfile') { 
+  if (to.name === 'user' || to.name === 'review' || to.name === 'UserProfile' || to.name === 'followers') { 
     if (await getCurrentUser()) {
       next();
     } else {
