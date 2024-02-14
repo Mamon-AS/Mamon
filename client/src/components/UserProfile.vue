@@ -4,9 +4,11 @@
       <div class="text-center">
         <img v-if="photoUrl" :src="photoUrl" alt="profile" class="object-cover rounded-full  w-32 h-32 mx-auto mb-4 border-2 border-gray-300" />
         <h3 class="text-xl text-gray-900" v-if="name">{{ name }}</h3>
-        <p class="text-gray-400 items center">
-            {{ followerCount }}  følgere
-        </p>
+        <router-link :to="{ name: 'followers', params: { userId: internalUserId } }"> 
+          <p class="text-gray-400 items center cursor-pointer text-decoration-line: underline">
+            {{ followerCount }} følgere
+          </p>
+        </router-link>
         <div>
         <!-- Display Bio with Edit Icon -->
         <div class="flex items-center justify-center">
@@ -23,7 +25,7 @@
           <div class="fixed inset-0 transition-opacity" aria-hidden="true">
           <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>
-      
+  
       <!-- Modal content -->
       <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
             <div class="bg-white p-4">
@@ -72,7 +74,7 @@
 
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watchEffect } from "vue";
 import { getAuth } from 'firebase/auth';
 import { doc, setDoc , getDoc, getDocs, deleteDoc, collection, serverTimestamp } from 'firebase/firestore';
 
@@ -101,8 +103,17 @@ export default {
     const isFollowing = ref(false);
     const bio = ref('');
     const showEditModal = ref(false);
-    let internalUserId = ref(props.userId)
+    let internalUserId = ref('')
 
+    const initializeUserId = () => {
+      const authUserId = getAuth().currentUser?.uid;
+      internalUserId.value = props.userId || authUserId;
+    };
+
+    initializeUserId();
+    watchEffect(() => {
+      initializeUserId();
+    });
     // Methods && functions
     const toggleFollow = async () => {
       const currentUserId = getAuth().currentUser?.uid;
@@ -147,8 +158,7 @@ export default {
     };
     const saveBio = async (bioText) => {
       const userId = getAuth().currentUser.uid;
-      const bioDocRef = doc(db, 'users', userId); 
-            
+      const bioDocRef = doc(db, 'users', userId);    
       try {
         await setDoc(bioDocRef, { bio: bioText }, { merge: true });
         bio.value = bioText; 
@@ -158,13 +168,13 @@ export default {
         console.error("Error updating bio:", error);
       }
     };
-     const fetchBio = async (userId) => {
-     const bioDocRef = doc(db, 'users', userId.value);
+    const fetchBio = async (userId) => {
+    const bioDocRef = doc(db, 'users', userId.value);
 
-     try {
-        const docSnap = await getDoc(bioDocRef);
-        if (docSnap.exists()) {
-          bio.value = docSnap.data().bio;
+    try {
+      const docSnap = await getDoc(bioDocRef);
+      if (docSnap.exists()) {
+        bio.value = docSnap.data().bio;
         } else {
           console.log("No bio found.");
           bio.value = "Ingen bio funnet";
@@ -173,6 +183,8 @@ export default {
         console.error("Error fetching bio:", error);
       }
     };
+
+
 
 onMounted(async () => {
       const auth = getAuth();
@@ -189,7 +201,7 @@ onMounted(async () => {
       }
     });
 
-    return { followerCount, isFollowing, toggleFollow, showEditModal, bio, saveBio  };
+    return { followerCount, isFollowing, toggleFollow, showEditModal, bio, saveBio, internalUserId };
   },
 };
 </script>
