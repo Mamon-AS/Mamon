@@ -54,7 +54,7 @@
           <span style="text-decoration:underline; cursor:pointer;" @click="navigateToProfile(user.userId)">
             {{ user.displayName }}
             👉 
-          {{ user.bio }}
+          {{ user.bio ? user.bio : "Ingen bio 😿"}}
         </span>
         </li>
       </ul>
