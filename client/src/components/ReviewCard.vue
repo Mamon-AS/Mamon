@@ -2,7 +2,7 @@
   <div class="darkblue rounded-lg p-4 mb-4 flex flex-col justify-between"> 
       <div class="content-wrapper">
           <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
-          <h3 class="text-lg md:text-2xl font-bold mb-4"> {{ (reviewItems.reviewedItem > 25 ? reviewItems.reviewedItem.slice(0,25) + '...' : reviewItems.reviewedItem) }}</h3>
+          <h3 class="text-lg md:text-2xl font-bold mb-4"> {{ (reviewItems.reviewedItem.length > 25 ? reviewItems.reviewedItem.slice(0,25) + '...' : reviewItems.reviewedItem) }}</h3>
           <p class="text-white md:text-lg mb-4 flex-1">
               {{ reviewItems.description }}
           </p>
