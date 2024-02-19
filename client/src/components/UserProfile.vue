@@ -56,14 +56,14 @@
         <div class="mt-4">
           <form v-if="isCurrentUser" method="post" enctype="multipart/form-data" class="upload-form mt-7">
             <input id="file" name="file" type="file" class="file-input hidden" @change="handleFileInputChange" />
-            <label for="file" class="file-label inline-block darkblue hover:bg-blue-700
+            <label for="file" class="file-label inline-block bg-mamonblue hover:bg-blue-700
               text-white font-bold py-2 px-4 rounded cursor-pointer">
                 <i class="fa-solid fa-upload"></i> Endre Bilde
             </label>
         </form>
           <button v-if="!isCurrentUser" @click="toggleFollow" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4
           focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5  lg:mb-7
-              text-center mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">   {{ isFollowing ? 'Følger' : 'Følg' }}
+              text-center mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"> {{ isFollowing ? 'Følger' : 'Følg' }}
           </button>    
         </div>
       </div>
@@ -104,7 +104,7 @@ export default {
     const bio = ref('');
     const showEditModal = ref(false);
     let internalUserId = ref('')
-
+    console.log(props.isCurrentUser);
     const initializeUserId = () => {
       const authUserId = getAuth().currentUser?.uid;
       internalUserId.value = props.userId || authUserId;
