@@ -28,24 +28,42 @@
               </span>
           </p>
       </div>
-        <div class="flex justify-center mt-4">
-          <span v-for="emoji in emojis" :key="emoji.value"
-            class="emoji text-2xl cursor-pointer mx-1"
-            :class="{ 'reacted': isReacted(emoji) }"
-            :style="{ opacity: emojiOpacity(emoji) }"
-            @click="sendReaction(emoji, reviewItems._id)">
+      
+    <!-- Primary Reaction Button -->
+    <div class="flex justify-start mt-4 relative">
+      <template v-if="uniqueEmojis.length > 0">
+        <span v-for="emoji in uniqueEmojis" :key="emoji.value" 
+              :class="['emoji', 'cursor-pointer', { 'userReactedEmoji ': isUserReactedEmoji(emoji.value) }]" 
+              @click="openModal">
           {{ emoji.value }}
+          
         </span>
-
+      </template>
+      <template v-else>
+        <span class="emoji cursor-pointer text-xl" @click="openModal">👍</span>
+      </template>
+    
+  
+        
+      <!-- Reaction Modal, shown conditionally -->
+      <div v-if="showReactionModal" class="reaction-modal absolute bottom-full mb-2 bg-white rounded-lg p-4 shadow-lg transform -translate-x-1/2 left-1/2">
+        <span class="absolute bottom-6 closeRightCross p-4 cursor-pointer shadow-xs" @click="showReactionModal = false"><i class="fa-regular fa-x"></i></span>
+        <div class="flex justify-around">
+          <span v-for="emoji in emojis" :key="emoji.value"
+                class="emoji text-2xl cursor-pointer mx-1"
+                @click="sendReaction(emoji, reviewItems._id); showReactionModal = false;">
+            {{ emoji.value }}
+          </span>
+        </div>
       </div>
-      <p class="flex justify-center text-white text-sm cursor-pointer text-decoration-line: underline" @click="openListOfUsersModal(reviewItems._id)">
-        <template v-if="reactionsCount === 1">
-          {{ reactionsCount }} reaksjon
-        </template>
-        <template v-else-if="reactionsCount > 1">
-          {{ reactionsCount }} reaksjoner
+      
+      
+      <p class=" text-white text-xl cursor-pointer text-decoration-line: underline ml-2"  @click="openListOfUsersModal(reviewItems._id)">
+        <template v-if="reactionsCount > 0">
+          {{ reactionsCount }} 
         </template>
       </p>
+    </div>
 
       <div v-if="showListOfUsersModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" @click="showListOfUsersModal = false">
         <div class="modal-content bg-white rounded-lg p-4 max-w-md mx-auto" @click.stop="true"> 
@@ -57,7 +75,7 @@
 </template>
 
 <script>
-import { watch, ref, computed, onMounted } from 'vue'
+import { watch, ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { getStorage, ref as firebaseRef, getDownloadURL } from 'firebase/storage'
 import { getAuth } from "firebase/auth";
@@ -94,6 +112,22 @@ export default {
       { value: '👍', clicked: false },
       { value: '😎', clicked: false }
     ]);
+    const showReactionModal = ref(false); 
+    let ignoreFirstClick = false;
+
+    // Computed property to get unique emojis
+    const uniqueEmojis = computed(() => {
+      const allReactions = [...Object.values(reactions.value), userReaction.value].filter(Boolean);
+      const allEmojiValues = allReactions.map(reaction => reaction.emoji);
+      const uniqueEmojiValues = Array.from(new Set(allEmojiValues));
+
+      return emojis.value.filter(emoji => uniqueEmojiValues.includes(emoji.value));
+    });
+  
+    // Method to check if emoji is the one user reacted with
+    const isUserReactedEmoji = (emojiValue) => {
+      return userReaction.value?.emoji === emojiValue;
+    };
 
 
     watch(currentUser, (newUser) => {
@@ -109,20 +143,6 @@ export default {
       currentUser.value = user;
 
     });
-
-
-    const isReacted = computed(() => {
-      return (emoji) => emoji.value === userReaction.value?.emoji;
-    });
-
-    const emojiOpacity = computed(() => {
-      return (emoji) => {
-      // Check if this emoji has been reacted to by any user
-        const hasReaction = Object.values(reactions.value).some(reaction => reaction.emoji === emoji.value);
-        return hasReaction ? 1 : 0.5; // Full opacity if reacted to, otherwise reduced
-      };
-    });
-
 
     const navigateToProfile = async (userId) => {
       const currentUserId = currentUser.value ? currentUser.value.uid : null;
@@ -197,7 +217,7 @@ export default {
       console.error("Error fetching user reactions:", error);
     }
   }
-
+  
   const openListOfUsersModal = async () => {
         showListOfUsersModal.value = true;
       };
@@ -211,6 +231,34 @@ export default {
     }));
   });
 
+  const openModal = () => {
+    console.log("Opening modal");
+    ignoreFirstClick = true; 
+    showReactionModal.value = true;
+    console.log(showReactionModal.value);
+
+    nextTick(() => {
+      setTimeout(() => {
+        ignoreFirstClick = false;
+      }, 0);
+    });
+  };
+
+  const closeModal = () => {
+      showReactionModal.value = false;
+    };
+
+  const handleClickOutside = (event) => {
+    if (ignoreFirstClick) {
+      ignoreFirstClick = false;
+      return;
+    }
+    const modal = document.querySelector('.reaction-modal');
+    if (modal && !modal.contains(event.target)) {
+      closeModal();
+    }
+  };
+ 
   onMounted(() => {
     const storageRef = firebaseRef(storage, 'users/' + props.reviewItems.userId + '/profilePicture.png');
     getDownloadURL(storageRef)
@@ -221,8 +269,13 @@ export default {
         console.log("File does not exist or could not fetch the download URL:", error);
         photoUrl.value = '/images/frosk.png'; 
       });
+      window.addEventListener('click', handleClickOutside);
   })
 
+  onUnmounted(() => {
+      window.removeEventListener('click', handleClickOutside);
+    });
+  
   return {
     stars,
     FormatDate,
@@ -233,12 +286,15 @@ export default {
     sendReaction,
     reactionsCount,
     userReaction,
-    isReacted,
-    emojiOpacity,
     showListOfUsersModal,
     openListOfUsersModal,
     reactedUsers,
-    usersData
+    usersData,
+    showReactionModal,
+    closeModal,
+    openModal,
+    uniqueEmojis,
+    isUserReactedEmoji
   };
     
   },
@@ -291,12 +347,20 @@ width: 100%;
 }
 
 .reacted {
-  transform: translateY(-0.5rem) scale(1.5); /* Highlight the user's reaction */
+  transform: translateY(-0.5rem) scale(1.5); 
 }
 
+.userReactedEmoji {
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center; 
+  transform: translateY(-0.5rem) scale(1.5);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, color 0.3s ease-in-out;
+  color: #4ade80; /* Bright color for emphasis */
+  box-shadow: 0 0 8px #4ade80; /* Glowing effect */
+  border-radius: 50%; /* Circular effect for emoji */
+}
 
-
-/* Optional: Adjust the keyframes for a more pronounced effect when clicked */
 @keyframes click-animation {
   0%, 100% {
     transform: translateY(0) scale(1); 
@@ -309,5 +373,7 @@ width: 100%;
   }
 }
 
-
+.closeRightCross {
+  right: 12.5rem;
+}
 </style>
