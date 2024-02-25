@@ -13,7 +13,7 @@ const router = createRouter({
     { path: '/users/:userId', name: 'UserProfile',component: () => import('../views/UserProfileView.vue'), meta: { requiresAuth: true }, props: true},
     { path: '/sign-in', name: 'sign-in',component: () => import('../views/SignInView.vue') },
     { path: '/privacy', name: 'privacy',component: () => import('../views/PrivacyPolicyView.vue') },
-    { path: '/review', name: 'review',component: () => import('../views/ReviewView.vue'), meta: { requiresAuth: true } },   
+    { path: '/review', name: 'review',component: () => import('../views/PostReviewView.vue'), meta: { requiresAuth: true } },   
     { path: '/followers/:userId', name: 'followers', component: () => import('../views/FollowersView.vue'), meta: { requiresAuth: true }, props: true },
   ]
 })
@@ -47,7 +47,7 @@ router.beforeEach(async(to, from, next) => {
 router.afterEach((to, from) => {
   if (from.name) {
     document.documentElement.scrollTop = 0
-    store.dispatch('CloseMenu')
+    store.dispatch('utils/CloseMenu')
   }
 });
 

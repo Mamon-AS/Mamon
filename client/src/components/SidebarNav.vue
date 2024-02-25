@@ -12,14 +12,6 @@
                 <span class="material-icons mr-2">home</span>
                     Hjem
                 </MenuItem>
-                <!-- <MenuItem to="/card">
-                    <span class="material-icons mr-2 ">domain</span>
-                    Tilbud
-                </MenuItem>
-                <MenuItem to="/authors">
-                    <span class="material-icons mr-2 ">people</span>
-                    Bedrifter
-                </MenuItem> -->
                 <MenuItem v-if="isLoggedIn" to="/review">
                     <span class="material-icons mr-2 ">child_care</span>
                     Anmeldelser
@@ -53,7 +45,7 @@ export default {
       const store = useStore()
     
       return {
-        menu_is_active: computed(() => store.state.menu_is_active),
+        menu_is_active: computed(() => store.state.utils.menu_is_active),
         
       }
   }

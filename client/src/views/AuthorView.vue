@@ -25,7 +25,7 @@ export default {
         const authors = computed(() => store.getters.authors)
 
         onMounted(() => {
-            store.dispatch("FetchAuthors")
+            store.dispatch("reviews/FetchAuthors")
         })
 
         return {

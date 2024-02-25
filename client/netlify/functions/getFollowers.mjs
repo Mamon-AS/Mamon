@@ -29,7 +29,7 @@ exports.handler = async (event) => {
             };
         }
 
-        // Fetch followers. Problem:
+        // Fetch followers:
         // 1. The profile picture is in firebase storage
         // 2. Followers and following are in firestore
         // 3. Name is fetched from the followers collection document and not from the user's profile
@@ -61,7 +61,7 @@ exports.handler = async (event) => {
             }
 
             return {
-                followerId: followerId,
+                userId: followerId,
                 name: followerData.name, // Using name from the followers collection document
                 bio: followerProfile ? followerProfile.bio : '', // Fetch bio from the user's profile, default to empty if not found
                 photoUrl: photoUrl,
