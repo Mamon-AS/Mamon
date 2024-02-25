@@ -3,7 +3,7 @@
       <div v-if="users && users.length">
       <p class="text-center text-gray-600 mt-4">{{ users.length }} brukere <i class="fa-solid fa-heart fa-beat" style="color: #ff0000;"></i></p>
         <div v-for="user in users" :key="user.userId" class='w-full max-w-lg mx-auto bg-white rounded-xl shadow-xl flex flex-col py-4 mb-4'>
-          <div @click="navigateToProfile(user.userId)" class="flex flex-col items-center justify-between cursor-pointer  p-4 duration-300 sm:flex-row sm:py-4 sm:px-8 hover:bg-[#f6f8f9]">
+          <div @click="navigate(user.userId)" class="flex flex-col items-center justify-between cursor-pointer  p-4 duration-300 sm:flex-row sm:py-4 sm:px-8 hover:bg-[#f6f8f9]">
             <div class="flex items-center text-center flex-col sm:flex-row sm:text-left">
               <div class="avatar-content mb-2.5 sm:mb-0 sm:mr-2.5 relative"> 
                 <img :src="user.photoUrl" alt="Profile picture" class="w-12 h-12 rounded-full"> 
@@ -26,35 +26,18 @@
   </template>
   
   
-  <script>
+  <script setup>
   import { useRouter } from 'vue-router'
-  import { getAuth } from 'firebase/auth';
+  import { defineProps } from 'vue';
+  import { navigateToProfile } from '../utils/';
   
-  export default {
-  props: {
+  const props = defineProps({
     users: Array,
-  },
-  setup() {
-      const router = useRouter();
-      const navigateToProfile = async (userId) => {
-        const auth = getAuth();
-        const currentUser = auth.currentUser;
-        const currentUserId = currentUser ? currentUser.uid : null;
-  
-        if (userId === currentUserId) {
-          router.push({ name: 'user' });
-        } else {
-          router.push({ name: 'UserProfile', params: { userId } });
-        }
-      };
-  
+  });
+  const router = useRouter();
+  console.log(props.users);
+  const navigate = (userId) => navigateToProfile(router, userId);
 
   
-      return {
-        navigateToProfile,
-        
-      };
-    },
-  };
   </script>
   

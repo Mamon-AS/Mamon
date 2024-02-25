@@ -51,7 +51,7 @@
     <div v-show="searchResults.length > 0" class="absolute top-full left-0 mt-12 w-full bg-white shadow-lg z-50">
       <ul>
         <li v-for="user in searchResults" :key="user.userId" class="p-2 hover:bg-gray-100">
-          <span style="text-decoration:underline; cursor:pointer;" @click="navigateToProfile(user.userId)">
+          <span style="text-decoration:underline; cursor:pointer;" @click="navigate(user.userId)">
             {{ user.displayName }}
             👉 
           {{ user.bio ? user.bio : "Ingen bio 😿"}}
@@ -85,6 +85,10 @@ import { useStore } from 'vuex';
 import { getAuth, signOut } from "firebase/auth";
 import router from '../router';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
+
+import { navigateToProfile } from '../utils/';
+
 
 
 export default {
@@ -96,8 +100,9 @@ export default {
     const searchField = ref(null);
     const showSearchField = ref(false);
     const store = useStore();
+    const vueRouter = useRouter();
 
-    const ToggleMenu = () => store.dispatch('ToggleMenu');
+    const ToggleMenu = () => store.dispatch('utils/ToggleMenu');
 
     const handleSignOut = () => {
       signOut(getAuth()).then(() => {
@@ -149,18 +154,8 @@ export default {
           searchResults.value = [];
         }
     }
-
-    const navigateToProfile = async (userId) => {
-      const auth = getAuth();
-      const currentUser = auth.currentUser;
-      const currentUserId = currentUser ? currentUser.uid : null;
-
-      if (userId === currentUserId) {
-        router.push({ name: 'user' });
-      } else {
-        router.push({ name: 'UserProfile', params: { userId } });
-      }
-    };
+    const navigate = (userId) => navigateToProfile(vueRouter, userId);
+    
 
     watch(searchQuery, (newValue, oldValue) => {
       if (newValue.trim() !== '') {
@@ -180,7 +175,7 @@ export default {
     });
     
     return {
-      menu_is_active: computed(() => store.state.menu_is_active),
+      menu_is_active: computed(() => store.state.utils.menu_is_active),
       ToggleMenu,
       handleSignOut,
       toggleSearchField,
@@ -188,7 +183,7 @@ export default {
       searchField, 
       searchQuery,
       searchResults,
-      navigateToProfile
+      navigate
     };
   },
 };

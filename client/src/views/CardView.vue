@@ -8,10 +8,10 @@
       </div>
 
         <button 
-          v-if="$store.state.total_marketing > posts.length"
-          @click="$store.dispatch('LoadMoreMarketing', 2)"
+          v-if="$store.state.reviews.total_marketing > posts.length"
+          @click="$store.dispatch('reviews/LoadMoreMarketing', 2)"
           class="btn mt-8">
-          Last mer ({{ $store.state.total_marketing - posts.length }})
+          Last mer ({{ $store.state.reviews.total_marketing - posts.length }})
         </button>
     </section>
   </main>
@@ -37,7 +37,7 @@ export default {
     onMounted(() => {
       // Hvor mange marketing posts skal vi hente?  
 
-      store.dispatch("FetchMarketing", 2)
+      store.dispatch("reviews/FetchMarketing", 2)
       
    
       // Listen for changes in the Sanity studio and subscribe to it
@@ -50,7 +50,7 @@ export default {
           case 'update':
             console.log("Marketing posts updated", update);
             sanity.getDocument(update.result.author._ref).then(author => {
-              store.dispatch('UpdateMarketing', {
+              store.dispatch('reviews/UpdateMarketing', {
                 ...update.result, author
               })
             })
@@ -58,7 +58,7 @@ export default {
           case 'appear':
             console.log("Marketing posts appeared", update);
             sanity.getDocument(update.result.author._ref).then(author => {
-              store.dispatch('AddNewMarketing', {
+              store.dispatch('reviews/AddNewMarketing', {
                 ...update.result, author
               })
             })
@@ -66,7 +66,7 @@ export default {
             break;
           case 'disappear':
             console.log("Marketing posts disappeared", update);
-            store.dispatch("RemoveMarketing", update.documentId)
+            store.dispatch("reviews/RemoveMarketing", update.documentId)
             break;
         }
       })

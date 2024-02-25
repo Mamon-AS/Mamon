@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-mamonblue rounded-lg p-4 mb-4 flex flex-col justify-between"> 
+  <div class="bg-mamonblue rounded-lg p-4 mb-2 flex flex-col justify-between border-solid border-2 border-black"> 
       <div class="content-wrapper">
           <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
           <h3 class="text-lg md:text-2xl font-bold mb-4"> {{ (reviewItems.reviewedItem.length > 25 ? reviewItems.reviewedItem.slice(0,25) + '...' : reviewItems.reviewedItem) }}</h3>
@@ -20,30 +20,59 @@
       </div> 
       <div class="flex items-center mt-4">
           <img c v-if="photoUrl" :src="photoUrl" alt="Profile picture" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mr-2 cursor-pointer"
-            @click="navigateToProfile(reviewItems.userId)"
+            @click="navigate(reviewItems.userId)"
              />
           <p class="text-white md:text-lg">
-              <span style="text-decoration:underline; cursor:pointer;" @click="navigateToProfile(reviewItems.userId)">
-                  {{ reviewItems.userName ? reviewItems.userName : "Anonymous"}}
+              <span style="text-decoration:underline; cursor:pointer;" @click="navigate(reviewItems.userId)">
+                  {{ reviewItems.userName ? reviewItems.userName : "Anonym"}}
               </span>
           </p>
       </div>
       
-    <!-- Primary Reaction Button -->
-    <div class="flex justify-start mt-4 relative">
+        <!-- Footer with reactions and comment button -->
+    <div class="footer flex items-center justify-between mt-4 px-4 py-2 border-t border-gray-800">
+      <!-- Reactions -->
+
+        
+    </div>
+  <!-- Comment Section -->
+    <div v-if="reviewItems.comments && reviewItems.comments.length > 0" class="comments-container">
+        <div class="bottom-full bg-white rounded-lg mt-4" v-for="comment in reviewItems.comments" :key="comment.commentId">
+          <CommentItem
+            :reviewId="reviewItems._id"
+            :userId="comment.userId"
+            :photoUrl="comment.photoUrl"
+            :displayName="comment.displayName"
+            :text="comment.text"
+            :createdAt="comment.createdAt"
+            :replies="comment.replies"
+            :commentId="comment.commentId"
+          />
+        </div>
+      </div>
+      <div v-else class="text-center p-4 text-white">
+        <p>Bli den første til å kommentere</p>
+      </div>
+       <!-- Comment Section --> 
+    <div class="rounded-lg mt-2 shadow-sm hover:shadow-lg transition-shadow duration-200 ease-in-out p-4">
+      <CommentForm 
+        :reviewId="reviewItems._id"
+        :reviewerUserId="reviewItems.userId"
+        :reviewerPhotoUrl="photoUrl" 
+      />
+    </div>
+    <div class="flex justify-end mt-4 relative emojiesNextToComments mr-2">
       <template v-if="uniqueEmojis.length > 0">
         <span v-for="emoji in uniqueEmojis" :key="emoji.value" 
               :class="['emoji', 'cursor-pointer', { 'userReactedEmoji ': isUserReactedEmoji(emoji.value) }]" 
-              @click="openModal">
-          {{ emoji.value }}
+              @click="openModal('listOfReactions')">
+          {{ emoji.value }} 
           
         </span>
       </template>
       <template v-else>
-        <span class="emoji cursor-pointer text-xl" @click="openModal">👍</span>
+        <span class="emoji cursor-pointer text-xl text-white" @click="openModal('listOfReactions')">👍 Liker</span>
       </template>
-    
-  
         
       <!-- Reaction Modal, shown conditionally -->
       <div v-if="showReactionModal" class="reaction-modal absolute bottom-full mb-2 bg-white rounded-lg p-4 shadow-lg transform -translate-x-1/2 left-1/2">
@@ -56,13 +85,14 @@
           </span>
         </div>
       </div>
+
       
-      
-      <p class=" text-white text-xl cursor-pointer text-decoration-line: underline ml-2"  @click="openListOfUsersModal(reviewItems._id)">
+      <p class=" text-white text-xl cursor-pointer text-decoration-line: underline ml-2"  @click="openModal('listOfUsers')">
         <template v-if="reactionsCount > 0">
           {{ reactionsCount }} 
         </template>
       </p>
+      
     </div>
 
       <div v-if="showListOfUsersModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" @click="showListOfUsersModal = false">
@@ -71,18 +101,20 @@
           <button class="mt-4 py-2 px-4 bg-mamonblue text-white rounded hover:bg-red-500" @click="showListOfUsersModal = false">Lukk</button>
         </div>
       </div>
-    </div>
+  </div>
 </template>
 
 <script>
-import { watch, ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { watch, ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getStorage, ref as firebaseRef, getDownloadURL } from 'firebase/storage'
 import { getAuth } from "firebase/auth";
 import axios from 'axios';
 
-import {FormatDate, CreateURL} from '../utils'
+import {FormatDate, CreateURL, navigateToProfile} from '../utils'
 import ListOfUsers from './ListOfUsers.vue';
+import CommentForm from './Comments/CommentForm.vue';
+import CommentItem from './Comments/CommentItem.vue';
 
 export default {
   props: {
@@ -92,15 +124,17 @@ export default {
     }
   },
   components: {
-    ListOfUsers
-  },
+    ListOfUsers,
+    CommentForm,
+    CommentItem,
+},
 
   setup(props) {
     const showListOfUsersModal = ref(false);
     const reactedUsers = ref([]);
     const currentUser = ref(null);
     const userReaction = ref({});
-    const reactionsCount = ref({}); 
+    const reactionsCount = ref(0); 
     const reactions = ref({})
     const photoUrl = ref("");
     const storage = getStorage();
@@ -114,6 +148,7 @@ export default {
     ]);
     const showReactionModal = ref(false); 
     let ignoreFirstClick = false;
+    
 
     // Computed property to get unique emojis
     const uniqueEmojis = computed(() => {
@@ -144,14 +179,7 @@ export default {
 
     });
 
-    const navigateToProfile = async (userId) => {
-      const currentUserId = currentUser.value ? currentUser.value.uid : null;
-      if (userId === currentUserId) {
-        router.push({ name: 'user' });
-      } else {
-        router.push({ name: 'UserProfile', params: { userId } });
-      }
-    };
+    const navigate = (userId) => navigateToProfile(router, userId);
 
     const stars = computed(() => {
         const starTotal = 5;
@@ -205,9 +233,11 @@ export default {
 
 
       if (response.status === 200 && response.data.reactions) {
+        console.log("Reactions fetched successfully:", response.data);
         reactions.value = response.data.reactions;
         userReaction.value = response.data.userReaction;   
         reactionsCount.value = response.data.totalReactions;
+        console.log(reactionsCount.value);
         reactedUsers.value = response.data
 
       } else {
@@ -216,11 +246,7 @@ export default {
     } catch (error) {
       console.error("Error fetching user reactions:", error);
     }
-  }
-  
-  const openListOfUsersModal = async () => {
-        showListOfUsersModal.value = true;
-      };
+  };
 
   const usersData = computed(() => {
     return Object.values(reactedUsers.value.reactions).map(reaction => ({
@@ -231,34 +257,46 @@ export default {
     }));
   });
 
-  const openModal = () => {
-    console.log("Opening modal");
-    ignoreFirstClick = true; 
-    showReactionModal.value = true;
-    console.log(showReactionModal.value);
+  const openModal = (modalName) => {
+    ignoreFirstClick = true;
+    if (modalName === 'listOfReactions') {
+      showReactionModal.value = true;
+    }
+    else if (modalName === 'listOfUsers') {
+      showListOfUsersModal.value = true;
+    }
 
-    nextTick(() => {
-      setTimeout(() => {
-        ignoreFirstClick = false;
-      }, 0);
-    });
   };
 
-  const closeModal = () => {
+  const closeModal = (modalName) => {
+    if (modalName === 'listOfReactions') {
       showReactionModal.value = false;
-    };
+    }
+    else if (modalName === 'listOfUsers') {
+      showListOfUsersModal.value = false;
+    }
+  };
+
 
   const handleClickOutside = (event) => {
     if (ignoreFirstClick) {
       ignoreFirstClick = false;
       return;
     }
-    const modal = document.querySelector('.reaction-modal');
-    if (modal && !modal.contains(event.target)) {
-      closeModal();
+
+
+    const reactionModal = document.querySelector('.reaction-modal');
+    if (showReactionModal.value && reactionModal && !reactionModal.contains(event.target)) {
+      closeModal('listOfReactions');
+    }
+
+    const usersModal = document.querySelector('.modal-content'); 
+    if (showListOfUsersModal.value && usersModal && !usersModal.contains(event.target)) {
+      closeModal('listOfUsers');
     }
   };
- 
+  
+
   onMounted(() => {
     const storageRef = firebaseRef(storage, 'users/' + props.reviewItems.userId + '/profilePicture.png');
     getDownloadURL(storageRef)
@@ -275,26 +313,24 @@ export default {
   onUnmounted(() => {
       window.removeEventListener('click', handleClickOutside);
     });
-  
+    console.log("Review items", props.reviewItems);
   return {
     stars,
     FormatDate,
     CreateURL,
     photoUrl,
-    navigateToProfile,
+    navigate,
     emojis,
     sendReaction,
     reactionsCount,
     userReaction,
     showListOfUsersModal,
-    openListOfUsersModal,
-    reactedUsers,
     usersData,
     showReactionModal,
     closeModal,
     openModal,
     uniqueEmojis,
-    isUserReactedEmoji
+    isUserReactedEmoji,
   };
     
   },
@@ -356,9 +392,9 @@ width: 100%;
   justify-content: center; 
   transform: translateY(-0.5rem) scale(1.5);
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, color 0.3s ease-in-out;
-  color: #4ade80; /* Bright color for emphasis */
-  box-shadow: 0 0 8px #4ade80; /* Glowing effect */
-  border-radius: 50%; /* Circular effect for emoji */
+  color: #4ade80; 
+  box-shadow: 0 0 5px #4ade80; 
+  border-radius: 50%; 
 }
 
 @keyframes click-animation {
@@ -375,5 +411,8 @@ width: 100%;
 
 .closeRightCross {
   right: 12.5rem;
+}
+.emojiesNextToComments {
+  bottom:6.1rem
 }
 </style>
