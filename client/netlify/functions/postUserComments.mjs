@@ -1,6 +1,7 @@
 import admin from 'firebase-admin';
 import { Buffer } from 'buffer';
 import { v4 as uuidv4 } from 'uuid';
+import { log } from 'console';
 
 const base64 = process.env.VITE_FIREBASE_SDK;
 const decodedString = Buffer.from(base64, 'base64').toString('utf-8');
@@ -20,8 +21,6 @@ const db = admin.firestore();
 exports.handler = async (event) => {
     try {
         const { action, commentId, text, reviewId, userId, displayName, parentCommentId } = JSON.parse(event.body);
-        console.log(action, commentId, text, reviewId, userId, displayName, parentCommentId);
-
         if (!action || !['add', 'delete', 'reply'].includes(action)) {
             return {
                 statusCode: 400,
@@ -33,7 +32,7 @@ exports.handler = async (event) => {
             };
         }
 
-        if (!text || !reviewId || !userId || !displayName) {
+        if ((action === 'add' || action === 'reply') && (!text || !reviewId || !userId || !displayName)) {
             return {
                 statusCode: 400,
                 body: JSON.stringify({ error: 'Missing required fields' }),
@@ -42,10 +41,20 @@ exports.handler = async (event) => {
                     'Access-Control-Allow-Origin': '*',
                 },
             };
-        }
+        } else if (action === 'delete' && (!commentId || !reviewId || !userId)) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ error: 'Missing required fields' }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
+            };
+
+        } 
 
         // Limit comment length to 280 characters
-        if (text.length > 280) {
+        if ( (action === 'add' || action === 'reply') && text.length > 280) {
             return {
                 statusCode: 400,
                 body: JSON.stringify({ error: 'Comment exceeds 280 characters' }),
@@ -71,13 +80,28 @@ exports.handler = async (event) => {
                 },
             };
         }
-
         let { comments = [], totalComments = 0 } = reviewDoc.data();
         comments = Array.isArray(comments) ? comments : [];
-
         if (action === 'delete') {
-            comments = comments.filter(comment => comment.commentId !== commentId || comment.userId !== userId);
-            totalComments = Math.max(0, totalComments - 1);
+            comments = comments.map(comment => {
+                // If the comment itself is the target
+                if (comment.commentId === commentId && comment.userId === userId) {
+                    totalComments--; 
+                    return null; 
+                }
+                
+                // targeting a reply within the comment
+                if (comment.replies && Array.isArray(comment.replies)) {
+                    const initialLength = comment.replies.length;   
+                    comment.replies = comment.replies.filter(reply => reply.commentId !== commentId || reply.userId !== userId);
+                    // If the length changed, a reply was deleted
+                    if (comment.replies.length < initialLength) {
+                        totalComments--; // Decrement total comments count
+                    }
+                }
+            
+                return comment; 
+            }).filter(comment => comment !== null); 
         } else {
             if (parentCommentId) {
                 const parentCommentIndex = comments.findIndex(comment => comment.commentId === parentCommentId);

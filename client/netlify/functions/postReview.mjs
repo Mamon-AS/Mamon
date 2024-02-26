@@ -54,7 +54,7 @@ async function uploadImageToSanity(imageUrl) {
           
         const createdReview = await sanity.create({
             _type: 'review',
-            reviewedItem: reviewedItem,
+            reviewedItem: fetchedTitle,
             rating: rating,
             userId: userId,
             userName: userName,
@@ -67,7 +67,7 @@ async function uploadImageToSanity(imageUrl) {
             sanityReviewId: sanityReviewId,
             userId: userId,
             userName: userName,
-            reviewedTitle: reviewedItem,
+            reviewedTitle: fetchedTitle,
             rating:rating,
             description: reviewedItemDescription
           });

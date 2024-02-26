@@ -5,7 +5,6 @@ import { Buffer } from 'buffer'
 exports.handler = async (event) => {
     try {
         const { url } = JSON.parse(event.body);
-        console.log("Fetching data from url: " + url + " ...");
         const response = await axios.get(url);
         const body = response.data;
         const $ = cheerio.load(body);

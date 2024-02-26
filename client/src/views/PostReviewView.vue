@@ -131,8 +131,6 @@ export default {
       loading.value = false;
       if (result.success) {
         review.submissionStatus = 'success';
-        console.log("Review submitted!");
-        console.log(review.submissionStatus);
          resetReviewForm(); 
       } else {
         review.submissionStatus = 'error';
