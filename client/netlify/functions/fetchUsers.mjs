@@ -35,8 +35,7 @@ exports.handler = async (event) => {
       const users = snapshot.docs.map(doc => ({
         userId: doc.id, 
         ...doc.data() 
-    }));
-    console.log(users);
+         }));
       return {
         statusCode: 200,
         body: JSON.stringify({ results: users }),

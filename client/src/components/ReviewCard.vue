@@ -207,7 +207,7 @@ export default {
         if (response.status >= 200 && response.status < 300) {
           // Successfully posted the reaction, update the local state
           userReaction.value = { emoji: selectedEmoji.value, displayName: currentUser.value.displayName };
-          console.log("Reaction updated successfully.");
+
           await getReactions(reviewId);
         } else {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -233,11 +233,9 @@ export default {
 
 
       if (response.status === 200 && response.data.reactions) {
-        console.log("Reactions fetched successfully:", response.data);
         reactions.value = response.data.reactions;
         userReaction.value = response.data.userReaction;   
         reactionsCount.value = response.data.totalReactions;
-        console.log(reactionsCount.value);
         reactedUsers.value = response.data
 
       } else {
@@ -313,7 +311,7 @@ export default {
   onUnmounted(() => {
       window.removeEventListener('click', handleClickOutside);
     });
-    console.log("Review items", props.reviewItems);
+
   return {
     stars,
     FormatDate,

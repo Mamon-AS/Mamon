@@ -33,6 +33,12 @@ export default {
         review.comments.push(comment);
       }
     },
+    DELETE_COMMENT(state, { reviewId, commentId }) { 
+      const review = state.reviewItems.find((r) => r._id === reviewId);
+      if (review) {
+        review.comments = review.comments.filter((c) => c._id !== commentId);
+      }
+    },
     SET_COMMENTS(state, { reviewId, comments }) {
       const review = state.reviewItems.find((r) => r._id === reviewId);
       if (review) {
@@ -63,12 +69,10 @@ export default {
   },
 
     async FetchReviews( {commit}, limit = null  ) {
-      console.log("fetching reviews");
       const query = `*[_type == "review"] | order(_createdAt desc) ${limit ? `[0...${limit}]` : ''}`
       const count_query = 'count(*[_type == "review"])'
       try {
         const reviewItems = await sanity.fetch(query);
-        console.log("reviewItems", reviewItems);
          let enrichedReviewItems = [];
           // Fetch comments for each review asynchronously
          for (const review of reviewItems) {
@@ -101,8 +105,6 @@ export default {
     },
 
     async LoadReviews ({ commit, state }, limit = 10)  {
-      console.log("loading reviews");
-      console.log(limit);
 			const query = `*[_type == "review"] | order(_createdAt desc) [${state.reviewItems.length}...${state.reviewItems.length + limit}]`
       try {
         const reviewItems = await sanity.fetch(query);
@@ -126,8 +128,6 @@ export default {
            }
            enrichedReviewItems.push(review);
          }
-         console.log("new enrichedReviewItems", enrichedReviewItems);
-         console.log(enrichedReviewItems);
          commit('SET_REVIEWS', [...state.reviewItems, ...enrichedReviewItems]);
       } catch (error) {
         console.error("Error fetching reviews:", error);
@@ -166,18 +166,35 @@ export default {
         
           if(action === 'add' || action === 'reply') {
               commit('ADD_COMMENT', response.data);
-          } else if(action === 'delete') {
-              // Handle deletion locally if necessary, e.g., remove the comment from state
-          }
-
+          } 
           dispatch('fetchComments', { reviewId });
+        }
+    } catch (error) {
+        console.error("Error posting comment:", error);
+     }
+    },
+    async deleteComment({ dispatch, commit }, { action = 'delete', reviewId, commentId, userId }) {
+      try {
+        const payload = {
+            action,
+            reviewId,
+            commentId,
+            userId
+        };
+
+        const response = await axios.post(`/.netlify/functions/postUserComments`, payload);
+        
+        if (response.status >= 200 && response.status < 300) {
+            commit('DELETE_COMMENT', response.data);
+            dispatch('fetchComments', { reviewId });
+        }
+      } catch (error) {
+          console.error("Error deleting comment:", error);
       }
-  } catch (error) {
-      console.error("Error posting comment:", error);
-  }
-},
-},
+    },
+  },
+
   getters: {
     reviewItems: (state) => state.reviewItems.sort((a, b) => new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()),
-  },
-};
+    },
+  };

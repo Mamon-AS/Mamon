@@ -16,7 +16,7 @@ if (admin.apps.length === 0) {
 }
 
 const bucket = admin.storage().bucket();
-const defaultPhotoUrl = '/images/default.png'; 
+const defaultPhotoUrl = '/images/frosk.png'; 
 
 const db = admin.firestore();
 
@@ -99,7 +99,7 @@ exports.handler = async (event) => {
       
       return { ...comment, reviewId }; 
     });
-    log('Fetched comments:', comments);
+    // log('Fetched comments:', comments);
     return {
       statusCode: 200,
       body: JSON.stringify({ comments, totalComments }),

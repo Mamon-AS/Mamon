@@ -29,7 +29,6 @@ exports.handler = async (event) => {
         }
         
         const userRecord = await admin.auth().getUser(userId);
-        console.log('Successfully fetched user data:', userRecord.displayName);
 
         const profilePicPath = `users/${userId}/profilePicture.png`; 
         const file = bucket.file(profilePicPath);
