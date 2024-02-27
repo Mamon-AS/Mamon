@@ -20,7 +20,7 @@
   import { getAuth } from 'firebase/auth'
 
   import UserProfile from '../components/UserProfile.vue';
-  import ReviewCard from '../components/ReviewCard.vue';
+  import ReviewCard from '../components/Reviews/ReviewCard.vue';
   import sanity from '../client';
 
   export default {

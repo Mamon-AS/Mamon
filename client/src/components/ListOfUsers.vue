@@ -35,7 +35,7 @@
     users: Array,
   });
   const router = useRouter();
-  console.log(props.users);
+
   const navigate = (userId) => navigateToProfile(router, userId);
 
   

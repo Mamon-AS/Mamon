@@ -21,8 +21,8 @@ const db = admin.firestore();
 exports.handler = async (event) => {
     try {
         const { emoji, reviewId, userId, displayName } = JSON.parse(event.body);
-
-        if (!emoji || !reviewId || !displayName) {
+        console.log('Updating reaction... for reviewId:', reviewId, 'emoji:', emoji, 'userId:', userId, 'displayName:', displayName);
+        if (!emoji || !reviewId || !displayName || !userId) {
             return {
                 statusCode: 400,
                 body: JSON.stringify({ error: 'Missing required fields' }),
@@ -32,7 +32,16 @@ exports.handler = async (event) => {
                 },
             };
         }
-
+        if (emoji.length > 2) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ error: 'Invalid emoji' }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
+            };
+        }
         const reviewRef = db.collection('reviews').doc(reviewId);
         const reviewDoc = await reviewRef.get();
 
