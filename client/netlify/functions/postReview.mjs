@@ -67,7 +67,7 @@ async function uploadImageToSanity(imageUrl) {
             sanityReviewId: sanityReviewId,
             userId: userId,
             userName: userName,
-            reviewedTitle: fetchedTitle,
+            reviewedItem: fetchedTitle,
             rating:rating,
             description: reviewedItemDescription
           });

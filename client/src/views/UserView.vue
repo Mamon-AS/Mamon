@@ -22,7 +22,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL  } from "firebase/storage"
 import { ref as vueRef, onMounted } from 'vue';
 
 import sanity from '../client';
-import ReviewCard from '../components/ReviewCard.vue';
+import ReviewCard from '../components/Reviews/ReviewCard.vue';
 import UserProfile from '../components/UserProfile.vue';
 
 export default {

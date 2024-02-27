@@ -2,7 +2,7 @@
   <div class="bg-mamonblue rounded-lg p-4 mb-2 flex flex-col justify-between border-solid border-2 border-black"> 
       <div class="content-wrapper">
           <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
-          <h3 class="text-lg md:text-2xl font-bold mb-4"> {{ (reviewItems.reviewedItem.length > 25 ? reviewItems.reviewedItem.slice(0,25) + '...' : reviewItems.reviewedItem) }}</h3>
+          <h3 class="text-lg md:text-2xl font-bold mb-4 text-center"> {{ (reviewItems.reviewedItem.length > 25 ? reviewItems.reviewedItem.slice(0,25) + '...' : reviewItems.reviewedItem) }}</h3>
           <p class="text-white md:text-lg mb-4 flex-1">
               {{ reviewItems.description }}
           </p>
@@ -111,10 +111,10 @@ import { getStorage, ref as firebaseRef, getDownloadURL } from 'firebase/storage
 import { getAuth } from "firebase/auth";
 import axios from 'axios';
 
-import {FormatDate, CreateURL, navigateToProfile} from '../utils'
-import ListOfUsers from './ListOfUsers.vue';
-import CommentForm from './Comments/CommentForm.vue';
-import CommentItem from './Comments/CommentItem.vue';
+import {FormatDate, CreateURL, navigateToProfile} from '../../utils'
+import ListOfUsers from '../ListOfUsers.vue';
+import CommentForm from '../Comments/CommentForm.vue';
+import CommentItem from '../Comments/CommentItem.vue';
 
 export default {
   props: {
@@ -311,7 +311,7 @@ export default {
   onUnmounted(() => {
       window.removeEventListener('click', handleClickOutside);
     });
-
+    console.log(props.reviewItems);
   return {
     stars,
     FormatDate,
