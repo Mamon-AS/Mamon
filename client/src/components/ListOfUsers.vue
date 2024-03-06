@@ -28,7 +28,6 @@
   
   <script setup>
   import { useRouter } from 'vue-router'
-  import { defineProps } from 'vue';
   import { navigateToProfile } from '../utils/';
   
   const props = defineProps({

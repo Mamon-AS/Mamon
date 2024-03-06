@@ -5,7 +5,7 @@
         :reviews="reviews" 
         :isCurrentUser="true" 
         :handleFileInputChange="handleFileInputChange" 
-        :updateUserProfile="updateUserProfile"
+        :optOutFeed="optOutFeed"
         />
 
     <div class="container mx-auto p-4">
@@ -38,9 +38,6 @@ export default {
         const photoUrl = vueRef(auth.currentUser?.photoURL || defaultPhotoUrl);
         const name = vueRef(auth.currentUser?.displayName);
         const reviews = vueRef([]);
-
-
-
 
         onMounted(() => {
             fetchUserReviews();
