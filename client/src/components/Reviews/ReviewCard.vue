@@ -58,7 +58,7 @@
       </div>
       <!-- Reaction Modal END -->
 
-      <p class=" text-white text-xl cursor-pointer text-decoration-line: underline ml-2"  @click="toggleModal('listOfUsers')">
+      <p class="text-xl cursor-pointer hover:underline ml-2"  @click="toggleModal('listOfUsers')">
         <template v-if="reactionsCount > 0">
           {{ reactionsCount }} 
         </template>
