@@ -1,105 +1,105 @@
 <template>
-    <div class="rounded-lg p-4 m-2 justify-between border-solid border-4 border-mamonblue text-left"> 
-        <div class="content-wrapper">
-            <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
-            <h3 class="text-lg md:text-2xl font-bold"> {{ (reviewItems.reviewedItem.length > 30 ? reviewItems.reviewedItem.slice(0,30) + '...' : reviewItems.reviewedItem) }}</h3>
-            <div class="flex justify-between items-end my-2">
-                <div class="flex items-center">
-                    <div class="stars-outer">
-                        <div class="stars-inner" :style="{ width: stars }"></div>
-                        <div class="stars-background"></div>
-                    </div>
-                </div>
-                <p class="text-sm">
-                    {{ FormatDate(reviewItems._createdAt) }}
-                </p> 
-            </div>
-            <p class="md:text-lg mb-4">
-                {{ reviewItems.description }}
-            </p>
-        </div> 
-        <div class="flex justify-end items-end mb-1">
-            <p>
-                <span class="cursor-pointer hover:underline" @click="navigate(reviewItems.userId)">
-                    {{ reviewItems.userName ? reviewItems.userName : "Anonym"}}
-                </span>
-            </p>
-            <img c v-if="photoUrl" :src="photoUrl" alt="Profile picture" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 ml-2 cursor-pointer"
-                @click="navigate(reviewItems.userId)"
-            />
+  <div class="rounded-lg p-4 m-2 justify-between border-solid border-4 border-mamonblue text-left"> 
+    <div class="content-wrapper">
+      <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
+      <h3 class="text-lg md:text-2xl font-bold"> {{ (reviewItems.reviewedItem.length > 30 ? reviewItems.reviewedItem.slice(0,30) + '...' : reviewItems.reviewedItem) }}</h3>
+      <div class="flex justify-between items-end my-2">
+        <div class="flex items-center">
+          <div class="stars-outer">
+            <div class="stars-inner" :style="{ width: stars }"></div>
+            <div class="stars-background"></div>
+          </div>
         </div>
+        <p class="text-sm">
+          {{ FormatDate(reviewItems._createdAt) }}
+        </p> 
+      </div>
+      <p class="md:text-lg mb-4">
+        {{ reviewItems.description }}
+      </p>
+    </div> 
+    <div class="flex justify-end items-end mb-1">
+      <p>
+        <span class="cursor-pointer hover:underline" @click="navigate(reviewItems.userId)">
+          {{ reviewItems.userName ? reviewItems.userName : "Anonym"}}
+        </span>
+      </p>
+      <img c v-if="photoUrl" :src="photoUrl" alt="Profile picture" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 ml-2 cursor-pointer"
+          @click="navigate(reviewItems.userId)"
+      />
+    </div>
 
-        <div class="border-t border-gray-800"></div>
+    <div class="border-t border-gray-800"></div>
 
-        <!-- Emoji section -->
-        <div class="flex relative ml-2">
-            <template v-if="uniqueEmojis.length > 0">
-                <span v-for="emoji in uniqueEmojis"
+    <!-- Emoji section -->
+    <div class="flex relative ml-2">
+      <template v-if="uniqueEmojis.length > 0">
+        <span v-for="emoji in uniqueEmojis"
                     :key="emoji.value" 
                     :class="['emoji', 'cursor-pointer', { 'userReactedEmoji ': isUserReactedEmoji(emoji.value) }]" 
                     @click="toggleModal('listOfReactions')">
-                        {{ emoji.value }} 
-                </span>
-            </template>
-            <template v-else>
-                <span class="emoji cursor-pointer" @click="toggleModal('listOfReactions')">👍</span>
-            </template>
-          
-            <!-- Reaction Modal, shown conditionally -->
-            <div v-if="showReactionModal" class="reaction-modal absolute bottom-full mb-2 bg-white rounded-lg p-2 shadow-lg transform -translate-x-1/2 left-1/2">
-                <span class="absolute bottom-6 closeRightCross p-4 cursor-pointer shadow-xs" @click="showReactionModal = false"><i class="fa-regular fa-x"></i></span>
-                <div class="flex justify-around">
-                    <span v-for="emoji in emojis" class="emoji text-2xl cursor-pointer mx-1"
-                        :key="emoji.value"
-                        @click="sendReaction(emoji, reviewItems._id); showReactionModal = false;">
-                            {{ emoji.value }} reaksjon{{ emoji.value > 1 ? 'er' : '' }}
-                    </span>
-                </div>
-            </div>
-            <!-- Reaction Modal END -->
-
-            <p class=" text-white text-xl cursor-pointer text-decoration-line: underline ml-2"  @click="toggleModal('listOfUsers')">
-                <template v-if="reactionsCount > 0">
-                  {{ reactionsCount }} 
-                </template>
-            </p>
-        
-        </div>
-        <!-- Emoji section END -->
-
-        <!-- Comment Section -->
-        <div v-if="reviewItems.comments && reviewItems.comments.length > 0" class="comments-container">
-            <div class="bottom-full bg-white rounded-lg mt-4" v-for="comment in reviewItems.comments" :key="comment.commentId">
-                <CommentItem
-                  :reviewId="reviewItems._id"
-                  :userId="comment.userId"
-                  :photoUrl="comment.photoUrl"
-                  :displayName="comment.displayName"
-                  :text="comment.text"
-                  :createdAt="comment.createdAt"
-                  :replies="comment.replies"
-                  :commentId="comment.commentId"
-                />
-            </div>
-        </div>
-        <div class="rounded-lg border mt-2 shadow-sm hover:shadow-lg transition-shadow duration-200 ease-in-out p-2">
-            <CommentForm 
-              :reviewId="reviewItems._id"
-              :reviewerUserId="reviewItems.userId"
-              :reviewerPhotoUrl="photoUrl"
-              :formPlaceholder="!reviewItems.comments.length ? 'Bli den første til å kommentere' : undefined" 
-            />
-        </div>
-        <!-- Comment Section END--> 
+          {{ emoji.value }} 
+        </span>
+      </template>
+      <template v-else>
+        <span class="emoji cursor-pointer" @click="toggleModal('listOfReactions')">👍</span>
+      </template>
       
-
-        <div v-if="showListOfUsersModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" @click="showListOfUsersModal = false">
-            <div class="modal-content bg-white rounded-lg p-4 max-w-md mx-auto" @click.stop="true"> 
-                <ListOfUsers :users="usersData"/>
-                <button class="mt-4 py-2 px-4 bg-mamonblue text-white rounded hover:bg-red-500" @click="showListOfUsersModal = false">Lukk</button>
-            </div>
+      <!-- Reaction Modal, shown conditionally -->
+      <div v-if="showReactionModal" class="reaction-modal absolute bottom-full mb-2 bg-white rounded-lg p-2 shadow-lg transform -translate-x-1/2 left-1/2">
+        <span class="absolute bottom-6 closeRightCross p-4 cursor-pointer shadow-xs" @click="showReactionModal = false"><i class="fa-regular fa-x"></i></span>
+        <div class="flex justify-around">
+          <span v-for="emoji in emojis" class="emoji text-2xl cursor-pointer mx-1"
+                      :key="emoji.value"
+                      @click="sendReaction(emoji, reviewItems._id); showReactionModal = false;">
+            {{ emoji.value }} reaksjon{{ emoji.value > 1 ? 'er' : '' }}
+          </span>
         </div>
+      </div>
+      <!-- Reaction Modal END -->
+
+      <p class=" text-white text-xl cursor-pointer text-decoration-line: underline ml-2"  @click="toggleModal('listOfUsers')">
+        <template v-if="reactionsCount > 0">
+          {{ reactionsCount }} 
+        </template>
+      </p>
+    
     </div>
+    <!-- Emoji section END -->
+
+    <!-- Comment Section -->
+    <div v-if="reviewItems.comments && reviewItems.comments.length > 0" class="comments-container">
+      <div class="bottom-full bg-white rounded-lg mt-4" v-for="comment in reviewItems.comments" :key="comment.commentId">
+        <CommentItem
+          :reviewId="reviewItems._id"
+          :userId="comment.userId"
+          :photoUrl="comment.photoUrl"
+          :displayName="comment.displayName"
+          :text="comment.text"
+          :createdAt="comment.createdAt"
+          :replies="comment.replies"
+          :commentId="comment.commentId"
+        />
+      </div>
+    </div>
+    <div class="rounded-lg border mt-2 shadow-sm hover:shadow-lg transition-shadow duration-200 ease-in-out p-2">
+      <CommentForm 
+        :reviewId="reviewItems._id"
+        :reviewerUserId="reviewItems.userId"
+        :reviewerPhotoUrl="photoUrl"
+        :formPlaceholder="!reviewItems.comments.length ? 'Bli den første til å kommentere' : undefined" 
+      />
+    </div>
+    <!-- Comment Section END--> 
+  
+
+    <div v-if="showListOfUsersModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" @click="showListOfUsersModal = false">
+      <div class="modal-content bg-white rounded-lg p-4 max-w-md mx-auto" @click.stop="true"> 
+        <ListOfUsers :users="usersData"/>
+        <button class="mt-4 py-2 px-4 bg-mamonblue text-white rounded hover:bg-red-500" @click="showListOfUsersModal = false">Lukk</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
