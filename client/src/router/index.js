@@ -36,7 +36,6 @@ router.beforeEach(async(to, from, next) => {
     if (await getCurrentUser()) {
       next();
     } else {
-      alert("Du må være logget inn for å se denne siden");
       next('/sign-in');
     }
   } else {
