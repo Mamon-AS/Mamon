@@ -120,7 +120,22 @@ exports.handler = async (event) => {
         }
 
         await reviewRef.update({ comments, totalComments });
+        if (action === 'add' || action === 'reply') {
+            const notificationMessage = action === 'add' ? 
+                `${displayName} kommenterte på din anmeldelse.` : 
+                `${displayName} svarte på en kommentar på din anmeldelse.`;
 
+            const notificationData = {
+                userId: reviewDoc.data().userId,
+                type: 'comment',
+                message: notificationMessage,
+                seen: false,
+                timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                reviewId: reviewId,
+            };
+        
+            await db.collection('notifications').add(notificationData);
+        }
         return {
             statusCode: 200,
             body: JSON.stringify({

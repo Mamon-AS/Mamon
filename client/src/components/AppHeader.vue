@@ -12,7 +12,7 @@
         <img src="/images/Transparent_Image_11_cropped.png" alt="Logo" class="h-8 w-auto logo"/>
       </a>
 
-      <button ref="toggleButton" @click="toggleSearchField" class="ml-5 mr-5 p-2 rounded-full text-white" :class="{'bg-transparent': showSearchField}">
+      <button ref="toggleButton" @click="toggleSearchField" class="lg:ml-5 lg:mr-5  p-2 rounded-full text-white" :class="{'bg-transparent': showSearchField}">
         <i class="fa-solid fa-magnifying-glass fa-2xl" style="color: #ffffff;"></i>     
        </button>
       
@@ -45,9 +45,17 @@
         </li>
       </ul>
     </div>
+
     <div v-if="isLoggedIn" class="ml-auto flex items-center">
+        <!-- Notification Bell -->
+      <div @click="fetchNotifications" class="relative mr-3 cursor-pointer">
+        <i class="fa-solid fa-bell fa-2xl mr-3" style="color: #ffffff;"></i>
+        <span v-if="unseenNotifications > 0" class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 text-red-600">{{  unseenNotifications }}</span>
+      </div>
+       <!-- Profile Photo and Dropdown -->
       <div @click="toggleModal" class="cursor-pointer">
       <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-12 h-12 border-4 border-gray-800 mr-2 cursor-pointer">
+
     </div>
     
     <Modal v-model="modalIsActive">
@@ -105,7 +113,7 @@ export default {
     const showSearchField = ref(false);
     const store = useStore();
     const vueRouter = useRouter();
-
+    const unseenNotifications = ref(0);
  
     const modalIsActive = computed({
         get: () => store.getters['utils/modalIsActive'],
@@ -180,7 +188,14 @@ export default {
           console.error("Failed to search users:", error);
           searchResults.value = [];
         }
-    }
+      }
+
+    const fetchNotifications = async () => {
+        // TODO: Fetch notifications from Firestore and update unseenNotifications
+        console.log("Fetching notifications...");
+        // Assume we fetched notifications and found 3 unseen ones
+        unseenNotifications.value = 3; // Update based on actual fetched data
+      };
     const navigate = (userId) => navigateToProfile(vueRouter, userId);
     
 
@@ -226,7 +241,9 @@ export default {
       toggleModal,
       openModal,
       closeModal,
-      userID
+      userID,
+      fetchNotifications,
+      unseenNotifications,
     };
   },
 };

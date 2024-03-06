@@ -380,9 +380,6 @@ width: 100%;
   transform: translateY(-0.5rem) scale(1.5);
 }
 
-.reacted {
-  transform: translateY(-0.5rem) scale(1.5); 
-}
 
 .userReactedEmoji {
   display: inline-flex; 

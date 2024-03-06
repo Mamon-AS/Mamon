@@ -70,6 +70,20 @@ exports.handler = async (event) => {
                 totalReactions += 1;
             }
             await reviewRef.update({ reactions, totalReactions });
+         
+            const notificationMessage = `${displayName} reagerte på din anmeldelse.` 
+
+            const notificationData = {
+                userId: userId,
+                type: 'reaction',
+                message: notificationMessage,
+                seen: false,
+                timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                reviewId: reviewId,
+            };
+            
+                await db.collection('notifications').add(notificationData);
+            
         }
 
         return {
