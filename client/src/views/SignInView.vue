@@ -40,6 +40,7 @@ const userRef = doc(db, "users", user.uid);
   const userProfile = {
     displayName: user.displayName,
     email: user.email,
+    isPrivate: false,
   }; 
 
 await setDoc(userRef, userProfile, { merge: true });

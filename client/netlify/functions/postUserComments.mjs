@@ -1,7 +1,6 @@
 import admin from 'firebase-admin';
 import { Buffer } from 'buffer';
 import { v4 as uuidv4 } from 'uuid';
-import { log } from 'console';
 
 const base64 = process.env.VITE_FIREBASE_SDK;
 const decodedString = Buffer.from(base64, 'base64').toString('utf-8');

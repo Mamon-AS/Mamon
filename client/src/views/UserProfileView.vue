@@ -1,84 +1,79 @@
 <template>
-  <div>
-    <UserProfile
-      :userId="userId"
-      :photoUrl="userProfile.photoUrl"
-      :name="userProfile.name"
-      :isCurrentUser="userProfile.isCurrentUser"
-      :reviews="userProfile.reviews"
+  <div class="container mx-auto p-4">
+      <UserProfile
+        :userId="userId"
+        :photoUrl="userProfile.photoUrl"
+        :name="userProfile.userName"
+        :isCurrentUser="userProfile.isCurrentUser"
+        :reviews="userProfile.reviews"
       />
   </div>
   <div class="container mx-auto p-4">
       <div class="md:grid md:grid-cols-3 md:gap-4">
-          <ReviewCard v-for="review in userProfile.reviews" :key="review._id" :reviewItems="review" /> 
+        <ReviewCard v-for="review in userReviews" :key="review._id" :reviewItems="review" />
       </div>
   </div>
 </template>
-  <script>
-  import { ref, onMounted, nextTick } from 'vue';
-  import axios from 'axios';
-  import { getAuth } from 'firebase/auth'
+<script>
+import { computed, onMounted } from 'vue';
+import { useStore } from 'vuex';
 
-  import UserProfile from '../components/UserProfile.vue';
-  import ReviewCard from '../components/Reviews/ReviewCard.vue';
-  import sanity from '../client';
+import UserProfile from '../components/UserProfile.vue';
+import ReviewCard from '../components/Reviews/ReviewCard.vue';
 
-  export default {
-      components: {
-        UserProfile,
-        ReviewCard
-      },
-    props: {
-      userId: {
-        type: String,
-        required: true
-      },
+export default {
+    components: {
+      UserProfile,
+      ReviewCard
     },
-    setup(props) {
-      const userProfile = ref({ reviews: [] }); 
+  props: {
+    userId: {
+      type: String,
+      required: true
+    },
+  },
+  setup(props) {
+    const store = useStore();
+    const isLoading = computed(() => store.state.users.isLoading);
+    const error = computed(() => store.state.users.error);
+    const userProfile = computed(() => store.state.users.userItems)
+    const userReviews = computed(() => store.getters['reviews/reviewItems']);
 
-        onMounted(() => {
-             fetchUserData();
 
-        });
-        const userID = props.userId;
-        // Methods
-        async function fetchUserData() {
-              try {          
-                const response = await axios.post(`/.netlify/functions/getUserData`, {
-                   userId: userID 
-                  });
 
-                if (response.status < 200 || response.status >= 300) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                  }
+    onMounted(() => {
+      fetchUserData();
+      fetchUserReviews();
+      });
 
-                const data = response.data;
-
-                const auth = getAuth();
-                const currentUser = auth.currentUser;
-                const isCurrentUser = currentUser && currentUser.uid === userID;
-                
-                userProfile.value = {
-                  ...data, 
-                  isCurrentUser, 
-                };
-                
-              const reviews = await sanity.fetch(`*[_type == "review" && userId == $userID]`, { userID })
-              userProfile.value = {
-                ...userProfile.value,
-                reviews 
-              };
-
-              await nextTick();
-
-            } catch (error) {
-              console.error("Error fetching user data:", error);
-            }
-          }
-      return {
-          userProfile
-        };
+    const fetchUserReviews = async () => {
+        try {          
+          let payload = {  };
+          payload.userId = props.userId;
+          payload.action = 'personal';
+          await store.dispatch('reviews/FetchReviews', payload);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       }
+    }
+     
+    const fetchUserData = async () => {
+      try {
+        const response = await store.dispatch(`users/fetchUsers`, props.userId);
+        if (response) {
+          console.log('User data:', response);
+        } 
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        }
+      }
+
+  return {
+    userProfile,
+    userReviews,
+    isLoading,
+    error
+    };
+  }
 }
 </script>

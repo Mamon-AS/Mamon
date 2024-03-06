@@ -75,17 +75,15 @@ export default {
           let action;
           let payload = { limit: 4 };
 
-          // Determine the action to dispatch based on the actionType parameter
           if (actionType === 'public') {
             action = 'reviews/FetchReviews';
-            payload.action = 'public'; // Assuming your store action can handle this payload structure
+            payload.action = 'public'; 
           } else if (actionType === 'fetch_followers_reviews') {
             action = 'reviews/FetchReviews';
-            payload.action = 'fetch_followers_reviews'; // Adjust as per your actual action logic
+            payload.action = 'fetch_followers_reviews'; 
             payload.userId = userId.value
           }
 
-          // Dispatch the Vuex action with the constructed payload
           await store.dispatch(action, payload);
         } catch (error) {
           console.error(error);

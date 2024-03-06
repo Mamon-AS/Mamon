@@ -300,7 +300,7 @@ export default {
   onUnmounted(() => {
       window.removeEventListener('click', handleClickOutside);
     });
-    console.log(props.reviewItems);
+
   return {
     stars,
     FormatDate,

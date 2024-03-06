@@ -72,42 +72,53 @@ export default {
       const { limit, action, userId } = payload;
 
       if(action === 'public') { 
-         const query = `*[_type == "review"] | order(_createdAt desc) ${limit ? `[0...${limit}]` : ''}`
-         const count_query = 'count(*[_type == "review"])'
          try {
-           const reviewItems = await sanity.fetch(query);
-            let enrichedReviewItems = [];
-             // Fetch comments for each review asynchronously
-            for (const review of reviewItems) {
-              try {
-                const response = await axios.post(`/.netlify/functions/getUserComments`, { reviewId: review._id });
-                if (response.status === 200) {
-                  review.comments = response.data.comments;
-                } else {
-                  review.comments = [];
+          const response = await axios.get(`/.netlify/functions/getPublicUsers`);
+          console.log(response.data);
+          const userIds = response.data.users.map(user => `"${user.id}"`);
+          console.log(userIds);
+          const userIdsQueryPart = `userId in [${userIds.join(',')}]`; 
+          console.log(userIdsQueryPart);
+          const query = `*[_type == "review" && (${userIdsQueryPart})] | order(_createdAt desc) ${limit ? `[0...${limit}]` : ''}`;
+          const count_query = `count(*[_type == "review" && (${userIdsQueryPart})])`;
+          try {
+              const reviewItems = await sanity.fetch(query);
+              let enrichedReviewItems = [];
+                // Fetch comments for each review asynchronously
+              for (const review of reviewItems) {
+                try {
+                  const response = await axios.post(`/.netlify/functions/getUserComments`, { reviewId: review._id });
+                  if (response.status === 200) {
+                    review.comments = response.data.comments;
+                  } else {
+                    review.comments = [];
+                  }
+                } catch (error) {
+                  if (error.response && error.response.status === 404) {
+                    console.log(`No comments found for review ID: ${review._id}`);
+                    review.comments = []; 
+                  } else {
+                    console.error(`Error fetching comments for review ID ${review._id}:`, error);
+                    review.comments = []; 
+                  }
                 }
-              } catch (error) {
-                if (error.response && error.response.status === 404) {
-                  console.log(`No comments found for review ID: ${review._id}`);
-                  review.comments = []; 
-                } else {
-                  console.error(`Error fetching comments for review ID ${review._id}:`, error);
-                  review.comments = []; 
-                }
+          
+                enrichedReviewItems.push(review);
               }
-        
-              enrichedReviewItems.push(review);
+              commit('SET_REVIEWS', enrichedReviewItems);
+              sanity.fetch(count_query).then(count => {
+                commit('SET_TOTAL_REVIEWS', count)
+              })
+            } catch (error) {
+              console.error("Error fetching reviews:", error);
             }
-            commit('SET_REVIEWS', enrichedReviewItems);
-            sanity.fetch(count_query).then(count => {
-              commit('SET_TOTAL_REVIEWS', count)
-            })
          } catch (error) {
-           console.error("Error fetching reviews:", error);
+            console.error("Error fetching public users:", error);
          }
+
         }
         else if (action === 'fetch_followers_reviews') {
-          console.log("Fetching reviews from followers");
+
           try {
             const response = await axios.post(`/.netlify/functions/getFollowersReviews`, { userId, limit });
             if (response.status === 200) {
@@ -144,9 +155,45 @@ export default {
           
             }
           } catch (error) {
-            console.error("Error fetching reviews from followers:", error);
+            commit('SET_REVIEWS', []);
           }
         
+        } else if (action === 'personal') {
+          const { limit, action, userId } = payload;
+
+          const query = `*[_type == "review" && userId == "${userId}"] | order(_createdAt desc) ${limit ? `[0...${limit}]` : ''}`
+          const count_query = 'count(*[_type == "review"])'
+          try {
+            const reviewItems = await sanity.fetch(query);
+             let enrichedReviewItems = [];
+             
+             for (const review of reviewItems) {
+               try {
+                 const response = await axios.post(`/.netlify/functions/getUserComments`, { reviewId: review._id });
+                 if (response.status === 200) {
+                   review.comments = response.data.comments;
+                 } else {
+                   review.comments = [];
+                 }
+               } catch (error) {
+                 if (error.response && error.response.status === 404) {
+                   console.log(`No comments found for review ID: ${review._id}`);
+                   review.comments = []; 
+                 } else {
+                   console.error(`Error fetching comments for review ID ${review._id}:`, error);
+                   review.comments = []; 
+                 }
+               }
+         
+               enrichedReviewItems.push(review);
+             }
+              commit('SET_REVIEWS', enrichedReviewItems);
+              sanity.fetch(count_query).then(count => {
+              commit('SET_TOTAL_REVIEWS', count)
+             })
+          } catch (error) {
+            console.error("Error fetching reviews:", error);
+          }
         }
     },
 
