@@ -1,106 +1,104 @@
 <template>
-  <div class="bg-mamonblue rounded-lg p-4 mb-2 flex flex-col justify-between border-solid border-2 border-black"> 
-      <div class="content-wrapper">
-          <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
-          <h3 class="text-lg md:text-2xl font-bold mb-4 text-center"> {{ (reviewItems.reviewedItem.length > 25 ? reviewItems.reviewedItem.slice(0,25) + '...' : reviewItems.reviewedItem) }}</h3>
-          <p class="text-white md:text-lg mb-4 flex-1">
-              {{ reviewItems.description }}
-          </p>
-          <div class="flex justify-between items-end">
-              <div class="flex items-center">
-                  <div class="stars-outer">
-                      <div class="stars-inner" :style="{ width: stars }"></div>
-                      <div class="stars-background"></div>
-                  </div>
-              </div>
-              <p class="text-white text-sm">
-                  {{ FormatDate(reviewItems._createdAt) }}
-              </p> 
+  <div class="rounded-lg p-4 m-2 justify-between border-solid border-4 border-mamonblue text-left"> 
+    <div class="content-wrapper">
+      <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
+      <h3 class="text-lg md:text-2xl font-bold"> {{ (reviewItems.reviewedItem.length > 30 ? reviewItems.reviewedItem.slice(0,30) + '...' : reviewItems.reviewedItem) }}</h3>
+      <div class="flex justify-between items-end my-2">
+        <div class="flex items-center">
+          <div class="stars-outer">
+            <div class="stars-inner" :style="{ width: stars }"></div>
+            <div class="stars-background"></div>
           </div>
-      </div> 
-      <div class="flex items-center mt-4">
-          <img c v-if="photoUrl" :src="photoUrl" alt="Profile picture" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mr-2 cursor-pointer"
-            @click="navigate(reviewItems.userId)"
-             />
-          <p class="text-white md:text-lg">
-              <span style="text-decoration:underline; cursor:pointer;" @click="navigate(reviewItems.userId)">
-                  {{ reviewItems.userName ? reviewItems.userName : "Anonym"}}
-              </span>
-          </p>
-      </div>
-      
-        <!-- Footer with reactions and comment button -->
-    <div class="footer flex items-center justify-between mt-4 px-4 py-2 border-t border-gray-800">
-      <!-- Reactions -->
-
-        
-    </div>
-  <!-- Comment Section -->
-    <div v-if="reviewItems.comments && reviewItems.comments.length > 0" class="comments-container">
-        <div class="bottom-full bg-white rounded-lg mt-4" v-for="comment in reviewItems.comments" :key="comment.commentId">
-          <CommentItem
-            :reviewId="reviewItems._id"
-            :userId="comment.userId"
-            :photoUrl="comment.photoUrl"
-            :displayName="comment.displayName"
-            :text="comment.text"
-            :createdAt="comment.createdAt"
-            :replies="comment.replies"
-            :commentId="comment.commentId"
-          />
         </div>
+        <p class="text-sm">
+          {{ FormatDate(reviewItems._createdAt) }}
+        </p> 
       </div>
-      <div v-else class="text-center p-4 text-white">
-        <p>Bli den første til å kommentere</p>
-      </div>
-       <!-- Comment Section --> 
-    <div class="rounded-lg mt-2 shadow-sm hover:shadow-lg transition-shadow duration-200 ease-in-out p-4">
-      <CommentForm 
-        :reviewId="reviewItems._id"
-        :reviewerUserId="reviewItems.userId"
-        :reviewerPhotoUrl="photoUrl" 
+      <p class="md:text-lg mb-4">
+        {{ reviewItems.description }}
+      </p>
+    </div> 
+    <div class="flex justify-end items-end mb-1">
+      <p>
+        <span class="cursor-pointer hover:underline" @click="navigate(reviewItems.userId)">
+          {{ reviewItems.userName ? reviewItems.userName : "Anonym"}}
+        </span>
+      </p>
+      <img c v-if="photoUrl" :src="photoUrl" alt="Profile picture" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 ml-2 cursor-pointer"
+          @click="navigate(reviewItems.userId)"
       />
     </div>
-    <div class="flex justify-end mt-4 relative emojiesNextToComments mr-2">
+
+    <div class="border-t border-gray-800"></div>
+
+    <!-- Emoji section -->
+    <div class="flex relative ml-2">
       <template v-if="uniqueEmojis.length > 0">
-        <span v-for="emoji in uniqueEmojis" :key="emoji.value" 
-              :class="['emoji', 'cursor-pointer', { 'userReactedEmoji ': isUserReactedEmoji(emoji.value) }]" 
-              @click="openModal('listOfReactions')">
+        <span v-for="emoji in uniqueEmojis"
+                    :key="emoji.value" 
+                    :class="['emoji', 'cursor-pointer', { 'userReactedEmoji ': isUserReactedEmoji(emoji.value) }]" 
+                    @click="toggleModal('listOfReactions')">
           {{ emoji.value }} 
-          
         </span>
       </template>
       <template v-else>
-        <span class="emoji cursor-pointer text-xl text-white" @click="openModal('listOfReactions')">👍 Liker</span>
+        <span class="emoji cursor-pointer" @click="toggleModal('listOfReactions')">👍</span>
       </template>
-        
+      
       <!-- Reaction Modal, shown conditionally -->
-      <div v-if="showReactionModal" class="reaction-modal absolute bottom-full mb-2 bg-white rounded-lg p-4 shadow-lg transform -translate-x-1/2 left-1/2">
+      <div v-if="showReactionModal" class="reaction-modal absolute bottom-full mb-2 bg-white rounded-lg p-2 shadow-lg transform -translate-x-1/2 left-1/2">
         <span class="absolute bottom-6 closeRightCross p-4 cursor-pointer shadow-xs" @click="showReactionModal = false"><i class="fa-regular fa-x"></i></span>
         <div class="flex justify-around">
-          <span v-for="emoji in emojis" :key="emoji.value"
-                class="emoji text-2xl cursor-pointer mx-1"
-                @click="sendReaction(emoji, reviewItems._id); showReactionModal = false;">
-            {{ emoji.value }}
+          <span v-for="emoji in emojis" class="emoji text-2xl cursor-pointer mx-1"
+                      :key="emoji.value"
+                      @click="sendReaction(emoji, reviewItems._id); showReactionModal = false;">
+            {{ emoji.value }} reaksjon{{ emoji.value > 1 ? 'er' : '' }}
           </span>
         </div>
       </div>
+      <!-- Reaction Modal END -->
 
-      
-      <p class=" text-white text-xl cursor-pointer text-decoration-line: underline ml-2"  @click="openModal('listOfUsers')">
+      <p class=" text-white text-xl cursor-pointer text-decoration-line: underline ml-2"  @click="toggleModal('listOfUsers')">
         <template v-if="reactionsCount > 0">
           {{ reactionsCount }} 
         </template>
       </p>
-      
+    
     </div>
+    <!-- Emoji section END -->
 
-      <div v-if="showListOfUsersModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" @click="showListOfUsersModal = false">
-        <div class="modal-content bg-white rounded-lg p-4 max-w-md mx-auto" @click.stop="true"> 
-          <ListOfUsers :users="usersData"/>
-          <button class="mt-4 py-2 px-4 bg-mamonblue text-white rounded hover:bg-red-500" @click="showListOfUsersModal = false">Lukk</button>
-        </div>
+    <!-- Comment Section -->
+    <div v-if="reviewItems.comments && reviewItems.comments.length > 0" class="comments-container">
+      <div class="bottom-full bg-white rounded-lg mt-4" v-for="comment in reviewItems.comments" :key="comment.commentId">
+        <CommentItem
+          :reviewId="reviewItems._id"
+          :userId="comment.userId"
+          :photoUrl="comment.photoUrl"
+          :displayName="comment.displayName"
+          :text="comment.text"
+          :createdAt="comment.createdAt"
+          :replies="comment.replies"
+          :commentId="comment.commentId"
+        />
       </div>
+    </div>
+    <div class="rounded-lg border mt-2 shadow-sm hover:shadow-lg transition-shadow duration-200 ease-in-out p-2">
+      <CommentForm 
+        :reviewId="reviewItems._id"
+        :reviewerUserId="reviewItems.userId"
+        :reviewerPhotoUrl="photoUrl"
+        :formPlaceholder="!reviewItems.comments.length ? 'Bli den første til å kommentere' : undefined" 
+      />
+    </div>
+    <!-- Comment Section END--> 
+  
+
+    <div v-if="showListOfUsersModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" @click="showListOfUsersModal = false">
+      <div class="modal-content bg-white rounded-lg p-4 max-w-md mx-auto" @click.stop="true"> 
+        <ListOfUsers :users="usersData"/>
+        <button class="mt-4 py-2 px-4 bg-mamonblue text-white rounded hover:bg-red-500" @click="showListOfUsersModal = false">Lukk</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -255,24 +253,15 @@ export default {
     }));
   });
 
-  const openModal = (modalName) => {
+  const toggleModal = (modalName) => {
     ignoreFirstClick = true;
     if (modalName === 'listOfReactions') {
-      showReactionModal.value = true;
+      showReactionModal.value == false ? showReactionModal.value = true : showReactionModal.value = false;
     }
     else if (modalName === 'listOfUsers') {
-      showListOfUsersModal.value = true;
+      showListOfUsersModal.value == false ? showReactionModal.value = true : showReactionModal.value = false;
     }
 
-  };
-
-  const closeModal = (modalName) => {
-    if (modalName === 'listOfReactions') {
-      showReactionModal.value = false;
-    }
-    else if (modalName === 'listOfUsers') {
-      showListOfUsersModal.value = false;
-    }
   };
 
 
@@ -285,12 +274,12 @@ export default {
 
     const reactionModal = document.querySelector('.reaction-modal');
     if (showReactionModal.value && reactionModal && !reactionModal.contains(event.target)) {
-      closeModal('listOfReactions');
+      toggleModal('listOfReactions');
     }
 
     const usersModal = document.querySelector('.modal-content'); 
     if (showListOfUsersModal.value && usersModal && !usersModal.contains(event.target)) {
-      closeModal('listOfUsers');
+      toggleModal('listOfUsers');
     }
   };
   
@@ -325,8 +314,8 @@ export default {
     showListOfUsersModal,
     usersData,
     showReactionModal,
-    closeModal,
-    openModal,
+    toggleModal,
+    toggleModal,
     uniqueEmojis,
     isUserReactedEmoji,
   };
@@ -372,16 +361,15 @@ width: 100%;
 }
 
 .emoji {
-  transition: transform 0.2s ease-in-out, opacity 0.2s;
+  transition: transform 0.1s ease-in-out;
 }
 
 .emoji:hover {
-  opacity: 1;
-  transform: translateY(-0.5rem) scale(1.5);
+  transform: scale(1.1);
 }
 
 .reacted {
-  transform: translateY(-0.5rem) scale(1.5); 
+  transform: scale(1.1); 
 }
 
 .userReactedEmoji {
@@ -410,7 +398,5 @@ width: 100%;
 .closeRightCross {
   right: 12.5rem;
 }
-.emojiesNextToComments {
-  bottom:6.1rem
-}
+
 </style>
