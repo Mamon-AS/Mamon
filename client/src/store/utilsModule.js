@@ -2,26 +2,27 @@ export default {
     namespaced: true,
     state() {
         return {
-            menu_is_active: false,
+			modalIsActive: false,
         }
     },
-    mutations: {
-		TOGGLE_MENU (state, dir = null) {
-			if (dir === 'open') {
-				state.menu_is_active = true
-			} else if (dir === 'close') {
-				state.menu_is_active = false
-			} else {
-				state.menu_is_active = !state.menu_is_active
-			}
+	mutations: {
+		SET_MODAL_ACTIVE(state, isActive) {
+		  console.log("Setting modal active state to", isActive);
+		  state.modalIsActive = isActive;
+		}
+	  },
+	  actions: {
+		openModal({ commit }) {
+		  commit('SET_MODAL_ACTIVE', true);
 		},
-    },	
-	actions: { 
-		ToggleMenu ({ commit }) {
-			commit('TOGGLE_MENU')
+		closeModal({ commit }) {
+		  commit('SET_MODAL_ACTIVE', false);
 		},
-		CloseMenu ({ commit }) {
-			commit('TOGGLE_MENU', 'close')
-		},
-    },
-}
+		toggleModal({ commit, state }) {
+		  commit('SET_MODAL_ACTIVE', !state.modalIsActive);
+		}
+	  },
+	  getters: {
+		modalIsActive: (state) => state.modalIsActive
+	  }
+	};

@@ -20,7 +20,7 @@ const defaultPhotoUrl = '/images/frosk.png';
 exports.handler = async (event) => {
     console.log("Fetching user data...")
     try {
-        const { userId } = JSON.parse(event.body);
+        const userId = (event.body);
         if (!userId) {
             return {
                 statusCode: 400,

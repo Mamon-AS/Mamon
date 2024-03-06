@@ -2,40 +2,26 @@
   <header 
     :class="[
       'flex w-full items-center justify-between p-4 z-50 relative transition-all duration-300', 
-      { 'bg-mamonblue': !full_hero_is_active && !showSearchField },
+      { 'bg-mamonblue': !showSearchField },
       { 'bg-blue-500': showSearchField, 'h-20 md:h-32': showSearchField },
-      { 'bg-transparent': menu_is_active && !showSearchField}
     ]"
     :style="showSearchField ? { position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100 } : {}"
   >
-    <div class="flex items-center">
-      <div
-        :class="`menu-toggle relative z-50 ${
-          menu_is_active 
-          ? 'is-active' 
-          : ''
-        }`"
-        @click="ToggleMenu">
-
-        <div class="hamburger">
-          <span></span>
-        </div>
-      </div>
-      
-      <a href="/" class="ml-5">
-        <img
-          :src="full_hero_is_active
-            ? '/images/High_Resolution_Image_4_cropped.png'
-            : '/images/Transparent_Image_11_cropped.png'"
-          alt="Logo"
-          class="h-8 w-auto logo"
-        />
+    <div class="flex">
+      <a href="/" class="ml-5 mt-2">
+        <img src="/images/Transparent_Image_11_cropped.png" alt="Logo" class="h-8 w-auto logo"/>
       </a>
 
-      <button ref="toggleButton" @click="toggleSearchField" class="ml-5 p-2 rounded-full text-white" :class="{'bg-blue-500': !showSearchField, 'bg-transparent': showSearchField}">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </button>
-
+      <button ref="toggleButton" @click="toggleSearchField" class="ml-5 mr-5 p-2 rounded-full text-white" :class="{'bg-transparent': showSearchField}">
+        <i class="fa-solid fa-magnifying-glass fa-2xl" style="color: #ffffff;"></i>     
+       </button>
+      
+      <HeaderItem to="/review">
+        <div class="flex flex-col md:flex-row items-center">
+          <i class="fa-solid fa-feather fa-2xl" style="color: #ffffff;"></i>
+          <p class="hidden md:block md:ml-2">Anmeldelser</p>
+        </div>
+      </HeaderItem>
     
       <input
         v-model="searchQuery"
@@ -59,21 +45,33 @@
         </li>
       </ul>
     </div>
-      <div>
-        <!-- <router-link v-if="!isLoggedIn"
-          :to="`/register`" 
-          class="bg-lightblue text-white border border-lightblue hover:bg-white hover:border-mamonblue hover:text-mamonblue py-1 px-4 ml-4 rounded transition"
-          >Ny her?
-        </router-link> -->
-        <router-link v-if="!isLoggedIn"
+    <div v-if="isLoggedIn" class="ml-auto flex items-center">
+      <div @click="toggleModal" class="cursor-pointer">
+      <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-12 h-12 border-4 border-gray-800 mr-2 cursor-pointer">
+    </div>
+    
+    <Modal v-model="modalIsActive">
+      <div class="flex flex-col dropdown animate-fade-in">
+        <button @click="navigate(userID)" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 mb-2 hover:scale-105 transition duration-300 ease-in-out">
+          <i class="fa-solid fa-user mr-2"></i> Min Profil
+        </button>
+        <button @click="openSettings" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 mb-2 hover:scale-105 transition duration-300 ease-in-out">
+          <router-link to="/settings">
+              <i class="fa-solid fa-gear mr-2"></i> Innstillinger
+          </router-link>
+        </button>
+        <button @click="handleSignOut" class="mt-8 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 hover:scale-105 transition duration-300 ease-in-out">
+          <i class="fa-solid fa-right-from-bracket mr-2"></i> Logg ut
+        </button>
+      </div>
+    </Modal>
+
+    </div>
+    <router-link v-if="!isLoggedIn"
           :to="`/sign-in`" 
           class="bg-lightblue text-white border border-lightblue hover:bg-white hover:border-mamonblue hover:text-mamonblue py-1 px-4 ml-4 rounded transition" 
           >Logg inn
         </router-link>
-        <a @click="handleSignOut" v-if="isLoggedIn" class="bg-lightblue text-white hover:bg-red-500 py-1 px-4 ml-4 rounded transition"
-          >Logg ut
-        </a>
-      </div>
       
   </header>
   
@@ -82,19 +80,25 @@
 <script>
 import { computed, nextTick, ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { useStore } from 'vuex';
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged  } from "firebase/auth";
 import router from '../router';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 
 import { navigateToProfile } from '../utils/';
-
-
+import HeaderItem from './HeaderItem.vue';
+import Modal from './Modal.vue';
 
 export default {
   props: ['isLoggedIn', 'auth', 'siteSettings'],
+  components: {
+    HeaderItem,
+    Modal
+},
   setup(props) {
     let ignoreNextOutsideClick = false;
+    const defaultPhotoUrl = '/images/frosk.png';
+    const auth = getAuth();
     const searchQuery = ref('');
     const searchResults = ref([]);
     const searchField = ref(null);
@@ -102,13 +106,36 @@ export default {
     const store = useStore();
     const vueRouter = useRouter();
 
-    const ToggleMenu = () => store.dispatch('utils/ToggleMenu');
+ 
+    const modalIsActive = computed({
+        get: () => store.getters['utils/modalIsActive'],
+        set: (value) => {
+          if(value) store.dispatch('utils/openModal');
+          else store.dispatch('utils/closeModal');
+        }
+      });
+
+    const toggleModal = () => {
+      store.dispatch('utils/toggleModal');
+    };
+
+    const openModal = () => {
+      store.dispatch('utils/openModal');
+    };
+
+    const closeModal = () => {
+      store.dispatch('utils/closeModal');
+    };
 
     const handleSignOut = () => {
       signOut(getAuth()).then(() => {
         router.push('/');
       });
     };
+
+    const photoUrl = ref(auth.currentUser?.photoURL || defaultPhotoUrl);
+    const userID = ref(auth.currentUser?.uid);
+    
     const toggleSearchField = () => {
       showSearchField.value = !showSearchField.value;
       if (showSearchField.value) {
@@ -167,91 +194,63 @@ export default {
     onMounted(() => {
       document.addEventListener('keydown', onEscapePress);
       document.addEventListener('click', onClickOutside);
-    });
+      
+      onAuthStateChanged(auth, (user) => {
+      if (user) {
+        userID.value = user.uid;
+        photoUrl.value = user.photoURL || defaultPhotoUrl;
+
+       } else {
+        userID.value = user.uid;
+        photoUrl.value = defaultPhotoUrl;
+          }
+        });
+      });
 
     onBeforeUnmount(() => {
       document.removeEventListener('keydown', onEscapePress);
       document.removeEventListener('click', onClickOutside);
     });
     
+    
     return {
-      menu_is_active: computed(() => store.state.utils.menu_is_active),
-      ToggleMenu,
       handleSignOut,
       toggleSearchField,
       showSearchField,
       searchField, 
       searchQuery,
       searchResults,
-      navigate
+      navigate,
+      photoUrl,
+      modalIsActive,
+      toggleModal,
+      openModal,
+      closeModal,
+      userID
     };
   },
 };
 
 </script>
-<style scoped>
- 
-.logo {
-  margin-left: auto;
-}
-.menu-toggle {
-	position: relative;
-	top: 1rem;
-	left: 1rem;
-	width: 32px;
-	height: 32px;
-	cursor: pointer;
-}
+<style>
 
-.menu-toggle .hamburger {
-	position: relative;
-	top: 15%;
-	left: 20%;
-	transform: translate(-50%, -50%);
-	width: 32px;
-	height: 32px;
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-
-.menu-toggle .hamburger span {
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
-	width: 100%;
-	height: 4px;
-	border-radius: 99px;
-	background-color: white;
-	transition: all 0.3s ease-in-out;
-}
-
-.menu-toggle .hamburger span::before,
-.menu-toggle .hamburger span::after {
-	content: '';
-	position: absolute;
-	width: 100%;
-	height: 4px;
-	border-radius: 99px;
-	background-color: white;
-	transition: all 0.3s ease-in-out;
-}
-
-.menu-toggle .hamburger span::after {
-	top: -8px;
-}
-
-.menu-toggle .hamburger span::before {
-	top: 8px;
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
 }
 
 
-.menu-toggle.is-active .hamburger > span {
-  transform: rotate(45deg);
-}
-.menu-toggle.is-active .hamburger > span::before {
-  top: 0;
-  transform: rotate(0deg);
-}
-.menu-toggle.is-active .hamburger > span::after {
-  top: 0;
-  transform: rotate(90deg);
+button:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease-in-out;
 }
 </style>

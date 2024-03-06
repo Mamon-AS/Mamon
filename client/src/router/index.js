@@ -9,12 +9,13 @@ const router = createRouter({
   routes: [
     { path: '/', name: 'home', component: HomeView },
     { path: '/register', name: 'register',component: () => import('../views/RegisterView.vue') },
-    { path: '/user', name: 'user',component: () => import('../views/UserView.vue'), meta: { requiresAuth: true }, props: true},
+    { path: '/user', name: 'user',component: () => import('../views/MyUserProfileView.vue'), meta: { requiresAuth: true }, props: true},
     { path: '/users/:userId', name: 'UserProfile',component: () => import('../views/UserProfileView.vue'), meta: { requiresAuth: true }, props: true},
     { path: '/sign-in', name: 'sign-in',component: () => import('../views/SignInView.vue') },
     { path: '/privacy', name: 'privacy',component: () => import('../views/PrivacyPolicyView.vue') },
     { path: '/review', name: 'review',component: () => import('../views/PostReviewView.vue'), meta: { requiresAuth: true } },   
     { path: '/followers/:userId', name: 'followers', component: () => import('../views/FollowersView.vue'), meta: { requiresAuth: true }, props: true },
+    { path: '/settings', name: 'settings',component: () => import('../views/SettingsView.vue'), meta: { requiresAuth: true }, props: true},
   ]
 })
 
@@ -32,7 +33,7 @@ const getCurrentUser = () => {
   };
 // navigation guard for å sjekke innlogga brukere 
 router.beforeEach(async(to, from, next) => {
-  if (to.name === 'user' || to.name === 'review' || to.name === 'UserProfile' || to.name === 'followers') { 
+  if (to.name === 'user' || to.name === 'review' || to.name === 'UserProfile' || to.name === 'followers' | to.name === 'settings') { 
     if (await getCurrentUser()) {
       next();
     } else {
@@ -47,7 +48,7 @@ router.beforeEach(async(to, from, next) => {
 router.afterEach((to, from) => {
   if (from.name) {
     document.documentElement.scrollTop = 0
-    store.dispatch('utils/CloseMenu')
+    store.dispatch('utils/closeModal')
   }
 });
 
