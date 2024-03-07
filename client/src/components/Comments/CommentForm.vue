@@ -2,7 +2,7 @@
   <!-- Comment Form -->
   <div class="flex relative m-1 pt-1">
     <textarea v-model="commentText" :placeholder="formPlaceholder" maxlength="280"
-      class="textarea w-full p-2 border rounded-md border-gray-300" rows="3">
+      class="textarea w-full p-2 border rounded-l-md border-gray-300" rows="3">
 		</textarea>
     <button @click="postComment(commentText, 'add', null, parentCommentId)"
             class="submit-btn bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-700">
