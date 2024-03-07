@@ -28,7 +28,7 @@
     <div class="border-t border-gray-800"></div>
 
     <!-- Emoji section -->
-    <div class="flex relative ml-2">
+    <div class="flex items-end relative ml-2">
       <template v-if="uniqueEmojis.length > 0">
         <span v-for="emoji in uniqueEmojis"
                     :key="emoji.value" 
@@ -48,13 +48,13 @@
           <span v-for="emoji in emojis" class="emoji text-2xl cursor-pointer mx-1"
                       :key="emoji.value"
                       @click="sendReaction(emoji, reviewItems._id); showReactionModal = false;">
-            {{ emoji.value }} reaksjon{{ emoji.value > 1 ? 'er' : '' }}
+            {{ emoji.value }}
           </span>
         </div>
       </div>
       <!-- Reaction Modal END -->
 
-      <p class="text-xl cursor-pointer hover:underline ml-2"  @click="toggleModal('listOfUsers')">
+      <p class="text-xs cursor-pointer hover:underline "  @click="toggleModal('listOfUsers')">
         <template v-if="reactionsCount > 0">
           {{ reactionsCount }} 
         </template>
@@ -372,10 +372,10 @@ width: 100%;
   display: inline-flex; 
   align-items: center; 
   justify-content: center; 
-  transform: translateY(-0.5rem) scale(1.5);
+  transform: translateY(-0.5rem) scale(1.1);
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, color 0.3s ease-in-out;
   color: #4ade80; 
-  box-shadow: 0 0 5px #4ade80; 
+  box-shadow: 0 0 5px #4ade80 inset, 0 0 5px #4ade80; 
   border-radius: 50%; 
 }
 
