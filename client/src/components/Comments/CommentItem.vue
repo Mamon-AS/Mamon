@@ -13,10 +13,10 @@
       <span v-if="props.userId === currentUserId" class="delete-link text-red-500 cursor-pointer ml-4" @click="deleteComment(props.commentId)">Slett</span>
     </div>
     <!-- Reply input field -->
-    <div v-if="showReplyInput" class="mt-2">
-      <textarea v-model="replyText" placeholder="Skriv et svar.." class="textarea w-full p-2 border rounded-md border-gray-300"></textarea>
-      <button @click="postReply" class="submit-btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 mt-2">Svar</button>
-    </div>
+    <CommentForm v-if="showReplyInput" 
+                      :reviewId="props.reviewId"
+                      :parentCommentId="reply.commentId" 
+                      :formPlaceholder="'Skriv et svar...'" />
   </div>
 
   <!-- Replies to the comment -->
@@ -31,10 +31,11 @@
         <span class="date">{{ timeStampToDate(reply.createdAt) }}</span>
         <span class="reply-link text-blue-500 cursor-pointer ml-4" @click="showReplyToReplyInput = reply.commentId">Svar</span>
         <span v-if="reply.userId === currentUserId" class="delete-link text-red-500 cursor-pointer ml-4" @click="deleteComment(reply.commentId)">Slett</span>
-        <div v-if="showReplyToReplyInput === reply.commentId" class="mt-2">
-            <textarea v-model="replyText" placeholder="Skriv et svar.." class="textarea w-full p-2 border rounded-md border-gray-300"></textarea>
-            <button @click="() => postReply(reply.commentId)" class="submit-btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 mt-2">Svar</button>
-        </div>
+        <CommentForm v-if="showReplyToReplyInput === reply.commentId" 
+                          :reviewId="props.reviewId"
+                          :parentCommentId="reply.commentId"
+                          :formPlaceholder="'Skriv et svar...'" 
+        />
       </div>
     </div>
   </div>
@@ -47,6 +48,7 @@ import { getAuth } from 'firebase/auth';
 import { useStore } from 'vuex';
 
 import { navigateToProfile, timeStampToDate  } from '../../utils/';
+import CommentForm from '../Comments/CommentForm.vue';
 
 const props = defineProps({
   reviewId: String,
@@ -58,6 +60,10 @@ const props = defineProps({
   replies: Array,
   commentId: String,
 });
+
+const components = {
+  CommentForm
+};
 
 const router = useRouter();
 const showReplyInput = ref(false);

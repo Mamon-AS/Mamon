@@ -125,7 +125,7 @@ export default {
     ListOfUsers,
     CommentForm,
     CommentItem,
-},
+  },
 
   setup(props) {
     const showListOfUsersModal = ref(false);

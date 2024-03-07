@@ -1,15 +1,15 @@
 <template>
   <!-- Comment Form -->
-  <div class="m-1 pt-1">
+  <div class="flex relative m-1 pt-1">
     <textarea v-model="commentText" :placeholder="formPlaceholder" maxlength="280"
       class="textarea w-full p-2 border rounded-md border-gray-300" rows="3">
 		</textarea>
-    <button @click="postComment(commentText)"
-            class="submit-btn mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+    <button @click="postComment(commentText, 'add', null, parentCommentId)"
+            class="submit-btn bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-700">
       Send
 		</button>
     <div v-if="commentText.length > 0"
-		        	:class="['text-right', 'text-sm',
+		        	:class="['absolute', 'bottom-0', 'left-2', 'text-right', 'text-sm',
               {'text-gray-300': commentText.length <= 250},
               { 'text-red-300': commentText.length > 250 && commentText.length <= 270},
               { 'text-red-600': commentText.length > 270 }]">
