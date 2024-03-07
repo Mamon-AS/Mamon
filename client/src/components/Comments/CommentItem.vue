@@ -1,7 +1,7 @@
 <template>
   <!-- Main comment -->
   <div class="comment-item p-4 border-b border-gray-200">
-    <div class="author" @click="navigate(props.userId)">
+    <div class="author flex items-end mb-2" @click="navigate(props.userId)">
       <img :src="props.photoUrl" alt="Profile picture" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mr-2 cursor-pointer"/>
       <span class="hover:underline cursor-pointer">{{ props.displayName }}</span>
     </div>
@@ -22,7 +22,7 @@
   <!-- Replies to the comment -->
   <div class="replies pl-8 mt-2 mb-2" v-if="props.replies && props.replies.length">
     <div v-for="reply in props.replies" :key="reply.commentId" class="reply-item p-2 border-b border-gray-100">
-      <div class="author" @click="navigate(reply.userId)">
+      <div class="author flex items-end mb-2" @click="navigate(reply.userId)">
         <img :src="reply.photoUrl" alt="Profile picture" class="object-cover rounded-full w-8 h-8 border-2 border-gray-700 mr-2 cursor-pointer"/>
         <span class="hover:underline cursor-pointer">{{ reply.displayName }}</span>
       </div>
