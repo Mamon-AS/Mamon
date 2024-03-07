@@ -7,7 +7,7 @@
       <div class="author" @click="navigate(props.userId)">
         <span class="hover:underline cursor-pointer">{{ props.displayName }}</span>
       </div> 
-      <div class="text mt-1">{{ props.text }}</div>
+      <div class="text-s mt-1">{{ props.text }}</div>
       <div class="details mt-2 text-sm text-gray-500">
         <span class="date">{{ date }}</span>
         <!-- Add a reply button or link -->
@@ -29,7 +29,7 @@
         <div class="author">
           <span class="hover:underline cursor-pointer" @click="navigate(reply.userId)">{{ reply.displayName }}</span>
         </div>
-        <div class="text mt-1">{{ reply.text }}</div>
+        <div class="text-s mt-1">{{ reply.text }}</div>
         <div class="details mt-2 text-xs text-gray-500">
           <span class="date">{{ timeStampToDate(reply.createdAt) }}</span>
           <span class="reply-link text-blue-500 cursor-pointer ml-4" @click="showReplyToReplyInput = reply.commentId">Svar</span>
