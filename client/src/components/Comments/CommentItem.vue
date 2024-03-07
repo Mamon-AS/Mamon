@@ -11,7 +11,7 @@
       <!-- Add a reply button or link -->
       <span class="reply-link text-blue-500 cursor-pointer ml-4" @click="showReplyInput = !showReplyInput">Svar</span>
       <span v-if="props.userId === currentUserId" class="delete-link text-red-500 cursor-pointer ml-4" @click="deleteComment(props.commentId)">Slett</span>
-      </div>
+    </div>
     <!-- Reply input field -->
     <div v-if="showReplyInput" class="mt-2">
       <textarea v-model="replyText" placeholder="Skriv et svar.." class="textarea w-full p-2 border rounded-md border-gray-300"></textarea>
@@ -36,7 +36,7 @@
             <button @click="() => postReply(reply.commentId)" class="submit-btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 mt-2">Svar</button>
         </div>
       </div>
-      </div>
+    </div>
   </div>
 </template>
 
