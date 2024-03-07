@@ -9,7 +9,7 @@
       Send
 		</button>
     <div v-if="commentText.length > 0"
-		        	:class="['absolute', 'bottom-0', 'left-2', 'text-right', 'text-sm',
+		        	:class="['absolute', 'bottom-0', 'left-2', 'text-right', 'text-sm', 'bg-white-100',
               {'text-gray-300': commentText.length <= 250},
               { 'text-red-300': commentText.length > 250 && commentText.length <= 270},
               { 'text-red-600': commentText.length > 270 }]">

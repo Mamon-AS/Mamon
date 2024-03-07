@@ -1,33 +1,29 @@
 <template>
-  <div class="rounded-lg p-4 m-2 justify-between border-solid border-4 border-mamonblue text-left"> 
+  <div class="relative rounded-lg p-4 pt-6 m-2 mt-4 justify-between border-solid border-4 border-mamonblue text-left">
+    <div class="flex absolute -top-4 -left-2 pr-1 pb-1 mb-1 bg-white" @click="navigate(reviewItems.userId)">
+      <img c v-if="photoUrl" :src="photoUrl" alt="Profile picture" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mr-2 cursor-pointer"/>
+      <span class="cursor-pointer hover:underline">{{ reviewItems.userName ? reviewItems.userName : "Anonym"}}</span>
+    </div>
+    <div class="flex justify-between items-end my-2">
+      <div class="flex items-center">
+        <div class="stars-outer">
+          <div class="stars-inner" :style="{ width: stars }"></div>
+          <div class="stars-background"></div>
+        </div>
+      </div>
+      <p class="text-sm">
+        {{ FormatDate(reviewItems._createdAt) }}
+      </p> 
+    </div>
+
     <div class="content-wrapper">
       <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
       <h3 class="text-lg md:text-2xl font-bold"> {{ (reviewItems.reviewedItem.length > 30 ? reviewItems.reviewedItem.slice(0,30) + '...' : reviewItems.reviewedItem) }}</h3>
-      <div class="flex justify-between items-end my-2">
-        <div class="flex items-center">
-          <div class="stars-outer">
-            <div class="stars-inner" :style="{ width: stars }"></div>
-            <div class="stars-background"></div>
-          </div>
-        </div>
-        <p class="text-sm">
-          {{ FormatDate(reviewItems._createdAt) }}
-        </p> 
-      </div>
+      
       <p class="md:text-lg mb-4">
         {{ reviewItems.description }}
       </p>
     </div> 
-    <div class="flex justify-end items-end mb-1">
-      <p>
-        <span class="cursor-pointer hover:underline" @click="navigate(reviewItems.userId)">
-          {{ reviewItems.userName ? reviewItems.userName : "Anonym"}}
-        </span>
-      </p>
-      <img c v-if="photoUrl" :src="photoUrl" alt="Profile picture" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 ml-2 cursor-pointer"
-          @click="navigate(reviewItems.userId)"
-      />
-    </div>
 
     <div class="border-t border-gray-800"></div>
 
