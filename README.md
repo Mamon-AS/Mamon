@@ -2,7 +2,8 @@
 
 ## Initalize new codespace:
 ### Requirements
-- node.js installed on the computer (https://nodejs.org/en/)
+- node.js installed on the environment (https://nodejs.org/en/)
+- netlify cli installed on the environment (´npm i --location=global netlify-cli´)
 
 ### Install 
 - ...npm in vue folder:

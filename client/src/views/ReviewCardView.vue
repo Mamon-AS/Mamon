@@ -1,12 +1,11 @@
 <template>
-  <div class="container mx-auto p-4 text-center">
-    <div class="flex items-center justify-center gap-4 mb-3">
-      <span class="text-xl font-medium">Offentlige brukere</span>
+  <div class="container mx-auto p-4">
+    <div class="flex items-center gap-4 mb-3">
       <label class="switch">
         <input type="checkbox" @click="toggleCheckbox">
         <span class="slider round"></span>
       </label>
-      <span class="text-xl font-medium">Folk du følger</span>
+      <span class="font-medium">Vis kun brukere du følger</span>
     </div>
     
     <!-- Conditionally render based on dataView state -->
@@ -19,7 +18,7 @@
       <button v-if="$store.state.reviews.total_reviews > posts.length"
               @click="$store.dispatch('reviews/LoadReviews', 4)"
               class="btn mt-8">
-        Les Mer ({{ $store.state.reviews.total_reviews - posts.length }})
+        Les mer ({{ $store.state.reviews.total_reviews - posts.length }})
       </button>
     </div>
     <div v-else>
@@ -31,7 +30,7 @@
       <button v-if="$store.state.reviews.total_reviews > posts.length"
               @click="$store.dispatch('reviews/LoadReviews', 4)"
               class="btn mt-8">
-        Les Mer ({{ $store.state.reviews.total_reviews - posts.length }})
+        Les mer ({{ $store.state.reviews.total_reviews - posts.length }})
       </button>
     </div>
   </div>
@@ -135,8 +134,8 @@ export default {
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 40px;
+  height: 26px;
 }
 
 .switch input {
@@ -158,8 +157,8 @@ export default {
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
+  height: 18px;
+  width: 18px;
   left: 4px;
   bottom: 4px;
   background-color: white;
@@ -176,9 +175,9 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
+  -webkit-transform: translateX(15px);
+  -ms-transform: translateX(15px);
+  transform: translateX(15px);
 }
 
 .slider.round {
