@@ -364,9 +364,6 @@ width: 100%;
   transform: scale(1.1);
 }
 
-.reacted {
-  transform: scale(1.1); 
-}
 
 .userReactedEmoji {
   display: inline-flex; 

@@ -12,7 +12,7 @@
         <img src="/images/Transparent_Image_11_cropped.png" alt="Logo" class="h-8 w-auto logo"/>
       </a>
 
-      <button ref="toggleButton" @click="toggleSearchField" class="ml-5 mr-5 p-2 rounded-full text-white" :class="{'bg-transparent': showSearchField}">
+      <button ref="toggleButton" @click="toggleSearchField" class="lg:ml-5 lg:mr-5  p-2 rounded-full text-white" :class="{'bg-transparent': showSearchField}">
         <i class="fa-solid fa-magnifying-glass fa-2xl" style="color: #ffffff;"></i>     
        </button>
       
@@ -45,9 +45,17 @@
         </li>
       </ul>
     </div>
+
     <div v-if="isLoggedIn" class="ml-auto flex items-center">
+        <!-- Notification Bell -->
+        <UserNotifications 
+          :userId="userID"
+        />
+
+       <!-- Profile Photo and Dropdown -->
       <div @click="toggleModal" class="cursor-pointer">
       <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-12 h-12 border-4 border-gray-800 mr-2 cursor-pointer">
+
     </div>
     
     <Modal v-model="modalIsActive">
@@ -88,12 +96,14 @@ import { useRouter } from 'vue-router';
 import { navigateToProfile } from '../utils/';
 import HeaderItem from './HeaderItem.vue';
 import Modal from './Modal.vue';
+import UserNotifications from './UserNotifications.vue';
 
 export default {
   props: ['isLoggedIn', 'auth', 'siteSettings'],
   components: {
     HeaderItem,
-    Modal
+    Modal,
+    UserNotifications
 },
   setup(props) {
     let ignoreNextOutsideClick = false;
@@ -105,7 +115,6 @@ export default {
     const showSearchField = ref(false);
     const store = useStore();
     const vueRouter = useRouter();
-
  
     const modalIsActive = computed({
         get: () => store.getters['utils/modalIsActive'],
@@ -180,7 +189,9 @@ export default {
           console.error("Failed to search users:", error);
           searchResults.value = [];
         }
-    }
+      }
+
+    
     const navigate = (userId) => navigateToProfile(vueRouter, userId);
     
 
@@ -226,7 +237,7 @@ export default {
       toggleModal,
       openModal,
       closeModal,
-      userID
+      userID,
     };
   },
 };

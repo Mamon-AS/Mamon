@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { db } from '../firebaseInit';
 
 export default {
     namespaced: true,
@@ -7,7 +9,8 @@ export default {
            userItems: [],
            isLoading: false,
            error: null,
-           isPrivate: false
+           isPrivate: false,
+           notifications: [],
         }
     },
     mutations: {
@@ -21,8 +24,13 @@ export default {
             state.error = error;
         },
         SET_PRIVACY(state, isPrivate) {
-            console.log('setting privacy to:', isPrivate);
             state.isPrivate = isPrivate;
+        },
+        ADD_NOTIFICATION(state, notification) {
+            state.notifications.push(notification);
+        },
+        REMOVE_NOTIFICATION(state, notificationId) {
+        state.notifications = state.notifications.filter(notification => notification.id !== notificationId);
         }
     },
 	actions: { 
@@ -76,7 +84,41 @@ export default {
               commit('SET_ERROR', error);
               commit('SET_LOADING', false);
             }
-          }
-          
+        },
+         async markNotificationAsRead ({ commit },  notificationId ) {
+            commit('SET_LOADING', true);
+            try {
+                const response = await axios.post(`/.netlify/functions/markNotificationAsRead`, notificationId);
+                commit('SET_LOADING', false);
+                if (response.status === 200) {
+                    commit('REMOVE_NOTIFICATION', notificationId);
+                }
+            } catch (error) {
+                console.error('Error marking notification as read:', error);
+                commit('SET_ERROR', error);
+                commit('SET_LOADING', false);
+                }
+            },
+        listenForNotifications({ commit }, userId) {
+            console.log(userId);
+            const notificationsQuery = query(collection(db, 'notifications'), where('userId', '==', userId));
+            
+            const unsubscribe = onSnapshot(notificationsQuery, (snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        let notification = { id: change.doc.id, ...change.doc.data() };
+                        commit('ADD_NOTIFICATION', notification);
+                    } else if (change.type === "removed") {
+                        let notificationId = change.doc.id;
+                        commit('REMOVE_NOTIFICATION', notificationId);
+                    }
+        
+                    
+                });
+            });
+            return unsubscribe;
+        },   
+
     },
+
 }

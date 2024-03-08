@@ -74,11 +74,8 @@ export default {
       if(action === 'public') { 
          try {
           const response = await axios.get(`/.netlify/functions/getPublicUsers`);
-          console.log(response.data);
           const userIds = response.data.users.map(user => `"${user.id}"`);
-          console.log(userIds);
           const userIdsQueryPart = `userId in [${userIds.join(',')}]`; 
-          console.log(userIdsQueryPart);
           const query = `*[_type == "review" && (${userIdsQueryPart})] | order(_createdAt desc) ${limit ? `[0...${limit}]` : ''}`;
           const count_query = `count(*[_type == "review" && (${userIdsQueryPart})])`;
           try {
