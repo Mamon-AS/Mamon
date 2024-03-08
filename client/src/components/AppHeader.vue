@@ -48,10 +48,10 @@
 
     <div v-if="isLoggedIn" class="ml-auto flex items-center">
         <!-- Notification Bell -->
-      <div @click="fetchNotifications" class="relative mr-3 cursor-pointer">
-        <i class="fa-solid fa-bell fa-2xl mr-3" style="color: #ffffff;"></i>
-        <span v-if="unseenNotifications > 0" class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 text-red-600">{{  unseenNotifications }}</span>
-      </div>
+        <UserNotifications 
+          :userId="userID"
+        />
+
        <!-- Profile Photo and Dropdown -->
       <div @click="toggleModal" class="cursor-pointer">
       <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-12 h-12 border-4 border-gray-800 mr-2 cursor-pointer">
@@ -96,12 +96,14 @@ import { useRouter } from 'vue-router';
 import { navigateToProfile } from '../utils/';
 import HeaderItem from './HeaderItem.vue';
 import Modal from './Modal.vue';
+import UserNotifications from './UserNotifications.vue';
 
 export default {
   props: ['isLoggedIn', 'auth', 'siteSettings'],
   components: {
     HeaderItem,
-    Modal
+    Modal,
+    UserNotifications
 },
   setup(props) {
     let ignoreNextOutsideClick = false;
@@ -113,7 +115,6 @@ export default {
     const showSearchField = ref(false);
     const store = useStore();
     const vueRouter = useRouter();
-    const unseenNotifications = ref(0);
  
     const modalIsActive = computed({
         get: () => store.getters['utils/modalIsActive'],
@@ -190,12 +191,7 @@ export default {
         }
       }
 
-    const fetchNotifications = async () => {
-        // TODO: Fetch notifications from Firestore and update unseenNotifications
-        console.log("Fetching notifications...");
-        // Assume we fetched notifications and found 3 unseen ones
-        unseenNotifications.value = 3; // Update based on actual fetched data
-      };
+    
     const navigate = (userId) => navigateToProfile(vueRouter, userId);
     
 
@@ -242,8 +238,6 @@ export default {
       openModal,
       closeModal,
       userID,
-      fetchNotifications,
-      unseenNotifications,
     };
   },
 };
