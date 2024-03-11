@@ -1,6 +1,4 @@
 import axios from 'axios';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
-import { db } from '../firebaseInit';
 
 export default {
     namespaced: true,
@@ -99,25 +97,6 @@ export default {
                 commit('SET_LOADING', false);
                 }
             },
-        listenForNotifications({ commit }, userId) {
-            console.log(userId);
-            const notificationsQuery = query(collection(db, 'notifications'), where('userId', '==', userId));
-            
-            const unsubscribe = onSnapshot(notificationsQuery, (snapshot) => {
-                snapshot.docChanges().forEach((change) => {
-                    if (change.type === "added") {
-                        let notification = { id: change.doc.id, ...change.doc.data() };
-                        commit('ADD_NOTIFICATION', notification);
-                    } else if (change.type === "removed") {
-                        let notificationId = change.doc.id;
-                        commit('REMOVE_NOTIFICATION', notificationId);
-                    }
-        
-                    
-                });
-            });
-            return unsubscribe;
-        },   
 
     },
 

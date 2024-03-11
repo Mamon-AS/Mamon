@@ -45,7 +45,7 @@ export default {
     };
 
     onMounted(() => {
-      const q = query(collection(db, 'notifications'), where('userId', '==', props.userId));
+      const q = query(collection(db, 'notifications'), where('notificationUserId', '==', props.userId));
       unsubscribe = onSnapshot(q, (snapshot) => {
         snapshot.docChanges().forEach(change => {
           if (change.type === "added") {
