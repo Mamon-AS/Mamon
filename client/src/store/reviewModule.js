@@ -238,7 +238,7 @@ export default {
       }
     },
 
-  async postComment({ commit, dispatch }, { action = 'add', text, reviewId, userId, displayName, commentId = null, parentCommentId }) {
+  async postComment({ commit, dispatch }, { action = 'add', text, reviewId, userId, displayName, commentId = null, parentCommentId, notificationUserId }) {
     try {
       const payload = {
           action,
@@ -248,6 +248,7 @@ export default {
           displayName,
           commentId, 
           parentCommentId,
+          notificationUserId
       };
 
       const response = await axios.post(`/.netlify/functions/postUserComments`, payload);
