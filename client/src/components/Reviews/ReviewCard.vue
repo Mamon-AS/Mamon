@@ -83,7 +83,7 @@
         :reviewId="reviewItems._id"
         :reviewerUserId="reviewItems.userId"
         :reviewerPhotoUrl="photoUrl"
-        :formPlaceholder="!reviewItems.comments.length ? 'Bli den første til å kommentere' : undefined" 
+        :formPlaceholder="!(reviewItems.comments?.length) ? 'Bli den første til å kommentere' : undefined"
       />
     </div>
     <!-- Comment Section END--> 
