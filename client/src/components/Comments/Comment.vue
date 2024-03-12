@@ -14,8 +14,13 @@
     </div>
     <!-- Reply input field -->
     <div v-if="showReplyInput" class="mt-2">
-      <textarea v-model="replyText" placeholder="Skriv et svar.." class="textarea w-full p-2 border rounded-md border-gray-300"></textarea>
-      <button @click="postReply" class="submit-btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 mt-2">Svar</button>
+      <CommentForm
+        :reviewId="props.reviewId"
+        :parentCommentId="props.commentId"
+        :formPlaceholder="'Svar til ' + props.displayName + '..'"
+        :reply="true"
+        :notificationUserId="props.userId"
+      />
     </div>
   </div>
 
@@ -32,8 +37,13 @@
         <span class="reply-link text-blue-500 cursor-pointer ml-4" @click="showReplyToReplyInput = reply.commentId">Svar</span>
         <span v-if="reply.userId === currentUserId" class="delete-link text-red-500 cursor-pointer ml-4" @click="deleteComment(reply.commentId)">Slett</span>
         <div v-if="showReplyToReplyInput === reply.commentId" class="mt-2">
-            <textarea v-model="replyText" placeholder="Skriv et svar.." class="textarea w-full p-2 border rounded-md border-gray-300"></textarea>
-            <button @click="postReply(reply.userId)" class="submit-btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 mt-2">Svar</button>
+          <CommentForm
+            :reviewId="props.reviewId"
+            :parentCommentId="props.commentId"
+            :formPlaceholder="'Svar til ' + props.displayName + '..'"
+            :reply="true"
+            :notificationUserId="props.userId"
+          />
         </div>
       </div>
     </div>

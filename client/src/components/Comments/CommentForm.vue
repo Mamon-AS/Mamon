@@ -5,15 +5,15 @@
       class="textarea w-full p-2 border rounded-l-md border-gray-300" rows="3"
       style="border-top-left-radius: 0.375rem; border-bottom-left-radius: 0.375rem;">
 		</textarea>
-    <button @click="postComment(commentText, 'add', null, parentCommentId)"
+    <button @click="postComment(commentText, (reply ? 'reply' : 'add'), notificationUserId, parentCommentId)"
             class="submit-btn bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-700">
       Send
 		</button>
     <div v-if="commentText.length > 0"
-		        	:class="['absolute', 'bottom-0', 'left-2', 'text-right', 'text-sm', 'bg-white-100',
+		        	:class="['absolute', 'bottom-0', 'left-2', 'text-right', 'text-sm', 'bg-white', 'bg-opacity-50',
               {'text-gray-300': commentText.length <= 250},
-              { 'text-red-300': commentText.length > 250 && commentText.length <= 270},
-              { 'text-red-600': commentText.length > 270 }]">
+              {'text-red-300': commentText.length > 250 && commentText.length < 270},
+              {'text-red-600': commentText.length >= 270 }]">
       {{ 280 - commentText.length }} / 280
     </div>
   </div>
@@ -32,6 +32,8 @@ const props = defineProps({
   reviewerPhotoUrl: String,
   parentCommentId: String,
   formPlaceholder: {type: String, default: 'Kommentér'},
+  reply: {type: Boolean, default: false},
+  notificationUserId: {type: String, default: null},
 });
 
 const store = useStore();
@@ -43,7 +45,8 @@ getAuth().onAuthStateChanged(user => {
       currentUser.value = user;
     });
 
-const postComment = async (text, action = "add", commentId = null, parentCommentId = null)  => {
+const postComment = async (text, action, notificationUserId, parentCommentId = null, commentId = null)  => {
+  if (!text) return;
   const commentData = { 
     text, 
     reviewId: props.reviewId, 
@@ -52,11 +55,15 @@ const postComment = async (text, action = "add", commentId = null, parentComment
     action, 
     commentId, 
     parentCommentId,
-    notificationUserId: props.reviewerUserId
+    notificationUserId: notificationUserId
   };
-  showCommentForm.value = false;
   
-  await store.dispatch('reviews/postComment', commentData);
+  try {
+    await store.dispatch('reviews/postComment', commentData);
+  } catch (error) {
+    console.error("Error posting reply:", error);
+  }
+  showCommentForm.value = false;
   commentText.value = '';
 }
 
