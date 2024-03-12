@@ -1,13 +1,14 @@
 <template>
   <header 
     :class="[
-      'flex w-full items-center justify-between p-4 z-50 relative transition-all duration-300', 
+      'flex w-full items-center justify-between p-4 z-50 fixed top-0 left-0  transition-all duration-300', 
       { 'bg-mamonblue': !showSearchField },
-      { 'bg-blue-500': showSearchField, 'h-20 md:h-32': showSearchField },
+      { 'bg-blue-500 h-20 md:h-32': showSearchField },
     ]"
     :style="showSearchField ? { position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100 } : {}"
   >
-    <div class="flex">
+    <!-- ICONS BEGIN -->
+    <div class="flex ">
       <a href="/" class="ml-5 mt-2">
         <img src="/images/Transparent_Image_11_cropped.png" alt="Logo" class="h-8 w-auto logo"/>
       </a>
@@ -34,6 +35,8 @@
         style="z-index: 101;"
       />
     </div>
+    <!-- ICONS END -->
+
     <div v-show="searchResults.length > 0" class="absolute top-full left-0 mt-12 w-full bg-white shadow-lg z-50">
       <ul>
         <li v-for="user in searchResults" :key="user.userId" class="p-2 hover:bg-gray-100">
@@ -46,42 +49,44 @@
       </ul>
     </div>
 
-    <div v-if="isLoggedIn" class="ml-auto flex items-center">
-        <!-- Notification Bell -->
-        <UserNotifications 
-          :userId="userID"
-        />
+      <div v-if="isLoggedIn" class="ml-auto flex items-center">
+          <!-- Notification Bell -->
+          <UserNotifications 
+            :userId="userID"
+          />
 
-       <!-- Profile Photo and Dropdown -->
-      <div @click="toggleModal" class="cursor-pointer">
-      <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-12 h-12 border-4 border-gray-800 mr-2 cursor-pointer">
+        <!-- Profile Photo and Dropdown -->
+        <div @click="toggleModal" class="cursor-pointer">
+        <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-12 h-12 border-4 border-gray-800 mr-2 cursor-pointer">
 
-    </div>
-    
-    <Modal v-model="modalIsActive">
-      <div class="flex flex-col dropdown animate-fade-in">
-        <button @click="navigate(userID)" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 mb-2 hover:scale-105 transition duration-300 ease-in-out">
-          <i class="fa-solid fa-user mr-2"></i> Min Profil
-        </button>
-        <button @click="openSettings" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 mb-2 hover:scale-105 transition duration-300 ease-in-out">
-          <router-link to="/settings">
-              <i class="fa-solid fa-gear mr-2"></i> Innstillinger
-          </router-link>
-        </button>
-        <button @click="handleSignOut" class="mt-8 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 hover:scale-105 transition duration-300 ease-in-out">
-          <i class="fa-solid fa-right-from-bracket mr-2"></i> Logg ut
-        </button>
       </div>
-    </Modal>
+        <!-- WHEN YOU CLICK USER PROFILE BEGIN -->
+      <Modal v-model="modalIsActive">
+        <div class="flex flex-col dropdown animate-fade-in">
+          <button @click="navigate(userID)" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 mb-2 hover:scale-105 transition duration-300 ease-in-out">
+            <i class="fa-solid fa-user mr-2"></i> Min Profil
+          </button>
+          <button @click="openSettings" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 mb-2 hover:scale-105 transition duration-300 ease-in-out">
+            <router-link to="/settings">
+                <i class="fa-solid fa-gear mr-2"></i> Innstillinger
+            </router-link>
+          </button>
+          <button @click="handleSignOut" class="mt-8 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 hover:scale-105 transition duration-300 ease-in-out">
+            <i class="fa-solid fa-right-from-bracket mr-2"></i> Logg ut
+          </button>
+        </div>
+      </Modal>
 
-    </div>
-    <router-link v-if="!isLoggedIn"
-          :to="`/sign-in`" 
-          class="bg-lightblue text-white border border-lightblue hover:bg-white hover:border-mamonblue hover:text-mamonblue py-1 px-4 ml-4 rounded transition" 
-          >Logg inn
-        </router-link>
-      
+      </div>
+      <router-link v-if="!isLoggedIn"
+            :to="`/sign-in`" 
+            class="bg-lightblue text-white border border-lightblue hover:bg-white hover:border-mamonblue hover:text-mamonblue py-1 px-4 ml-4 rounded transition" 
+            >Logg inn
+      </router-link>
+      <!-- WHEN YOU CLICK USER PROFILE END -->
+
   </header>
+  
   
 </template>
 

@@ -122,8 +122,8 @@ exports.handler = async (event) => {
         await reviewRef.update({ comments, totalComments });
         if (action === 'add' || action === 'reply') {
             const notificationMessage = action === 'add' ? 
-                `${displayName} kommenterte på din anmeldelse.` : 
-                `${displayName} svarte på din kommentar.`;
+                `${displayName} kommenterte "${text}" på din anmeldelse.` : 
+                `${displayName} svarte med "${text}" på din kommentar.`;
 
             const notificationData = {
                 userId: reviewDoc.data().userId,

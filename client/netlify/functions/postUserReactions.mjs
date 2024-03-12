@@ -71,7 +71,7 @@ exports.handler = async (event) => {
             }
             await reviewRef.update({ reactions, totalReactions });
          
-            const notificationMessage = `${displayName} reagerte på din anmeldelse.` 
+            const notificationMessage = `${displayName} reagerte med ${emoji} på din anmeldelse.` 
 
             const notificationData = {
                 userId: userId,
