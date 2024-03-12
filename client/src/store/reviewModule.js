@@ -91,47 +91,54 @@ export default {
     }
   
    
-    if(action === 'public') {
+    if(action === 'public') { 
       try {
-        console.log("Fetching public reviews");
-        const response = await axios.get(`/.netlify/functions/getPublicUsers`);
-        if (response.status === 200) {
-          const userIds = response.data.users.map(user => `"${user.id}"`);
-          const userIdsQueryPart = `userId in [${userIds.join(',')}]`;
-          const query = `*[_type == "review" && (${userIdsQueryPart})] | order(_createdAt desc) ${limit ? `[0...${limit}]` : ''}`;
-          const countQuery = `count(*[_type == "review" && (${userIdsQueryPart})])`;
-  
-          const reviewItems = await sanity.fetch(query);
-          let enrichedReviewItems = [];
-  
-          for (const review of reviewItems) {
-
-            const commentsResponse = await axios.post(`/.netlify/functions/getUserComments`, { reviewId: review._id });
-            if (commentsResponse.status === 200) {
-              review.comments = commentsResponse.data.comments;
-            } else {
-              review.comments = [];
-            }
-            enrichedReviewItems.push(review);
-          }
-  
-
-          const totalReviews = await sanity.fetch(countQuery);
-  
-          // Cache the new data with a timestamp
-          localStorage.setItem(cacheKey, JSON.stringify({
-            timestamp: Date.now(),
-            data: { reviewItems: enrichedReviewItems, totalReviews }
-          }));
-  
+       const response = await axios.get(`/.netlify/functions/getPublicUsers`);
+       const userIds = response.data.users.map(user => `"${user.id}"`);
+       const userIdsQueryPart = `userId in [${userIds.join(',')}]`; 
+       const query = `*[_type == "review" && (${userIdsQueryPart})] | order(_createdAt desc) ${limit ? `[0...${limit}]` : ''}`;
+       const count_query = `count(*[_type == "review" && (${userIdsQueryPart})])`;
+       try {
+           const reviewItems = await sanity.fetch(query);
+           let enrichedReviewItems = [];
+             // Fetch comments for each review asynchronously
+           for (const review of reviewItems) {
+             try {
+               const response = await axios.post(`/.netlify/functions/getUserComments`, { reviewId: review._id });
+               if (response.status === 200) {
+                 review.comments = response.data.comments;
+               } else {
+                 review.comments = [];
+               }
+             } catch (error) {
+               if (error.response && error.response.status === 404) {
+                 console.log(`No comments found for review ID: ${review._id}`);
+                 review.comments = []; 
+               } else {
+                 console.error(`Error fetching comments for review ID ${review._id}:`, error);
+                 review.comments = []; 
+               }
+             }
        
-          commit('SET_REVIEWS', enrichedReviewItems);
-          commit('SET_TOTAL_REVIEWS', totalReviews);
-        }
+             enrichedReviewItems.push(review);
+           }
+
+           commit('SET_REVIEWS', enrichedReviewItems);
+           sanity.fetch(count_query).then(count => {
+            localStorage.setItem(cacheKey, JSON.stringify({
+              timestamp: Date.now(),
+              data: { reviewItems: enrichedReviewItems, totalReviews: count }
+            }))
+             commit('SET_TOTAL_REVIEWS', count)
+           })
+         } catch (error) {
+           console.error("Error fetching reviews:", error);
+         }
       } catch (error) {
-        console.error("Error fetching reviews:", error);
+         console.error("Error fetching public users:", error);
       }
-    }
+
+     }
     else if (action === 'fetch_followers_reviews') {
 
       try {
