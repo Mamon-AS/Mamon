@@ -20,8 +20,8 @@ const db = admin.firestore();
 // 2. Denormalization: The user's name will be stored aswell because they belong together and I don't want to make another query to get the user's name
 exports.handler = async (event) => {
     try {
-        const { emoji, reviewId, userId, displayName } = JSON.parse(event.body);
-        console.log('Updating reaction... for reviewId:', reviewId, 'emoji:', emoji, 'userId:', userId, 'displayName:', displayName);
+        const { emoji, reviewId, userId, displayName, notificationUserId } = JSON.parse(event.body);
+        console.log('Updating reaction... for reviewId:', reviewId, 'emoji:', emoji, 'userId:', userId, 'displayName:', displayName, ' notificationUserId:', notificationUserId);
         if (!emoji || !reviewId || !displayName || !userId) {
             return {
                 statusCode: 400,
@@ -70,6 +70,21 @@ exports.handler = async (event) => {
                 totalReactions += 1;
             }
             await reviewRef.update({ reactions, totalReactions });
+         
+            const notificationMessage = `${displayName} reagerte med ${emoji} på din anmeldelse.` 
+
+            const notificationData = {
+                userId: userId,
+                type: 'reaction',
+                message: notificationMessage,
+                seen: false,
+                timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                reviewId: reviewId,
+                notificationUserId: notificationUserId
+            };
+            
+                await db.collection('notifications').add(notificationData);
+            
         }
 
         return {

@@ -1,5 +1,5 @@
 <template>
-    <section v-if="settings && settings.fullHero" class="flex justify-center xl:grid">
+    <section v-if="settings && settings.fullHero" class="flex justify-center xl:grid pt-20">
         <div v-if="settings.heroTitle" class="flex-col w-full mx-auto">
             
             <div class="mb-4">

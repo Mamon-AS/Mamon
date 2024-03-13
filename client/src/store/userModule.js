@@ -7,7 +7,8 @@ export default {
            userItems: [],
            isLoading: false,
            error: null,
-           isPrivate: false
+           isPrivate: false,
+           notifications: [],
         }
     },
     mutations: {
@@ -21,8 +22,13 @@ export default {
             state.error = error;
         },
         SET_PRIVACY(state, isPrivate) {
-            console.log('setting privacy to:', isPrivate);
             state.isPrivate = isPrivate;
+        },
+        ADD_NOTIFICATION(state, notification) {
+            state.notifications.push(notification);
+        },
+        REMOVE_NOTIFICATION(state, notificationId) {
+        state.notifications = state.notifications.filter(notification => notification.id !== notificationId);
         }
     },
 	actions: { 
@@ -76,7 +82,22 @@ export default {
               commit('SET_ERROR', error);
               commit('SET_LOADING', false);
             }
-          }
-          
+        },
+         async markNotificationAsRead ({ commit },  notificationId ) {
+            commit('SET_LOADING', true);
+            try {
+                const response = await axios.post(`/.netlify/functions/markNotificationAsRead`, notificationId);
+                commit('SET_LOADING', false);
+                if (response.status === 200) {
+                    commit('REMOVE_NOTIFICATION', notificationId);
+                }
+            } catch (error) {
+                console.error('Error marking notification as read:', error);
+                commit('SET_ERROR', error);
+                commit('SET_LOADING', false);
+                }
+            },
+
     },
+
 }

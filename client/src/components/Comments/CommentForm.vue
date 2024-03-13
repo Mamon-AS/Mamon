@@ -51,10 +51,13 @@ const postComment = async (text, action = "add", commentId = null, parentComment
     displayName: currentUser.value.displayName,
     action, 
     commentId, 
-    parentCommentId 
+    parentCommentId,
+    notificationUserId: props.reviewerUserId
   };
   showCommentForm.value = false;
+  
   await store.dispatch('reviews/postComment', commentData);
+  commentText.value = '';
 }
 
 </script>

@@ -47,7 +47,7 @@
         <div class="flex justify-around">
           <span v-for="emoji in emojis" class="emoji text-2xl cursor-pointer mx-1"
                       :key="emoji.value"
-                      @click="sendReaction(emoji, reviewItems._id); showReactionModal = false;">
+                      @click="sendReaction(emoji, reviewItems._id, reviewItems.userId); showReactionModal = false;">
             {{ emoji.value }}
           </span>
         </div>
@@ -83,7 +83,7 @@
         :reviewId="reviewItems._id"
         :reviewerUserId="reviewItems.userId"
         :reviewerPhotoUrl="photoUrl"
-        :formPlaceholder="!reviewItems.comments.length ? 'Bli den første til å kommentere' : undefined" 
+        :formPlaceholder="!(reviewItems.comments?.length) ? 'Bli den første til å kommentere' : undefined"
       />
     </div>
     <!-- Comment Section END--> 
@@ -182,7 +182,7 @@ export default {
         return starPercentageRounded
     })
 
-    const sendReaction = async (selectedEmoji, reviewId) => {
+    const sendReaction = async (selectedEmoji, reviewId, notificationUserId) => {
       // Immediately check if the user is logged in
       if (!currentUser.value) {
         console.log("User not logged in to post reactions.");
@@ -195,7 +195,8 @@ export default {
           emoji: selectedEmoji.value,
           reviewId: reviewId,
           userId: currentUser.value.uid,
-          displayName: currentUser.value.displayName
+          displayName: currentUser.value.displayName,
+          notificationUserId: notificationUserId
         });
 
         if (response.status >= 200 && response.status < 300) {
@@ -311,7 +312,6 @@ export default {
     usersData,
     showReactionModal,
     toggleModal,
-    toggleModal,
     uniqueEmojis,
     isUserReactedEmoji,
   };
@@ -364,9 +364,6 @@ width: 100%;
   transform: scale(1.1);
 }
 
-.reacted {
-  transform: scale(1.1); 
-}
 
 .userReactedEmoji {
   display: inline-flex; 

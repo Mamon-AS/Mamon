@@ -19,7 +19,7 @@ const db = admin.firestore();
 
 exports.handler = async (event) => {
     try {
-        const { action, commentId, text, reviewId, userId, displayName, parentCommentId } = JSON.parse(event.body);
+        const { action, commentId, text, reviewId, userId, displayName, parentCommentId, notificationUserId } = JSON.parse(event.body);
         if (!action || !['add', 'delete', 'reply'].includes(action)) {
             return {
                 statusCode: 400,
@@ -30,7 +30,7 @@ exports.handler = async (event) => {
                 },
             };
         }
-
+        console.log('Updating comments... for action:', action, 'commentId:', commentId, 'text:', text, 'reviewId:', reviewId, 'userId:', userId, 'displayName:', displayName, 'parentCommentId:', parentCommentId, ' notificationUserId:', notificationUserId);
         if ((action === 'add' || action === 'reply') && (!text || !reviewId || !userId || !displayName)) {
             return {
                 statusCode: 400,
@@ -120,7 +120,23 @@ exports.handler = async (event) => {
         }
 
         await reviewRef.update({ comments, totalComments });
+        if (action === 'add' || action === 'reply') {
+            const notificationMessage = action === 'add' ? 
+                `${displayName} kommenterte "${text}" på din anmeldelse.` : 
+                `${displayName} svarte med "${text}" på din kommentar.`;
 
+            const notificationData = {
+                userId: reviewDoc.data().userId,
+                type: 'comment',
+                message: notificationMessage,
+                seen: false,
+                timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                reviewId: reviewId,
+                notificationUserId: notificationUserId
+            };
+        
+            await db.collection('notifications').add(notificationData);
+        }
         return {
             statusCode: 200,
             body: JSON.stringify({
