@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
-    <button @click="toggleNotificationsDropdown" class="flex items-center justify-center relative w-10 h-10 mr-2">
-      <i class="fa-solid fa-bell fa-2xl" style="color: #ffffff;"></i>
+    <button @click="toggleNotificationsDropdown" class="flex items-end justify-center relative w-10 h-10 mr-2">
+      <i class="fa-solid fa-bell fa-l" style="color: #ffffff;"></i>
       <span v-if="unseenNotificationsCount" class="absolute -top-2 -right-2 flex items-center justify-center w-6 h-6 text-xs text-white bg-red-500 rounded-full">
         {{ unseenNotificationsCount.length > 9 ? "9+" : unseenNotificationsCount }}
       </span>

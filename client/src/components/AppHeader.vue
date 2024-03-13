@@ -55,8 +55,7 @@
       />
       <!-- Profile Photo and Dropdown -->
       <div @click="toggleModal" class="cursor-pointer">
-      <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-12 h-12 border-4 mr-2 cursor-pointer border-white"
-      >
+      <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-12 h-12 border-4 mr-2 cursor-pointer border-white">
     </div>
     
     <!-- WHEN YOU CLICK USER PROFILE BEGIN -->
