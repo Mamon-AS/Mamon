@@ -48,7 +48,7 @@
         </li>
       </ul>
     </div>
-    <div v-if="isLoggedIn" class="ml-auto flex items-center">
+    <div v-if="isLoggedIn" class="ml-auto flex items-end">
       <!-- Notification Bell -->
       <UserNotifications 
         :userId="userID"
