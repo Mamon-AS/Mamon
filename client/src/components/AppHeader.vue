@@ -3,23 +3,23 @@
     :class="[
       'flex w-full items-center justify-between p-4 z-50 relative transition-all duration-300', 
       { 'bg-mamonblue': !showSearchField },
-      { 'bg-blue-500': showSearchField, 'h-20 md:h-32': showSearchField },
+      { 'bg-blue-500 h-20 md:h-32': showSearchField },
     ]"
     :style="showSearchField ? { position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100 } : {}"
   >
-    <div class="flex">
-      <a href="/" class="ml-5 mt-2">
+    <div class="flex items-end">
+      <a href="/" class="ml-2 lg:ml-5 mt-2">
         <img src="/images/Transparent_Image_11_cropped.png" alt="Logo" class="h-8 w-auto logo"/>
       </a>
 
-      <button ref="toggleButton" @click="toggleSearchField" class="ml-5 mr-5 p-2 rounded-full text-white" :class="{'bg-transparent': showSearchField}">
-        <i class="fa-solid fa-magnifying-glass fa-2xl" style="color: #ffffff;"></i>     
+      <button ref="toggleButton" @click="toggleSearchField" class="mx-2 lg:mx-5 px-2 rounded text-white hover:bg-lightblue focus:bg-lightblue">
+        <i class="fa-solid fa-magnifying-glass fa-l lg:fa-xl" style="color: #ffffff;"></i>     
        </button>
       
       <HeaderItem to="/review">
-        <div class="flex flex-col md:flex-row items-center">
-          <i class="fa-solid fa-feather fa-2xl" style="color: #ffffff;"></i>
-          <p class="hidden md:block md:ml-2">Anmeldelser</p>
+        <div class="flex flex-col md:flex-row items-center px-2 py-1 md:py-0">
+          <i class="fa-solid fa-feather lg:fa-xl" style="color: #ffffff;"></i>
+          <p class="hidden md:block md:ml-2">Anmeld</p>
         </div>
       </HeaderItem>
     
@@ -40,14 +40,15 @@
           <span style="text-decoration:underline; cursor:pointer;" @click="navigate(user.userId)">
             {{ user.displayName }}
             👉 
-          {{ user.bio ? user.bio : "Ingen bio 😿"}}
-        </span>
+            {{ user.bio ? user.bio : "Ingen bio 😿"}}
+          </span>
         </li>
       </ul>
     </div>
     <div v-if="isLoggedIn" class="ml-auto flex items-center">
       <div @click="toggleModal" class="cursor-pointer">
-      <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-12 h-12 border-4 border-gray-800 mr-2 cursor-pointer">
+      <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-12 h-12 border-4 mr-2 cursor-pointer border-white"
+      >
     </div>
     
     <Modal v-model="modalIsActive">
@@ -248,9 +249,4 @@ export default {
   animation: fade-in 0.5s ease-out forwards;
 }
 
-
-button:hover {
-  transform: scale(1.05);
-  transition: transform 0.3s ease-in-out;
-}
 </style>
