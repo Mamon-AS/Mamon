@@ -17,11 +17,24 @@
         <span class="sr-only">Loading...</span>
         <img v-if="photoUrl" :src="photoUrl" alt="profile" class="object-cover rounded-full  w-32 h-32 mx-auto mb-4 border-2 border-gray-300" />
         <h3 class="text-xl text-gray-900" v-if="name">{{ name }}</h3>
-        <router-link :to="{ name: 'followers', params: { userId: internalUserId } }"> 
-          <p class="text-gray-400 items center cursor-pointer text-decoration-line: underline">
-            {{ followerCount }} følgere
-          </p>
-        </router-link>
+
+        <!-- REVIEWS, FOLLOWERS, FOLLOWING -->
+        <div class="mt-2 mb-2 flex justify-center gap-4">
+          <div class="text-center">
+            <span class="block text-xl font-semibold">{{ reviews.length }}</span>
+            <span class="text-gray-400">anmeldelser</span>
+          </div>
+          <router-link :to="{ name: 'followers', params: { userId: internalUserId, action:'followers' } }" class="text-center">
+            <span class="block text-xl font-semibold">{{ followerCount }}</span>
+            <span class="text-gray-400">følgere</span>
+          </router-link>
+          <router-link :to="{ name: 'followers', params: { userId: internalUserId, action:'following'} }" class="text-center">
+            <span class="block text-xl font-semibold">{{ followingCount }}</span>
+            <span class="text-gray-400">følger</span>
+          </router-link>
+        </div>
+ 
+      
         <div>
         <!-- Display Bio with Edit Icon -->
         <div class="flex items-center justify-center">
@@ -82,7 +95,7 @@
         </div>
       </div>
       </div>
-      <p v-if="reviews.length > 0" class="text-center text-gray-600 mt-4">{{ reviews.length }} anmeldelser  <i class="fa-solid fa-heart fa-beat"></i></p>
+
     </section>
   </main>
 </template>
@@ -119,6 +132,7 @@ export default {
     const store = useStore();
     const isLoading = computed(() => store.state.users.isLoading);
     const followerCount = ref(0);
+    const followingCount = ref(0);
     const isFollowing = ref(false);
     const bio = ref('');
     const showEditModal = ref(false);
@@ -141,7 +155,6 @@ export default {
       }
 
       const targetUserId = props.userId;
-      const targetName = props.name
       const myName = getAuth().currentUser.displayName;
       
       const followingRef = doc(db, `users/${currentUserId}/following/${targetUserId}`);
@@ -154,19 +167,27 @@ export default {
         await deleteDoc(followersRef);
       } else {
         // follow logic
-        await setDoc(followingRef, { userId: targetUserId, name:targetName, createdAt: serverTimestamp() });
+        console.log('Following user:', targetUserId, 'from user:', currentUserId, myName);
+        await setDoc(followingRef, { userId: targetUserId, createdAt: serverTimestamp() });
         // update the followers list of the target user
-        await setDoc(followersRef, { userId: currentUserId, name: myName, createdAt: serverTimestamp() });
+        console.log('Adding follower:', currentUserId, 'to user:', targetUserId);
+        await setDoc(followersRef, { userId: currentUserId, createdAt: serverTimestamp() });
       }
 
       // refresh the states
       await getFollowerCount(props.userId);
+      await getFollowingCount(props.userId);
       await checkFollowingStatus(currentUserId, targetUserId);
     };
     const getFollowerCount = async (userId) => {
       const followersRef = collection(db, `users/${userId}/followers`);
       const querySnapshot = await getDocs(followersRef);
       followerCount.value = querySnapshot.size;
+    };
+    const getFollowingCount = async (userId) => {
+      const followingRef = collection(db, `users/${userId}/following`);
+      const querySnapshot = await getDocs(followingRef);
+      followingCount.value = querySnapshot.size;
     };
 
     const checkFollowingStatus = async (currentUserId, targetUserId) => {
@@ -202,8 +223,6 @@ export default {
       }
     };
 
-
-
 onMounted(async () => {
       const auth = getAuth();
       const currentUserId = auth.currentUser ? auth.currentUser.uid : null;
@@ -214,6 +233,7 @@ onMounted(async () => {
 
       if (currentUserId || internalUserId.value) {
         await getFollowerCount(internalUserId.value); 
+        await getFollowingCount(internalUserId.value);
         await checkFollowingStatus(currentUserId, internalUserId.value); 
         await fetchBio(internalUserId); 
       }
@@ -221,7 +241,8 @@ onMounted(async () => {
 
     return { 
       isLoading,
-      followerCount, 
+      followerCount,
+      followingCount,
       isFollowing,
       toggleFollow, 
       showEditModal, 

@@ -12,12 +12,11 @@
       <a href="/" class="ml-2 lg:ml-5 mt-2">
         <img src="/images/Transparent_Image_11_cropped.png" alt="Logo" class="h-8 w-auto logo"/>
       </a>
-
-      <button ref="toggleButton" @click="toggleSearchField" class="mx-2 lg:mx-5 px-2 rounded text-white hover:bg-lightblue focus:bg-lightblue">
+      <button v-show="isLoggedIn" ref="toggleButton" @click="toggleSearchField" class="mx-2 lg:mx-5 px-2 rounded text-white hover:bg-lightblue focus:bg-lightblue">
         <i class="fa-solid fa-magnifying-glass fa-l lg:fa-xl" style="color: #ffffff;"></i>     
       </button>
       
-      <HeaderItem to="/review">
+      <HeaderItem to="/review" v-show="isLoggedIn">
         <div class="flex flex-col md:flex-row items-center px-2 py-1 md:py-0">
           <i class="fa-solid fa-feather lg:fa-xl" style="color: #ffffff;"></i>
           <p class="hidden md:block md:ml-2">Anmeld</p>
