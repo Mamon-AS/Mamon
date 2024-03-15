@@ -5,7 +5,7 @@
         :photoUrl="userProfile.photoUrl"
         :name="userProfile.userName"
         :isCurrentUser="userProfile.isCurrentUser"
-        :reviews="userProfile.reviews"
+        :reviews="userReviews"
       />
   </div>
   <div class="container mx-auto p-4">

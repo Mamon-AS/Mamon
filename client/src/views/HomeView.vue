@@ -1,7 +1,8 @@
 <template>
     <main class="home-page">
-        <FullHero />
-        <ReviewCardView />
+        <div v-show="isLoggedIn">
+            <ReviewCardView />
+        </div>
         <footer class="text-center">
             <p>© {{ new Date().getFullYear() }} Mamon. All rights reserved.</p>
         </footer>
@@ -9,12 +10,27 @@
 </template>
 
 <script>
-import FullHero from '../components/FullHero.vue';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { ref, onMounted } from 'vue';
 import ReviewCardView from '../views/ReviewCardView.vue';
+
 export default {
   components: {
-    FullHero,
     ReviewCardView
+  },
+
+  setup() {
+    const isLoggedIn = ref(false);
+
+    onMounted(() => {
+      onAuthStateChanged(getAuth(), (user) => {
+        isLoggedIn.value = !!user;
+      });
+    });
+
+    return {
+      isLoggedIn
+    }
   }
 }
 

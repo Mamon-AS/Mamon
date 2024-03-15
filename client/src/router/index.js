@@ -14,7 +14,7 @@ const router = createRouter({
     { path: '/sign-in', name: 'sign-in',component: () => import('../views/SignInView.vue') },
     { path: '/privacy', name: 'privacy',component: () => import('../views/PrivacyPolicyView.vue') },
     { path: '/review', name: 'review',component: () => import('../views/PostReviewView.vue'), meta: { requiresAuth: true } },   
-    { path: '/followers/:userId', name: 'followers', component: () => import('../views/FollowersView.vue'), meta: { requiresAuth: true }, props: true },
+    { path: '/followers/:userId/:action', name: 'followers', component: () => import('../views/FollowersView.vue'), meta: { requiresAuth: true }, props: true },
     { path: '/settings', name: 'settings',component: () => import('../views/SettingsView.vue'), meta: { requiresAuth: true }, props: true},
   ]
 })
@@ -33,7 +33,7 @@ const getCurrentUser = () => {
   };
 // navigation guard for å sjekke innlogga brukere 
 router.beforeEach(async(to, from, next) => {
-  if (to.name === 'user' || to.name === 'review' || to.name === 'UserProfile' || to.name === 'followers' | to.name === 'settings') { 
+  if (to.name === 'user' || to.name === 'review' || to.name === 'UserProfile' || to.name === 'followers' || to.name === 'settings') { 
     if (await getCurrentUser()) {
       next();
     } else {

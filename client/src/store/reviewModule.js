@@ -204,52 +204,64 @@ export default {
         }
       }
         else if (action === 'personal') {
-          try {
-            const cacheKey = `reviews_${action}_${userId}_${limit}`;
-            const cachedData = localStorage.getItem(cacheKey);
-        
-            if (cachedData) {
-              const { timestamp, data } = JSON.parse(cachedData);
-              if (Date.now() - timestamp < 3600000) { 
-                console.log("Using cached personal reviews");
-                commit('SET_REVIEWS', data.reviewItems);
-                commit('SET_TOTAL_REVIEWS', data.totalReviews);
-                return;
-              } else {
-                console.log("Personal reviews cache expired, fetching new data");
-              }
-            }
+          const { limit, action, userId } = payload;
 
-            const query = `*[_type == "review" && userId == "${userId}"] | order(_createdAt desc) ${limit ? `[0...${limit}]` : ''}`;
-            const personalReviews = await sanity.fetch(query);
-            let enrichedPersonalReviews = [];
-        
-            for (const review of personalReviews) {
-              const commentsResponse = await axios.post(`/.netlify/functions/getUserComments`, { reviewId: review._id });
-              if (commentsResponse.status === 200) {
-                review.comments = commentsResponse.data.comments;
-              } else {
-                review.comments = [];
-              }
-              enrichedPersonalReviews.push(review);
+          const cacheKey = `reviews_${action}_${userId}_${limit}`;
+          const cachedData = localStorage.getItem(cacheKey);
+      
+          if (cachedData) {
+            const { timestamp, data } = JSON.parse(cachedData);
+            if (Date.now() - timestamp < 3600000) { 
+              console.log("Using cached personal reviews");
+              commit('SET_REVIEWS', data.reviewItems);
+              commit('SET_TOTAL_REVIEWS', data.totalReviews);
+              return;
+            } else {
+              console.log("Personal reviews cache expired, fetching new data");
             }
-        
+          }
+
+          const query = `*[_type == "review" && userId == "${userId}"] | order(_createdAt desc) ${limit ? `[0...${limit}]` : ''}`
+          const count_query = 'count(*[_type == "review"])';
+
           
-            const totalPersonalReviews = personalReviews.length; 
-        
-            localStorage.setItem(cacheKey, JSON.stringify({
-              timestamp: Date.now(),
-              data: { reviewItems: enrichedPersonalReviews, totalReviews: totalPersonalReviews }
-            }));
-        
-        
-            commit('SET_REVIEWS', enrichedPersonalReviews);
-            commit('SET_TOTAL_REVIEWS', totalPersonalReviews);
+          try {
+            const reviewItems = await sanity.fetch(query);
+             let enrichedReviewItems = [];
+             
+             for (const review of reviewItems) {
+               try {
+                 const response = await axios.post(`/.netlify/functions/getUserComments`, { reviewId: review._id });
+                 if (response.status === 200) {
+                   review.comments = response.data.comments;
+                 } else {
+                   review.comments = [];
+                 }
+               } catch (error) {
+                 if (error.response && error.response.status === 404) {
+                   console.log(`No comments found for review ID: ${review._id}`);
+                   review.comments = []; 
+                 } else {
+                   console.error(`Error fetching comments for review ID ${review._id}:`, error);
+                   review.comments = []; 
+                 }
+               }
+         
+               enrichedReviewItems.push(review);
+             }
+             commit('SET_REVIEWS', enrichedReviewItems);
+             sanity.fetch(count_query).then(count => {
+              commit('SET_TOTAL_REVIEWS', count)
+              localStorage.setItem(cacheKey, JSON.stringify({
+                timestamp: Date.now(),
+                data: { reviewItems: enrichedReviewItems, totalReviews: count }
+              }));
+             })
+            
           } catch (error) {
-            console.error("Error fetching personal reviews:", error);
+            console.error("Error fetching reviews:", error);
           }
         }
-        
     },
 
     async LoadReviews ({ commit, state }, limit = 10)  {
