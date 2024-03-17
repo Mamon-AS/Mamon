@@ -75,6 +75,7 @@
           :createdAt="comment.createdAt"
           :replies="comment.replies"
           :commentId="comment.commentId"
+          :highlightCommentId="highlightCommentId"
         />
       </div>
     </div>
@@ -115,7 +116,8 @@ export default {
     reviewItems: {
       type: Object,
       required: true
-    }
+    },
+    highlightCommentId: String,
   },
   components: {
     ListOfUsers,
@@ -141,6 +143,7 @@ export default {
       { value: '😎', clicked: false }
     ]);
     const showReactionModal = ref(false); 
+
     let ignoreFirstClick = false;
     
 
@@ -256,7 +259,7 @@ export default {
       showReactionModal.value == false ? showReactionModal.value = true : showReactionModal.value = false;
     }
     else if (modalName === 'listOfUsers') {
-      showListOfUsersModal.value == false ? showReactionModal.value = true : showReactionModal.value = false;
+      showListOfUsersModal.value == false ? showListOfUsersModal.value = true : showListOfUsersModal.value = false;
     }
 
   };
@@ -276,6 +279,7 @@ export default {
 
     const usersModal = document.querySelector('.modal-content'); 
     if (showListOfUsersModal.value && usersModal && !usersModal.contains(event.target)) {
+      console.log("hei");
       toggleModal('listOfUsers');
     }
   };

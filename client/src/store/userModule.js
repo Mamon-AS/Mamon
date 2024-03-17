@@ -24,7 +24,7 @@ export default {
         SET_PRIVACY(state, isPrivate) {
             state.isPrivate = isPrivate;
         },
-        ADD_NOTIFICATION(state, notification) {
+        SET_NOTIFICATION(state, notification) {
             state.notifications.push(notification);
         },
         REMOVE_NOTIFICATION(state, notificationId) {
@@ -99,5 +99,6 @@ export default {
             },
 
     },
+    
 
 }

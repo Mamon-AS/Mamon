@@ -203,7 +203,8 @@ export default {
         commit('SET_REVIEWS', []);
         }
       }
-        else if (action === 'personal') {
+      else if (action === 'personal') {
+
           const { limit, action, userId } = payload;
 
           const cacheKey = `reviews_${action}_${userId}_${limit}`;
@@ -256,6 +257,46 @@ export default {
                 timestamp: Date.now(),
                 data: { reviewItems: enrichedReviewItems, totalReviews: count }
               }));
+             })
+            
+          } catch (error) {
+            console.error("Error fetching reviews:", error);
+          }
+        }
+        
+        else if (action === "single") {
+          const { reviewId } = payload;
+          const query = `*[_type == "review" && _id == "${reviewId}"]`
+          const count_query = 'count(*[_type == "review"])';
+          
+          try {
+
+            const reviewItems = await sanity.fetch(query);
+             let enrichedReviewItems = [];
+             
+             for (const review of reviewItems) {
+               try {
+                 const response = await axios.post(`/.netlify/functions/getUserComments`, { reviewId: review._id });
+                 if (response.status === 200) {
+                   review.comments = response.data.comments;
+                 } else {
+                   review.comments = [];
+                 }
+               } catch (error) {
+                 if (error.response && error.response.status === 404) {
+                   console.log(`No comments found for review ID: ${review._id}`);
+                   review.comments = []; 
+                 } else {
+                   console.error(`Error fetching comments for review ID ${review._id}:`, error);
+                   review.comments = []; 
+                 }
+               }
+         
+               enrichedReviewItems.push(review);
+             }
+             commit('SET_REVIEWS', enrichedReviewItems);
+             sanity.fetch(count_query).then(count => {
+              commit('SET_TOTAL_REVIEWS', count)
              })
             
           } catch (error) {
@@ -320,19 +361,19 @@ export default {
           parentCommentId,
           notificationUserId
       };
-
+      console.log('Posting comment:', payload);
       const response = await axios.post(`/.netlify/functions/postUserComments`, payload);
-      
-      if (response.status >= 200 && response.status < 300) {
-        localStorage.removeItem('reviews_public_all_4');
-        if(action === 'add' || action === 'reply') {
-            commit('ADD_COMMENT', response.data);
-          } 
-          dispatch('fetchComments', { reviewId });
-        }
-    } catch (error) {
-        console.error("Error posting comment:", error);
-     }
+        
+        if (response.status >= 200 && response.status < 300) {
+          localStorage.removeItem('reviews_public_all_4');
+          if(action === 'add' || action === 'reply') {
+              commit('ADD_COMMENT', response.data);
+            } 
+            dispatch('fetchComments', { reviewId });
+          }
+      } catch (error) {
+          console.error("Error posting comment:", error);
+      }
     },
     async deleteComment({ dispatch, commit }, { action = 'delete', reviewId, commentId, userId }) {
       try {

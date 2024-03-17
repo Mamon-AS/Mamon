@@ -1,7 +1,7 @@
 <template>
   <!-- Main comment -->
-  <div class="comment-item p-4 border-b border-gray-200">
-    <div class="author flex items-end mb-2" @click="navigate(props.userId)">
+  <div class="comment-item p-4 border-b border-gray-200" :class="{'highlight-background': props.commentId === props.highlightCommentId}" >
+    <div class="author flex items-end mb-2" @click="navigate(props.userId)" >
       <img :src="props.photoUrl" alt="Profile picture" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mr-2 cursor-pointer"/>
       <span class="hover:underline cursor-pointer">{{ props.displayName }}</span>
     </div>
@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from 'vue';
+import { defineProps, ref, watch, onMounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAuth } from 'firebase/auth';
 import { useStore } from 'vuex';
@@ -57,6 +57,7 @@ const props = defineProps({
   createdAt: Object,
   replies: Array,
   commentId: String,
+  highlightCommentId: String,
 });
 
 const router = useRouter();
@@ -81,7 +82,6 @@ watch(currentUser, (newValue) => {
 
 const postReply = async (notificationUserId) => {
   const text = replyText.value.trim();
-  console.log(notificationUserId);
   if (!text) return;
   const action = 'reply';
   const reviewId = props.reviewId;
@@ -123,4 +123,25 @@ const deleteComment = async (commentId) => {
     console.error("Error deleting comment:", error);
   }
 };
+
+
+onMounted(async () => {
+    await nextTick();
+    if (props.commentId === props.highlightCommentId) {
+      console.log("WE HAVE A MATCH");
+      const element = document.querySelector(`.highlight-background`);
+      if (element) {
+        console.log("I am finna scroll");
+        element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  });
+
+
 </script>
+<style>
+.highlight-background {
+  background-color: #f0f9ff; 
+  border-color: #bfdbfe; 
+}
+</style>
