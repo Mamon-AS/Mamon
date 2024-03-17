@@ -8,7 +8,9 @@
     </button>
     <div v-show="showNotificationsDropdown" class="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg z-50">
       <ul>
-        <li v-for="notification in notifications" :key="notification.notificationId" @click="markAsRead(notification.id)" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+        <li v-for="notification in notifications" :key="notification.notificationId" 
+           @click="markAsRead(notification.id, notification.reviewId, notification.commentId);"
+          class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
           {{ notification.message }}
         </li>
       </ul>
@@ -19,6 +21,7 @@
 <script>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router'
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from "../firebaseInit"; 
 
@@ -35,13 +38,22 @@ export default {
     const notifications = computed(() => store.state.users.notifications);
     const unseenNotificationsCount = computed(() => notifications.value.filter(n => !n.seen).length);
     let unsubscribe = null;
+    const router = useRouter();
 
     const toggleNotificationsDropdown = () => {
       showNotificationsDropdown.value = !showNotificationsDropdown.value;
     };
 
-    const markAsRead = (notificationId) => {
+    const markAsRead = (notificationId, reviewId, commentId) => {
       store.dispatch('users/markNotificationAsRead', notificationId);
+      showNotificationsDropdown.value = false;
+
+      router.push({
+        path: `/review/${reviewId}`,
+        query: { 
+          ...commentId ? { commentId } : {},
+        },
+      });
     };
 
     onMounted(() => {
@@ -50,7 +62,7 @@ export default {
         snapshot.docChanges().forEach(change => {
           if (change.type === "added") {
             const notification = { id: change.doc.id, ...change.doc.data() };
-            store.commit('users/ADD_NOTIFICATION', notification); 
+            store.commit('users/SET_NOTIFICATION', notification); 
           }
       
         });

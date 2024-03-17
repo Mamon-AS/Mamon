@@ -27,7 +27,7 @@ exports.handler = async (event) => {
             body: JSON.stringify({ error: 'Missing notification ID' }),
         };
     }
-
+    console.log('Deleting notification:', notificationId);
     try {
         const notificationRef = db.collection('notifications').doc(notificationId);
         
