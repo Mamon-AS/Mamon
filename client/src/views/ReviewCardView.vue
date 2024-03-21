@@ -2,10 +2,10 @@
   <div class="container mx-auto p-4">
     <div class="flex items-center gap-4 mb-3">
       <label class="switch">
-        <input type="checkbox" @click="toggleCheckbox">
+        <input type="checkbox" @click="toggleCheckbox($event)">
         <span class="slider round"></span>
       </label>
-      <span class="font-medium">Vis kun brukere du følger</span>
+      <span class="font-medium">Vis alle anmeldelser</span>
     </div>
     
     <!-- Conditionally render based on dataView state -->
@@ -55,7 +55,7 @@ export default {
     setup() {
       const subscription = ref(null);
       const store = useStore();
-      const dataView = ref('public');
+      const dataView = ref('followers');
       const posts = computed(() => store.getters['reviews/reviewItems']);
    
       const auth = getAuth();
@@ -66,11 +66,13 @@ export default {
         }
       });
       
-      const toggleCheckbox = () => {
-          dataView.value = dataView.value === 'public' ? 'followers' : 'public';
-        }
+      const toggleCheckbox = (event) => {
+          dataView.value = event.target.checked ? 'public' : 'followers';
+          console.log(dataView.value);
+      };
 
-      const fetchReviews = async (actionType = 'public') => {
+
+      const fetchReviews = async (actionType) => {
         try {
           let action;
           let payload = { limit: 4 };
@@ -92,16 +94,24 @@ export default {
 
 
       watch(dataView, (newValue, oldValue) => {
-          if (newValue === 'followers') {
-            fetchReviews('fetch_followers_reviews');
-          } else if (newValue === 'public') {
+          console.log("dataView changed", newValue, oldValue);
+          if (newValue === 'public') {
             fetchReviews('public');
+          } else if (newValue === 'followers') {
+            fetchReviews('fetch_followers_reviews');
             }
         });
         
-
+      watch(userId, (newUserId) => {
+        if (newUserId) {
+          fetchReviews('fetch_followers_reviews');
+          }
+      }, { immediate: true });
+      
       onMounted(() => {
-        fetchReviews('public'); 
+        let payload = { limit: 4 };
+        console.log("userId.value", userId.value);
+        fetchReviews('fetch_followers_reviews',  payload.userId = userId.value ); 
         const query = '*[_type == "reviews"]';
         subscription.value = sanity
         .listen(query)

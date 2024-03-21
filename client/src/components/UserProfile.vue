@@ -14,7 +14,9 @@
       </div>
       
       <div v-else>
+        <followRequestAction v-if="acceptOrDeclineFollowRequest" :name="name" :requesterId="userId" :receiverId="currentUserId" :followRequestId="acceptOrDeclineFollowRequest.id" />
         <span class="sr-only">Loading...</span>
+   
         <img v-if="photoUrl" :src="photoUrl" alt="profile" class="object-cover rounded-full  w-32 h-32 mx-auto mb-4 border-2 border-gray-300" />
         <h3 class="text-xl text-gray-900" v-if="name">{{ name }}</h3>
 
@@ -88,10 +90,16 @@
             </label>
         </form>
 
-          <button v-if="!isCurrentUser" @click="toggleFollow" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4
-          focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5  lg:mb-7
-              text-center mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"> {{ isFollowing ? 'Følger' : 'Følg' }}
-          </button>    
+        <button v-if="!isFollowing && !pendingFollowRequest && !loading && !isCurrentUser" @click="toggleFollow(name)" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 lg:mb-7 text-center mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          Følg
+        </button>
+        <button v-else-if="!loading && pendingFollowRequest" class="text-white bg-gray-500 font-medium rounded-full text-sm px-5 py-2.5 lg:mb-7 text-center mb-2" disabled>
+          Forespørsel sendt
+        </button>
+        <button v-if="isFollowing && !pendingFollowRequest && !loading && !isCurrentUser" @click="toggleUnfollow" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 lg:mb-7 text-center mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          Følger
+        </button>
+
         </div>
       </div>
       </div>
@@ -102,14 +110,18 @@
 
 
 <script>
-import { ref, onMounted, watchEffect, computed } from "vue";
+import { ref, onMounted, onUnmounted, watchEffect, computed } from "vue";
 import { getAuth } from 'firebase/auth';
-import { doc, setDoc , getDoc, getDocs, deleteDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc , getDoc, onSnapshot, collection  } from 'firebase/firestore';
 import { useStore } from "vuex";
 
 import { db } from "../firebaseInit";
+import followRequestAction from "./FollowRequestAction.vue";
 
 export default {
+  components: {
+    followRequestAction
+  },
   props: {
     userId: String,
     photoUrl: String,
@@ -136,65 +148,81 @@ export default {
     const isFollowing = ref(false);
     const bio = ref('');
     const showEditModal = ref(false);
+    const currentUserId = getAuth().currentUser?.uid;
     let internalUserId = ref('')
     const initializeUserId = () => {
       const authUserId = getAuth().currentUser?.uid;
       internalUserId.value = props.userId || authUserId;
     };
+    let unsubscribeFollowers, unsubscribeFollowing, unsubscribeFollowingStatus;
 
     initializeUserId();
     watchEffect(() => {
       initializeUserId();
     });
+    console.log(props.name);
     // Methods && functions
-    const toggleFollow = async () => {
-      const currentUserId = getAuth().currentUser?.uid;
+    const pendingFollowRequest = computed(() => {
+      return store.state.following.followRequests.some(req => 
+        req.senderId === currentUserId && 
+        req.receiverId === props.userId && 
+        req.status === 'pending'
+      );
+    });
+    const acceptOrDeclineFollowRequest = computed(() => {
+      return store.getters['following/specificFollowRequestFromMe'](currentUserId, props.userId);  
+    });
+    
+    const loading = computed(() => store.state.following.loading);
+
+    const toggleFollow = async (name) => {
       if (!currentUserId) {
         console.error("No authenticated user found!");
         return;
       }
-
-      const targetUserId = props.userId;
-      const myName = getAuth().currentUser.displayName;
       
-      const followingRef = doc(db, `users/${currentUserId}/following/${targetUserId}`);
-      const followersRef = doc(db, `users/${targetUserId}/followers/${currentUserId}`);
+      store.dispatch('following/sendFollowRequest', {
+        currentUserId,
+        targetUserId: internalUserId.value,
+        displayName: name, 
+        });
+ 
+    };
 
-      if (isFollowing.value) {
-        // unfollow
-        await deleteDoc(followingRef);
-        // update the followers list of the target user
-        await deleteDoc(followersRef);
-      } else {
-        // follow logic
-        console.log('Following user:', targetUserId, 'from user:', currentUserId, myName);
-        await setDoc(followingRef, { userId: targetUserId, createdAt: serverTimestamp() });
-        // update the followers list of the target user
-        console.log('Adding follower:', currentUserId, 'to user:', targetUserId);
-        await setDoc(followersRef, { userId: currentUserId, createdAt: serverTimestamp() });
+    const toggleUnfollow = async () => {
+      if (!currentUserId) {
+        console.error("No authenticated user found!");
+        return;
       }
-
-      // refresh the states
-      await getFollowerCount(props.userId);
-      await getFollowingCount(props.userId);
-      await checkFollowingStatus(currentUserId, targetUserId);
+      store.dispatch('following/unfollowUser', {
+        currentUserId,
+        targetUserId: internalUserId.value
+      });
     };
-    const getFollowerCount = async (userId) => {
+
+    const getFollowerCount = (userId) => {
       const followersRef = collection(db, `users/${userId}/followers`);
-      const querySnapshot = await getDocs(followersRef);
-      followerCount.value = querySnapshot.size;
-    };
-    const getFollowingCount = async (userId) => {
-      const followingRef = collection(db, `users/${userId}/following`);
-      const querySnapshot = await getDocs(followingRef);
-      followingCount.value = querySnapshot.size;
+      unsubscribeFollowers = onSnapshot(followersRef, (querySnapshot) => {
+        followerCount.value = querySnapshot.size;
+      });
     };
 
-    const checkFollowingStatus = async (currentUserId, targetUserId) => {
-      const followingDocRef = doc(db, `users/${currentUserId}/following/${targetUserId}`);
-      const docSnap = await getDoc(followingDocRef);
-      isFollowing.value = docSnap.exists();
+    const getFollowingCount = (userId) => {
+      const followingRef = collection(db, `users/${userId}/following`);
+      unsubscribeFollowing = onSnapshot(followingRef, (querySnapshot) => {
+        followingCount.value = querySnapshot.size;
+      });
     };
+
+    const checkFollowingStatus = (currentUserId, targetUserId) => {
+      const followingDocRef = doc(db, `users/${currentUserId}/following/${targetUserId}`);
+      unsubscribeFollowingStatus = onSnapshot(followingDocRef, (docSnap) => {
+        isFollowing.value = docSnap.exists();
+      });
+    };
+
+
+
     const saveBio = async (bioText) => {
       const userId = getAuth().currentUser.uid;
       const bioDocRef = doc(db, 'users', userId);    
@@ -223,7 +251,7 @@ export default {
       }
     };
 
-onMounted(async () => {
+    onMounted(async () => {
       const auth = getAuth();
       const currentUserId = auth.currentUser ? auth.currentUser.uid : null;
       // Because I can visit my own profile without a userId prop, I need to check if the prop is empty
@@ -232,11 +260,22 @@ onMounted(async () => {
       }
 
       if (currentUserId || internalUserId.value) {
-        await getFollowerCount(internalUserId.value); 
-        await getFollowingCount(internalUserId.value);
-        await checkFollowingStatus(currentUserId, internalUserId.value); 
-        await fetchBio(internalUserId); 
+        await Promise.all([
+          getFollowerCount(internalUserId.value),
+          getFollowingCount(internalUserId.value),
+          checkFollowingStatus(currentUserId, internalUserId.value),
+          fetchBio(internalUserId),
+          store.dispatch('following/fetchFollowRequests', currentUserId)
+        ]);
+
       }
+
+    });
+
+    onUnmounted(() => {
+      if (unsubscribeFollowers) unsubscribeFollowers();
+      if (unsubscribeFollowing) unsubscribeFollowing();
+      if (unsubscribeFollowingStatus) unsubscribeFollowingStatus();
     });
 
     return { 
@@ -248,7 +287,12 @@ onMounted(async () => {
       showEditModal, 
       bio,
       saveBio,
-      internalUserId
+      internalUserId,
+      pendingFollowRequest,
+      loading,
+      toggleUnfollow,
+      acceptOrDeclineFollowRequest,
+      currentUserId
     };
   },
 };

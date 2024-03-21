@@ -46,7 +46,6 @@ const getPhotoUrl = async (followingId) => {
 }
 
 exports.handler = async (event) => {
-    console.log("Fetching user data...");
     try {
         const { userId, action } = JSON.parse(event.body);
         if (!userId || !action) {

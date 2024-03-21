@@ -26,7 +26,6 @@ getAuth().onAuthStateChanged(user => {
 
 // Navigerer til brukerprofilen til brukeren, eller til innlogget bruker
 export const navigateToProfile = (router, userId) => {
-    console.log("Navigating to profile", userId);
     const currentUserId = currentUser.value ? currentUser.value.uid : null;
 
     if (userId === currentUserId) {
@@ -39,7 +38,6 @@ export const navigateToProfile = (router, userId) => {
 // Firebase timestamp til Måned Dag Time:Minutt
 export const timeStampToDate = (timestamp) => {
     let date;
-
     if (timestamp instanceof Date) {
         date = timestamp;
     } else if (typeof timestamp === 'string' || timestamp instanceof String) {

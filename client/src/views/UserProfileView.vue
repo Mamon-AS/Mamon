@@ -3,7 +3,7 @@
       <UserProfile
         :userId="userId"
         :photoUrl="userProfile.photoUrl"
-        :name="userProfile.userName"
+        :name="userProfile.name"
         :isCurrentUser="userProfile.isCurrentUser"
         :reviews="userReviews"
       />
@@ -39,8 +39,6 @@ export default {
     const userProfile = computed(() => store.state.users.userItems)
     const userReviews = computed(() => store.getters['reviews/reviewItems']);
 
-
-
     onMounted(() => {
       fetchUserData();
       fetchUserReviews();
@@ -67,7 +65,6 @@ export default {
         console.error("Error fetching user data:", error);
         }
       }
-
   return {
     userProfile,
     userReviews,

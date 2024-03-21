@@ -24,9 +24,14 @@ export default {
         SET_PRIVACY(state, isPrivate) {
             state.isPrivate = isPrivate;
         },
-        SET_NOTIFICATION(state, notification) {
-            state.notifications.push(notification);
-        },
+        SET_NOTIFICATION(state, newNotification) {
+            const index = state.notifications.findIndex(notification => notification.id === newNotification.id);
+            if (index === -1) { 
+              state.notifications.push(newNotification);
+            } else {
+              state.notifications[index] = newNotification;
+            }
+          },
         REMOVE_NOTIFICATION(state, notificationId) {
         state.notifications = state.notifications.filter(notification => notification.id !== notificationId);
         }
@@ -36,7 +41,7 @@ export default {
             commit('SET_LOADING', true); 
             commit('SET_ERROR', null); 
             try {
-                const response = await axios.post(`/.netlify/functions/getUserData`,   userId  );
+                const response = await axios.post(`/.netlify/functions/getUserData`, userId  );
                 if (response.status === 200) {
                     commit('SET_USERS', response.data);
                     commit('SET_LOADING', false);
