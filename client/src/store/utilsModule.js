@@ -7,10 +7,9 @@ export default {
     },
 	mutations: {
 		SET_MODAL_ACTIVE(state, isActive) {
-		  console.log("Setting modal active state to", isActive);
-		  state.modalIsActive = isActive;
+			state.modalIsActive = isActive;
 		}
-	  },
+	 },
 	  actions: {
 		openModal({ commit }) {
 		  commit('SET_MODAL_ACTIVE', true);

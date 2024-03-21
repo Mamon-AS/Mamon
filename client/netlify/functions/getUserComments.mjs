@@ -23,7 +23,6 @@ const db = admin.firestore();
 exports.handler = async (event) => {
   try {
     const { reviewId } = JSON.parse(event.body);
-    console.log('Fetching comments... for reviewId:', reviewId);
     log('Fetching comments... for reviewId:', reviewId);
     if (!reviewId) {
       return {

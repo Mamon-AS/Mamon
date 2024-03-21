@@ -27,21 +27,21 @@ exports.handler = async (event) => {
             body: JSON.stringify({ error: 'Missing notification ID' }),
         };
     }
-    console.log('Deleting notification:', notificationId);
+
     try {
         const notificationRef = db.collection('notifications').doc(notificationId);
         
-        await notificationRef.delete();
+        await notificationRef.update({ seen: true });
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Notification deleted successfully' }),
+            body: JSON.stringify({ message: 'Notification marked as seen successfully' }),
         };
     } catch (error) {
         console.error('Error deleting notification:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to delete notification' }),
+            body: JSON.stringify({ error: 'Failed to mark notification as seen' }),
         };
     }
 };
