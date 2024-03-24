@@ -37,13 +37,11 @@ export default {
         const isLoading = ref(true); 
         const posts = computed(() => store.getters['reviews/reviewItems']);
         const singleCommentId = ref(route.query.commentId);
-        
-        console.log('singleCommentId:', singleCommentId.value);
 
         onMounted(async () => {
             try {
                 console.log('route.params.reviewId:', route.params.reviewId);
-                await store.dispatch('reviews/FetchReviews', { action:'single', reviewId:route.params.reviewId });
+                await store.dispatch('reviews/fetchSingleReview', route.params.reviewId );
             }
             catch (error) {
                 console.error('Error fetching review:', error);

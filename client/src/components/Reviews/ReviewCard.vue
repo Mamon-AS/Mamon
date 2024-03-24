@@ -146,7 +146,6 @@ export default {
 
     let ignoreFirstClick = false;
     
-
     // Computed property to get unique emojis
     const uniqueEmojis = computed(() => {
       const allReactions = [...Object.values(reactions.value), userReaction.value].filter(Boolean);
@@ -165,8 +164,6 @@ export default {
     watch(currentUser, (newUser) => {
       if (newUser) {
         getReactions(props.reviewItems._id);
-      } else {
-        console.log("Waiting for user login...");
       }
     }, { immediate: true });
 
@@ -279,7 +276,6 @@ export default {
 
     const usersModal = document.querySelector('.modal-content'); 
     if (showListOfUsersModal.value && usersModal && !usersModal.contains(event.target)) {
-      console.log("hei");
       toggleModal('listOfUsers');
     }
   };

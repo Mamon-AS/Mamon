@@ -1,6 +1,5 @@
 import admin from 'firebase-admin';
 import { Buffer } from 'buffer';
-import { log } from 'console';
 
 // Initialize Firebase Admin SDK once
 if (admin.apps.length === 0) {
@@ -19,6 +18,21 @@ const bucket = admin.storage().bucket();
 const defaultPhotoUrl = '/images/frosk.png'; 
 
 const db = admin.firestore();
+
+async function isUserFollowing(userId, currentUserId) {
+  // Check if the current user is following the target user
+  const followerRef = db.collection('users').doc(userId).collection('followers').doc(currentUserId);
+  const doc = await followerRef.get();
+  return doc.exists;
+}
+
+async function fetchReviewsByUser(userId, limit) {
+  const reviewsRef = db.collection('reviews').where('userId', '==', userId).limit(limit);
+  const snapshot = await reviewsRef.get();
+  const reviews = [];
+  snapshot.forEach(doc => reviews.push({ ...doc.data(), reviewId: doc.id }));
+  return reviews;
+}
 
 async function fetchProfilePictureUrl(userId) {
   try {
@@ -39,12 +53,11 @@ async function fetchProfilePictureUrl(userId) {
 
 exports.handler = async (event) => {
   try {
-    const { userId, limit } = JSON.parse(event.body);
-
-    if (!userId) {
+    const { userId, limit, currentUserId } = JSON.parse(event.body);
+    if (!userId || !currentUserId || typeof userId !== 'string' || typeof currentUserId !== 'string') {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Missing userId' }),
+        body: JSON.stringify({ error: 'Missing parameters' }),
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
@@ -62,38 +75,20 @@ exports.handler = async (event) => {
         };
       }
 
-    const followingRef = db.collection('users').doc(userId).collection('following');
-    const snapshot = await followingRef.get();
-    if (snapshot.empty) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ error: 'User does not exist or does not follow anyone' }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-      };
-    }
+      const isFollowing = await isUserFollowing(userId, currentUserId);
+      if (!isFollowing) {
+        console.log('User is not following this user');
+        return {
+          statusCode: 403,
+          body: JSON.stringify({ error: "You are not following this user" }),
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        };
+      }
 
-    let followingUserIds = [];
-    snapshot.forEach(doc => {
-      followingUserIds.push(doc.id);
-    });
-
- 
-    let reviews = [];
-
-    // Firestore 'in' query supports up to 10 items, so split followingUserIds into the limit parameter
-    for (let i = 0; i < followingUserIds.length; i += limit) {
-      let chunk = followingUserIds.slice(i, i + limit);
-      const reviewsRef = db.collection('reviews').where('userId', 'in', chunk);
-      const reviewsSnapshot = await reviewsRef.get();
-
-      reviewsSnapshot.forEach(doc => {
-        reviews.push(doc.data());
-      });
-    }
-
+    let reviews = await fetchReviewsByUser(userId, limit)
 
     // Extract all unique user IDs from comments and replies
     let userIds = new Set();

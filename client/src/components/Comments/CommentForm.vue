@@ -6,8 +6,10 @@
       style="border-top-left-radius: 0.375rem; border-bottom-left-radius: 0.375rem;">
 		</textarea>
     <button @click="postComment(commentText, 'add', null, parentCommentId)"
+            :disabled="isSending"
             class="submit-btn bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-700">
-      Send
+      <span v-if="!isSending">Send</span>
+      <span v-else>Sender...</span>
 		</button>
     <div v-if="commentText.length > 0"
 		        	:class="['absolute', 'bottom-0', 'left-2', 'text-right', 'text-sm', 'bg-white-100',
@@ -38,12 +40,17 @@ const store = useStore();
 const currentUser = ref(null);
 const commentText = ref('');
 const showCommentForm = ref(false);
+const isSending = ref(false); // Track if a comment is being sent
 
 getAuth().onAuthStateChanged(user => {
       currentUser.value = user;
     });
 
 const postComment = async (text, action = "add", commentId = null, parentCommentId = null)  => {
+  if (isSending.value) return;
+  
+  isSending.value = true;
+  
   const commentData = { 
     text, 
     reviewId: props.reviewId, 
@@ -56,8 +63,14 @@ const postComment = async (text, action = "add", commentId = null, parentComment
   };
   showCommentForm.value = false;
   
-  await store.dispatch('reviews/postComment', commentData);
-  commentText.value = '';
+  try {
+    await store.dispatch('reviews/postComment', commentData);
+    commentText.value = '';
+  } catch (error) {
+    console.error('Error posting comment:', error);
+  } finally {
+    isSending.value = false; 
+  }
 }
 
 </script>
