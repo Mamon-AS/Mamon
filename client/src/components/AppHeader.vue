@@ -183,6 +183,7 @@ export default {
       }
     };
     async function searchUsers(query) {
+      query = query.toLowerCase().replace(/\b\w/g, match => match.toUpperCase());
       try {
         const response = await axios.post(`/.netlify/functions/fetchUsers`, {
           query:query

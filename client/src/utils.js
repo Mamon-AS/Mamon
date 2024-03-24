@@ -1,5 +1,6 @@
 import sanity from "./client"
 import imageUrlBuilder from '@sanity/image-url'
+import axios from "axios";
 import { getAuth } from "firebase/auth";
 import { ref } from "vue";
 
@@ -57,4 +58,18 @@ export const timeStampToDate = (timestamp) => {
     const minutes = date.getMinutes().toString().padStart(2, '0');
 
     return `${month} ${day.toString().padStart(2, '0')} ${year} ${hours.toString().padStart(2, '0')}:${minutes}`;
+};
+
+export const getUserComments = async (reviewId) => {
+    try {
+      const response = await axios.post(`/.netlify/functions/getUserComments`, { reviewId });
+      if (response.status === 200) {
+        return response.data.comments; 
+      } else {
+        return []; 
+      }
+    } catch (error) {
+      console.error(`Error fetching comments for review ID ${reviewId}:`, error);
+      return [];
+    }
 };

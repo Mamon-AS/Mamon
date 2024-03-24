@@ -73,7 +73,7 @@ async function uploadImageToSanity(imageUrl) {
           });
           return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Review submitted successfully' }),
+            body: JSON.stringify(createdReview),
           };
 
     } catch (error) {

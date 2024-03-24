@@ -19,9 +19,9 @@
 <script>
 import { getAuth, updateProfile } from 'firebase/auth';
 import { getStorage, ref, uploadBytes, getDownloadURL  } from "firebase/storage";
-import { ref as vueRef, onMounted } from 'vue';
+import { ref as vueRef, onMounted, computed } from 'vue';
+import { useStore } from 'vuex'
 
-import sanity from '../client';
 import ReviewCard from '../components/Reviews/ReviewCard.vue';
 import UserProfile from '../components/UserProfile.vue';
 
@@ -33,25 +33,24 @@ export default {
 
     setup() {
         const auth = getAuth();
-        const provider = vueRef(auth.currentUser.providerData[0].providerId);
         const defaultPhotoUrl = '/images/frosk.png';
         const photoUrl = vueRef(auth.currentUser?.photoURL || defaultPhotoUrl);
         const name = vueRef(auth.currentUser?.displayName);
-        const reviews = vueRef([]);
+        const store = useStore();
 
+        const reviews = computed(() => store.getters['reviews/reviewItems']);
+        
         onMounted(() => {
             fetchUserReviews();
         });
 
         // Methods
         const fetchUserReviews = () => {
-        const userId = getAuth().currentUser.uid;
-        sanity.fetch(`*[_type == "review" && userId == $userId]`, { userId })
-            .then((data) => {
-                reviews.value = data;
-            }).catch((error) => {
-                console.error('Error fetching reviews:', error);
-            });
+            try {
+                store.dispatch('reviews/FetchPersonalReviews', auth.currentUser.uid);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
         };
 
         const handleFileInputChange = async (event) => {
@@ -86,12 +85,11 @@ export default {
         };
 
         return {
-            provider,
             photoUrl,
             name,
-            reviews,
             handleFileInputChange,
             updateUserProfile,
+            reviews
         };
     }
 };
