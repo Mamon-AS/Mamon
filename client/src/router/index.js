@@ -17,6 +17,7 @@ const router = createRouter({
     { path: '/followers/:userId/:action', name: 'followers', component: () => import('../views/FollowersView.vue'), meta: { requiresAuth: true }, props: true },
     { path: '/settings', name: 'settings',component: () => import('../views/SettingsView.vue'), meta: { requiresAuth: true }, props: true},
     { path: '/review/:reviewId', name: 'singleReview',component: () => import('../views/SingleReviewView.vue'), meta: { requiresAuth: true }, props: true},
+    { path: '/suggestions', name: 'suggestions',component: () => import('../views/PeopleYouMayKnow.vue'), meta: { requiresAuth: true }, props: true},
   ]
 })
 
@@ -35,7 +36,7 @@ const getCurrentUser = () => {
 // navigation guard for å sjekke innlogga brukere 
 router.beforeEach(async(to, from, next) => {
   if (to.name === 'user' || to.name === 'review' || to.name === 'UserProfile' || to.name === 'followers' || to.name === 'settings'
-  || to.name === 'singleReview') { 
+  || to.name === 'singleReview' || to.name === 'suggestions') { 
     if (await getCurrentUser()) {
       next();
     } else {

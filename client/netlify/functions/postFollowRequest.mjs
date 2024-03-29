@@ -41,7 +41,7 @@ exports.handler = async (event) => {
 
       const docRef = await followRequestsRef.add(request);
       
-      const notificationMessage = `${displayName} har sent deg en følgeforespørsel.`;
+      const notificationMessage = `Du har fått en følgeforespørsel!`;
       const notificationData = {
         userId:currentUserId,
         type: 'followRequest',

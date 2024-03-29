@@ -48,6 +48,13 @@
       </ul>
     </div>
     <div v-if="isLoggedIn" class="ml-auto flex items-end">
+      <!-- People You May Know -->
+      <HeaderItem to="/suggestions">
+        <div class="px-2">
+          <i class="fa-solid fa-user-group" style="color: #ffffff;"></i>
+          <p class="hidden md:block md:ml-2"></p>
+        </div>
+      </HeaderItem>
       <!-- Notification Bell -->
       <UserNotifications 
         :userId="userID"
@@ -106,7 +113,7 @@ export default {
   components: {
     HeaderItem,
     Modal,
-    UserNotifications
+    UserNotifications,
 },
   setup(props) {
     let ignoreNextOutsideClick = false;
