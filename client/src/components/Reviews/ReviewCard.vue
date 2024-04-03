@@ -128,7 +128,7 @@ import axios from 'axios';
 import {FormatDate, CreateURL, navigateToProfile} from '../../utils'
 import ListOfUsers from '../ListOfUsers.vue';
 import CommentForm from '../Comments/CommentForm.vue';
-import CommentItem from '../Comments/CommentItem.vue';
+import Comment from '../Comments/Comment.vue';
 
 export default {
   props: {
@@ -141,7 +141,7 @@ export default {
   components: {
     ListOfUsers,
     CommentForm,
-    CommentItem,
+    Comment,
   },
 
   setup(props) {
@@ -412,4 +412,4 @@ width: 100%;
   right: 12.5rem;
 }
 
-</style>
+</style>../Comments/Comment.vue

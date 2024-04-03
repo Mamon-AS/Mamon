@@ -2,19 +2,26 @@
   <header 
     :class="[
       'flex w-full items-center justify-between p-4 z-50 fixed top-0 left-0  transition-all duration-300', 
-      { 'bg-mamonblue': !showSearchField },
-      { 'bg-blue-500 h-20 md:h-32': showSearchField },
+      { 'bg-mamonblue': !searchResults.length > 0 },
+      { 'bg-blue-500 h-20 md:h-32': searchResults.length > 0 },
     ]"
     :style="showSearchField ? { position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100 } : {}"
   >
     <!-- ICONS BEGIN -->
-    <div class="flex items-end">
+    <div class="flex items-end ">
       <a href="/" class="ml-2 lg:ml-5 mt-2">
         <img src="/images/Transparent_Image_11_cropped.png" alt="Logo" class="h-8 w-auto logo"/>
       </a>
-      <button v-show="isLoggedIn" ref="toggleButton" @click="toggleSearchField" class="mx-2 lg:mx-5 px-2 rounded text-white hover:bg-lightblue focus:bg-lightblue">
-        <i class="fa-solid fa-magnifying-glass fa-l lg:fa-xl" style="color: #ffffff;"></i>     
-      </button>
+
+      <input
+        v-show="isLoggedIn"
+        v-model="searchQuery"
+        ref="searchField"
+        type="search"
+        placeholder="Søk..."
+        class="px-2 py-1 ml-8 mr-2 text-xs border border-gray-300 rounded-md shadow-sm opacity-50 w-20 focus:w-auto focus:opacity-100 hover:opacity-100 focus:outline-none focus:ring-2 
+        focus:border-lightblue bg-white transition-all duration-300"
+      />
       
       <HeaderItem to="/review" v-show="isLoggedIn">
         <div class="flex flex-col md:flex-row items-center px-2 py-1 md:py-0">
@@ -23,20 +30,11 @@
         </div>
       </HeaderItem>
     
-      <input
-        v-model="searchQuery"
-        v-show="showSearchField"
-        ref="searchField"
-        type="search"
-        placeholder="Søk..."
-        class="absolute top-full left-0 mt-2 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 
-        focus:border-lightblue bg-white transition-all duration-300"
-        style="z-index: 101;"
-      />
+
     </div>
     <!-- ICONS END -->
 
-    <div v-show="searchResults.length > 0" class="absolute top-full left-0 mt-12 w-full bg-white shadow-lg z-50">
+    <div v-show="searchResults.length > 0" class="absolute top-[calc(50%+theme(spacing.12))] left-0 w-full bg-white shadow-lg z-50">
       <ul>
         <li v-for="user in searchResults" :key="user.userId" class="p-2 hover:bg-gray-100">
           <span style="text-decoration:underline; cursor:pointer;" @click="navigate(user.userId)">
@@ -203,7 +201,10 @@ export default {
       }
 
     
-    const navigate = (userId) => navigateToProfile(vueRouter, userId);
+    const navigate = (userId) => {
+      navigateToProfile(vueRouter, userId);
+      closeSearch();  
+    };
     
 
     watch(searchQuery, (newValue, oldValue) => {
