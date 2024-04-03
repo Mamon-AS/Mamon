@@ -1,11 +1,13 @@
 <template>
-    <main class="home-page">
+ <main class="home-page flex flex-col justify-between min-h-screen">
+      <div class="flex-grow">
         <div v-show="isLoggedIn">
             <ReviewCardView />
         </div>
         <div v-show="!isLoggedIn">
             <GetStarted />
         </div>
+      </div>
         <footer class="text-center">
             <p>© {{ new Date().getFullYear() }} Mamon. All rights reserved.</p>
         </footer>
