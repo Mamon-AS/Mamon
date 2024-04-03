@@ -19,7 +19,7 @@
         ref="searchField"
         type="search"
         placeholder="Søk..."
-        class="px-2 py-1 ml-2 text-s border border-gray-300 rounded-md shadow-sm opacity-50 w-20 focus:w-auto focus:opacity-100 focus:outline-none focus:ring-2 
+        class="px-2 py-1 ml-8 mr-2 text-xs border border-gray-300 rounded-md shadow-sm opacity-50 w-20 focus:w-auto focus:opacity-100 hover:opacity-100 focus:outline-none focus:ring-2 
         focus:border-lightblue bg-white transition-all duration-300"
       />
       
@@ -34,7 +34,7 @@
     </div>
     <!-- ICONS END -->
 
-    <div v-show="searchResults.length > 0" class="absolute top-full left-0 mt-12 w-full bg-white shadow-lg z-50">
+    <div v-show="searchResults.length > 0" class="absolute top-12 left-0 w-full bg-white shadow-lg z-50">
       <ul>
         <li v-for="user in searchResults" :key="user.userId" class="p-2 hover:bg-gray-100">
           <span style="text-decoration:underline; cursor:pointer;" @click="navigate(user.userId)">
