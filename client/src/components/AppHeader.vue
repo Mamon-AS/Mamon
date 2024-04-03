@@ -34,7 +34,7 @@
     </div>
     <!-- ICONS END -->
 
-    <div v-show="searchResults.length > 0" class="absolute top-12 left-0 w-full bg-white shadow-lg z-50">
+    <div v-show="searchResults.length > 0" class="absolute top-[calc(50%+theme(spacing.12))] left-0 w-full bg-white shadow-lg z-50">
       <ul>
         <li v-for="user in searchResults" :key="user.userId" class="p-2 hover:bg-gray-100">
           <span style="text-decoration:underline; cursor:pointer;" @click="navigate(user.userId)">
@@ -201,7 +201,10 @@ export default {
       }
 
     
-    const navigate = (userId) => navigateToProfile(vueRouter, userId);
+    const navigate = (userId) => {
+      navigateToProfile(vueRouter, userId);
+      closeSearch();  
+    };
     
 
     watch(searchQuery, (newValue, oldValue) => {
