@@ -49,7 +49,7 @@ export default {
 }
 
 main {
-  @apply mx-auto max-w-6xl my-8 px-4;
+  @apply mx-auto max-w-6xl px-4;
   .user {
     @apply bg-white shadow-md rounded-lg p-8;
     h1 {

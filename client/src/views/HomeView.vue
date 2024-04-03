@@ -1,8 +1,13 @@
 <template>
-    <main class="home-page">
+ <main class="home-page flex flex-col justify-between min-h-screen">
+      <div class="flex-grow">
         <div v-show="isLoggedIn">
             <ReviewCardView />
         </div>
+        <div v-show="!isLoggedIn">
+            <GetStarted />
+        </div>
+      </div>
         <footer class="text-center">
             <p>© {{ new Date().getFullYear() }} Mamon. All rights reserved.</p>
         </footer>
@@ -13,10 +18,13 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ref, onMounted } from 'vue';
 import ReviewCardView from '../views/ReviewCardView.vue';
+import GetStarted from '../components/GetStarted.vue';
 
 export default {
   components: {
-    ReviewCardView
+    ReviewCardView,
+    GetStarted
+
   },
 
   setup() {
