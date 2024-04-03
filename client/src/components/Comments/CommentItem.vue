@@ -128,7 +128,6 @@ const deleteComment = async (commentId) => {
 onMounted(async () => {
     await nextTick();
     if (props.commentId === props.highlightCommentId) {
-      console.log("WE HAVE A MATCH");
       const element = document.querySelector(`.highlight-background`);
       if (element) {
         console.log("I am finna scroll");

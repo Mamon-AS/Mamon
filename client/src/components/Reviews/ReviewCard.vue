@@ -65,21 +65,40 @@
 
     <!-- Comment Section -->
     <div v-if="reviewItems.comments && reviewItems.comments.length > 0" class="comments-container">
-      <div class="bottom-full bg-white rounded-lg mt-4" v-for="comment in reviewItems.comments" :key="comment.commentId">
-        <CommentItem
-          :reviewId="reviewItems._id"
-          :userId="comment.userId"
-          :photoUrl="comment.photoUrl"
-          :displayName="comment.displayName"
-          :text="comment.text"
-          :createdAt="comment.createdAt"
-          :replies="comment.replies"
-          :commentId="comment.commentId"
-          :highlightCommentId="highlightCommentId"
-        />
-      </div>
-    </div>
-    <div class="rounded-lg border mt-2 shadow-sm hover:shadow-lg transition-shadow duration-200 ease-in-out p-2">
+      <template v-if="!showAllComments">
+        <div class="bottom-full bg-white rounded-lg mt-4" v-for="(comment, index) in reviewItems.comments.slice(0, 2)" :key="index">
+          <CommentItem
+            :reviewId="reviewItems._id"
+            :userId="comment.userId"
+            :photoUrl="comment.photoUrl"
+            :displayName="comment.displayName"
+            :text="comment.text"
+            :createdAt="comment.createdAt"
+            :replies="comment.replies"
+            :commentId="comment.commentId"
+            :highlightCommentId="highlightCommentId"
+          />
+        </div>
+        <button v-if="reviewItems.comments.length > 2" @click="showAllComments = true" class="text-gray-500 mx-auto block mt-4 px-4 py-2 rounded hover:bg-gray-100 focus:outline-none">
+        Les alle kommentarene ({{ reviewItems.comments.length - 2 }} flere)
+      </button>
+      </template>
+      <template v-else>
+        <div class="bottom-full bg-white rounded-lg mt-4" v-for="(comment, index) in reviewItems.comments" :key="comment.commentId">
+          <CommentItem
+            :reviewId="reviewItems._id"
+            :userId="comment.userId"
+            :photoUrl="comment.photoUrl"
+            :displayName="comment.displayName"
+            :text="comment.text"
+            :createdAt="comment.createdAt"
+            :replies="comment.replies"
+            :commentId="comment.commentId"
+            :highlightCommentId="highlightCommentId"
+          />
+        </div>
+      </template>
+
       <CommentForm 
         :reviewId="reviewItems._id"
         :reviewerUserId="reviewItems.userId"
@@ -143,7 +162,7 @@ export default {
       { value: '😎', clicked: false }
     ]);
     const showReactionModal = ref(false); 
-
+    const showAllComments = ref(false);
     let ignoreFirstClick = false;
     
     // Computed property to get unique emojis
@@ -314,6 +333,7 @@ export default {
     toggleModal,
     uniqueEmojis,
     isUserReactedEmoji,
+    showAllComments
   };
     
   },

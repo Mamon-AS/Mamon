@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router'
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
@@ -54,6 +54,19 @@ export default {
     const toggleNotificationsDropdown = () => {
       showNotificationsDropdown.value = !showNotificationsDropdown.value;
     };
+    const closeDropdownIfClickedOutside = (event) => {
+      if (!event.target.closest('.relative')) {
+        showNotificationsDropdown.value = false;
+      }
+    };
+    watch(showNotificationsDropdown, (newVal) => {
+      if (newVal) {
+        document.addEventListener('click', closeDropdownIfClickedOutside);
+      } else {
+        document.removeEventListener('click', closeDropdownIfClickedOutside);
+      }
+    });
+
 
     const timeStampToTimeAgo = (timestamp) => {
       const now = new Date();
@@ -126,6 +139,7 @@ export default {
       if (unsubscribe) {
         unsubscribe();
       }
+      document.removeEventListener('click', closeDropdownIfClickedOutside);
     });
 
     return {
@@ -134,7 +148,8 @@ export default {
       unseenNotificationsCount,
       toggleNotificationsDropdown,
       markAsRead,
-      timeStampToTimeAgo
+      timeStampToTimeAgo,
+      closeDropdownIfClickedOutside
     };
   },
 };

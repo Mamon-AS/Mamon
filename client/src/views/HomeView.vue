@@ -3,6 +3,9 @@
         <div v-show="isLoggedIn">
             <ReviewCardView />
         </div>
+        <div v-show="!isLoggedIn">
+            <GetStarted />
+        </div>
         <footer class="text-center">
             <p>© {{ new Date().getFullYear() }} Mamon. All rights reserved.</p>
         </footer>
@@ -13,10 +16,13 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ref, onMounted } from 'vue';
 import ReviewCardView from '../views/ReviewCardView.vue';
+import GetStarted from '../components/GetStarted.vue';
 
 export default {
   components: {
-    ReviewCardView
+    ReviewCardView,
+    GetStarted
+
   },
 
   setup() {

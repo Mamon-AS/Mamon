@@ -87,7 +87,7 @@ exports.handler = async (event) => {
       let chunk = followingUserIds.slice(i, i + limit);
       const reviewsRef = db.collection('reviews')
       .where('userId', 'in', chunk)
-      .limit(limit);
+      // .limit(limit);
       const reviewsSnapshot = await reviewsRef.get();
 
       reviewsSnapshot.forEach(doc => {

@@ -195,17 +195,17 @@ export default {
     const cacheKey = `allFollowingReviewsCache_${userId}`;
     const cachedData = localStorage.getItem(cacheKey);
 
-    if (cachedData) {
-      const { timestamp, data } = JSON.parse(cachedData);
-      if (Date.now() - timestamp < 3600000) { 
-          commit('SET_REVIEWS', data.reviewItems);
-          commit('SET_TOTAL_REVIEWS', data.totalReviews);
-          return;
-      } else {
-          console.log("ALL following reviews cache expired, fetching new data");
-          localStorage.removeItem(cacheKey); // Remove expired cache
-        }
-    }
+    // if (cachedData) {
+    //   const { timestamp, data } = JSON.parse(cachedData);
+    //   if (Date.now() - timestamp < 3600000) { 
+    //       commit('SET_REVIEWS', data.reviewItems);
+    //       commit('SET_TOTAL_REVIEWS', data.totalReviews);
+    //       return;
+    //   } else {
+    //       console.log("ALL following reviews cache expired, fetching new data");
+    //       localStorage.removeItem(cacheKey); // Remove expired cache
+    //     }
+    // }
     
     try {
       console.log("fetching new data");
