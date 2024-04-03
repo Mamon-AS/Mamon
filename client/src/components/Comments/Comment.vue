@@ -58,6 +58,8 @@ import { useStore } from 'vuex';
 
 import { navigateToProfile, timeStampToDate  } from '../../utils/';
 
+import CommentForm from './CommentForm.vue';
+
 const props = defineProps({
   reviewId: String,
   userId: String,
