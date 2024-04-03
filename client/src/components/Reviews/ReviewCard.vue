@@ -67,7 +67,7 @@
     <div v-if="reviewItems.comments && reviewItems.comments.length > 0" class="comments-container">
       <template v-if="!showAllComments">
         <div class="bottom-full bg-white rounded-lg mt-4" v-for="(comment, index) in reviewItems.comments.slice(0, 2)" :key="index">
-          <CommentItem
+          <Comment
             :reviewId="reviewItems._id"
             :userId="comment.userId"
             :photoUrl="comment.photoUrl"
@@ -85,7 +85,7 @@
       </template>
       <template v-else>
         <div class="bottom-full bg-white rounded-lg mt-4" v-for="(comment, index) in reviewItems.comments" :key="comment.commentId">
-          <CommentItem
+          <Comment
             :reviewId="reviewItems._id"
             :userId="comment.userId"
             :photoUrl="comment.photoUrl"
