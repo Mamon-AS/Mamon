@@ -1,10 +1,11 @@
 <template>
-  <ListOfUsers :users="followers" />
+  <ListOfUsers :users="following" />
 </template>
 
 <script>
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 import ListOfUsers from '../components/ListOfUsers.vue';
 
@@ -19,19 +20,21 @@ export default {
     ListOfUsers,
   },
   setup(props) {
-    const followers = ref([]);
+    const following = ref([]);
+    const route = useRoute();
 
-    async function fetchUserData(userID) {
+    async function fetchUserData(userID, action) {
       try {
-        const response = await axios.post(`/.netlify/functions/getFollowers`, {
+        const response = await axios.post(`/.netlify/functions/getFollowing`, {
           userId: userID,
+          action
         });
 
         if (response.status < 200 || response.status >= 300) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        followers.value = response.data.followers;
+        following.value = response.data.following;
 
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -39,11 +42,11 @@ export default {
     }
 
     onMounted(() => {
-      fetchUserData(props.userId);
+      fetchUserData(props.userId, route.params.action);
     });
 
     return {
-      followers
+      following
     };
   },
 };

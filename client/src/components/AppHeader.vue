@@ -2,88 +2,91 @@
   <header 
     :class="[
       'flex w-full items-center justify-between p-4 z-50 fixed top-0 left-0  transition-all duration-300', 
-      { 'bg-mamonblue': !showSearchField },
-      { 'bg-blue-500 h-20 md:h-32': showSearchField },
+      { 'bg-mamonblue': !searchResults.length > 0 },
+      { 'bg-blue-500 h-20 md:h-32': searchResults.length > 0 },
     ]"
     :style="showSearchField ? { position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100 } : {}"
   >
     <!-- ICONS BEGIN -->
-    <div class="flex ">
-      <a href="/" class="ml-5 mt-2">
+    <div class="flex items-end ">
+      <a href="/" class="ml-2 lg:ml-5 mt-2">
         <img src="/images/Transparent_Image_11_cropped.png" alt="Logo" class="h-8 w-auto logo"/>
       </a>
 
-      <button ref="toggleButton" @click="toggleSearchField" class="lg:ml-5 lg:mr-5  p-2 rounded-full text-white" :class="{'bg-transparent': showSearchField}">
-        <i class="fa-solid fa-magnifying-glass fa-2xl" style="color: #ffffff;"></i>     
-       </button>
-      
-      <HeaderItem to="/review">
-        <div class="flex flex-col md:flex-row items-center">
-          <i class="fa-solid fa-feather fa-2xl" style="color: #ffffff;"></i>
-          <p class="hidden md:block md:ml-2">Anmeldelser</p>
-        </div>
-      </HeaderItem>
-    
       <input
+        v-show="isLoggedIn"
         v-model="searchQuery"
-        v-show="showSearchField"
         ref="searchField"
         type="search"
         placeholder="Søk..."
-        class="absolute top-full left-0 mt-2 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 
+        class="px-2 py-1 ml-8 mr-2 text-xs border border-gray-300 rounded-md shadow-sm opacity-50 w-20 focus:w-auto focus:opacity-100 hover:opacity-100 focus:outline-none focus:ring-2 
         focus:border-lightblue bg-white transition-all duration-300"
-        style="z-index: 101;"
       />
+      
+      <HeaderItem to="/review" v-show="isLoggedIn">
+        <div class="flex flex-col md:flex-row items-center px-2 py-1 md:py-0">
+          <i class="fa-solid fa-feather lg:fa-xl" style="color: #ffffff;"></i>
+          <p class="hidden md:block md:ml-2">Anmeld</p>
+        </div>
+      </HeaderItem>
+    
+
     </div>
     <!-- ICONS END -->
 
-    <div v-show="searchResults.length > 0" class="absolute top-full left-0 mt-12 w-full bg-white shadow-lg z-50">
+    <div v-show="searchResults.length > 0" class="absolute top-[calc(50%+theme(spacing.12))] left-0 w-full bg-white shadow-lg z-50">
       <ul>
         <li v-for="user in searchResults" :key="user.userId" class="p-2 hover:bg-gray-100">
           <span style="text-decoration:underline; cursor:pointer;" @click="navigate(user.userId)">
             {{ user.displayName }}
             👉 
-          {{ user.bio ? user.bio : "Ingen bio 😿"}}
-        </span>
+            {{ user.bio ? user.bio : "Ingen bio 😿"}}
+          </span>
         </li>
       </ul>
     </div>
-
-      <div v-if="isLoggedIn" class="ml-auto flex items-center">
-          <!-- Notification Bell -->
-          <UserNotifications 
-            :userId="userID"
-          />
-
-        <!-- Profile Photo and Dropdown -->
-        <div @click="toggleModal" class="cursor-pointer">
-        <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-12 h-12 border-4 border-gray-800 mr-2 cursor-pointer">
-
-      </div>
-        <!-- WHEN YOU CLICK USER PROFILE BEGIN -->
-      <Modal v-model="modalIsActive">
-        <div class="flex flex-col dropdown animate-fade-in">
-          <button @click="navigate(userID)" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 mb-2 hover:scale-105 transition duration-300 ease-in-out">
-            <i class="fa-solid fa-user mr-2"></i> Min Profil
-          </button>
-          <button @click="openSettings" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 mb-2 hover:scale-105 transition duration-300 ease-in-out">
-            <router-link to="/settings">
-                <i class="fa-solid fa-gear mr-2"></i> Innstillinger
-            </router-link>
-          </button>
-          <button @click="handleSignOut" class="mt-8 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 hover:scale-105 transition duration-300 ease-in-out">
-            <i class="fa-solid fa-right-from-bracket mr-2"></i> Logg ut
-          </button>
+    <div v-if="isLoggedIn" class="ml-auto flex items-end">
+      <!-- People You May Know -->
+      <HeaderItem to="/suggestions">
+        <div class="px-2">
+          <i class="fa-solid fa-user-group" style="color: #ffffff;"></i>
+          <p class="hidden md:block md:ml-2"></p>
         </div>
-      </Modal>
-
+      </HeaderItem>
+      <!-- Notification Bell -->
+      <UserNotifications 
+        :userId="userID"
+      />
+      <!-- Profile Photo and Dropdown -->
+      <div @click="toggleModal" class="cursor-pointer">
+      <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-12 h-12 border-4 mr-2 cursor-pointer border-white">
+    </div>
+    
+    <!-- WHEN YOU CLICK USER PROFILE BEGIN -->
+    <Modal v-model="modalIsActive">
+      <div class="flex flex-col dropdown animate-fade-in">
+        <button @click="navigate(userID)" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 mb-2 hover:scale-105 transition duration-300 ease-in-out">
+          <i class="fa-solid fa-user mr-2"></i> Min Profil
+        </button>
+        <button @click="openSettings" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 mb-2 hover:scale-105 transition duration-300 ease-in-out">
+          <router-link to="/settings">
+            <i class="fa-solid fa-gear mr-2"></i> Innstillinger
+          </router-link>
+        </button>
+        <button @click="handleSignOut" class="mt-8 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 hover:scale-105 transition duration-300 ease-in-out">
+          <i class="fa-solid fa-right-from-bracket mr-2"></i> Logg ut
+        </button>
       </div>
-      <router-link v-if="!isLoggedIn"
+    </Modal>
+
+    </div>
+    <router-link v-if="!isLoggedIn"
             :to="`/sign-in`" 
             class="bg-lightblue text-white border border-lightblue hover:bg-white hover:border-mamonblue hover:text-mamonblue py-1 px-4 ml-4 rounded transition" 
-            >Logg inn
-      </router-link>
-      <!-- WHEN YOU CLICK USER PROFILE END -->
+            >
+      Logg inn
+    </router-link>
+    <!-- WHEN YOU CLICK USER PROFILE END -->
 
   </header>
   
@@ -108,7 +111,7 @@ export default {
   components: {
     HeaderItem,
     Modal,
-    UserNotifications
+    UserNotifications,
 },
   setup(props) {
     let ignoreNextOutsideClick = false;
@@ -185,6 +188,7 @@ export default {
       }
     };
     async function searchUsers(query) {
+      query = query.toLowerCase().replace(/\b\w/g, match => match.toUpperCase());
       try {
         const response = await axios.post(`/.netlify/functions/fetchUsers`, {
           query:query
@@ -197,7 +201,10 @@ export default {
       }
 
     
-    const navigate = (userId) => navigateToProfile(vueRouter, userId);
+    const navigate = (userId) => {
+      navigateToProfile(vueRouter, userId);
+      closeSearch();  
+    };
     
 
     watch(searchQuery, (newValue, oldValue) => {
@@ -264,9 +271,4 @@ export default {
   animation: fade-in 0.5s ease-out forwards;
 }
 
-
-button:hover {
-  transform: scale(1.05);
-  transition: transform 0.3s ease-in-out;
-}
 </style>

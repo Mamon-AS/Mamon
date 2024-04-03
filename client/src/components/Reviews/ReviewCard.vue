@@ -1,7 +1,7 @@
 <template>
   <div class="relative rounded-lg p-4 pt-6 m-2 mt-4 justify-between border-solid border-4 border-mamonblue text-left">
     <div class="flex absolute -top-4 -left-2 pr-1 pb-1 mb-1 bg-white" @click="navigate(reviewItems.userId)">
-      <img c v-if="photoUrl" :src="photoUrl" alt="Profile picture" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mr-2 cursor-pointer"/>
+      <img c v-if="photoUrl" :src="photoUrl" alt="Profile picture" class="object-cover rounded-full w-10 h-10 border-4 border-mamonblue mr-2 cursor-pointer"/>
       <span class="cursor-pointer hover:underline">{{ reviewItems.userName ? reviewItems.userName : "Anonym"}}</span>
     </div>
     <div class="flex justify-between items-end my-2">
@@ -75,6 +75,7 @@
           :createdAt="comment.createdAt"
           :replies="comment.replies"
           :commentId="comment.commentId"
+          :highlightCommentId="highlightCommentId"
         />
       </div>
     </div>
@@ -115,7 +116,8 @@ export default {
     reviewItems: {
       type: Object,
       required: true
-    }
+    },
+    highlightCommentId: String,
   },
   components: {
     ListOfUsers,
@@ -141,9 +143,9 @@ export default {
       { value: '😎', clicked: false }
     ]);
     const showReactionModal = ref(false); 
+
     let ignoreFirstClick = false;
     
-
     // Computed property to get unique emojis
     const uniqueEmojis = computed(() => {
       const allReactions = [...Object.values(reactions.value), userReaction.value].filter(Boolean);
@@ -162,8 +164,6 @@ export default {
     watch(currentUser, (newUser) => {
       if (newUser) {
         getReactions(props.reviewItems._id);
-      } else {
-        console.log("Waiting for user login...");
       }
     }, { immediate: true });
 
@@ -256,7 +256,7 @@ export default {
       showReactionModal.value == false ? showReactionModal.value = true : showReactionModal.value = false;
     }
     else if (modalName === 'listOfUsers') {
-      showListOfUsersModal.value == false ? showReactionModal.value = true : showReactionModal.value = false;
+      showListOfUsersModal.value == false ? showListOfUsersModal.value = true : showListOfUsersModal.value = false;
     }
 
   };

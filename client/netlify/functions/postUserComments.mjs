@@ -68,6 +68,7 @@ exports.handler = async (event) => {
         const reviewDoc = await reviewRef.get();
 
         const createdAt = new Date();
+        let newOrReplyCommentId = null;
 
         if (!reviewDoc.exists) {
             return {
@@ -103,17 +104,20 @@ exports.handler = async (event) => {
             }).filter(comment => comment !== null); 
         } else {
             if (parentCommentId) {
+                newOrReplyCommentId = uuidv4();
+                console.log(newOrReplyCommentId, 'newOrReplyCommentId')
                 const parentCommentIndex = comments.findIndex(comment => comment.commentId === parentCommentId);
                 if (parentCommentIndex !== -1) {
                     comments[parentCommentIndex].replies = Array.isArray(comments[parentCommentIndex].replies) ? comments[parentCommentIndex].replies : [];
-                    comments[parentCommentIndex].replies.push({ commentId: uuidv4(), text, displayName, userId, createdAt });
+                    comments[parentCommentIndex].replies.push({ commentId: newOrReplyCommentId, text, displayName, userId, createdAt });
                 }
             } else {
                 const existingCommentIndex = comments.findIndex(comment => comment.commentId === commentId && comment.userId === userId);
                 if (existingCommentIndex !== -1) {
                     comments[existingCommentIndex].text = text;
                 } else {
-                    comments.push({ commentId: uuidv4(), text, displayName, userId, createdAt });
+                    newOrReplyCommentId = uuidv4();
+                    comments.push({ commentId: newOrReplyCommentId, text, displayName, userId, createdAt });
                     totalComments += 1;
                 }
             }
@@ -132,7 +136,8 @@ exports.handler = async (event) => {
                 seen: false,
                 timestamp: admin.firestore.FieldValue.serverTimestamp(),
                 reviewId: reviewId,
-                notificationUserId: notificationUserId
+                notificationUserId: notificationUserId,
+                commentId: newOrReplyCommentId
             };
         
             await db.collection('notifications').add(notificationData);
