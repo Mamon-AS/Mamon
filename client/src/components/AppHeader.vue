@@ -202,8 +202,8 @@ export default {
 
     
     const navigate = (userId) => {
-      navigateToProfile(vueRouter, userId);
-      closeSearch();  
+      closeSearch(); 
+      navigateToProfile(vueRouter, userId); 
     };
     
 
