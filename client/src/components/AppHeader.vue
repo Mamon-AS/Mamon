@@ -8,9 +8,13 @@
     :style="showSearchField ? { position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100 } : {}"
   >
     <!-- ICONS BEGIN -->
-    <div class="flex items-end ">
-      <a href="/" class="ml-2 lg:ml-5 mt-2">
-        <img src="/images/Transparent_Image_11_cropped.png" alt="Logo" class="h-8 w-auto logo"/>
+    <div class="flex items-end">
+      <a href="/" class="ml-2 lg:ml-5 mt-4">
+        <!-- Mobilinio and pæds-->
+        <img src="/images/High_Resolution_Image_3.jpg" alt="Logo" class="h-6 lg:hidden"/>
+        <!-- large screens and up -->
+        <img src="/images/Transparent_Image_11_cropped.png" alt="Logo" class="hidden lg:block lg:h-8 w-auto logo"/>
+
       </a>
 
       <input
@@ -19,7 +23,7 @@
         ref="searchField"
         type="search"
         placeholder="Søk..."
-        class="px-2 py-1 ml-8 mr-2 text-xs border border-gray-300 rounded-md shadow-sm opacity-50 w-20 focus:w-auto focus:opacity-100 hover:opacity-100 focus:outline-none focus:ring-2 
+        class="px-2 py-1 lg:ml-8 mr-2 text-xs border border-gray-300 rounded-md shadow-sm opacity-50 w-20 focus:w-auto focus:opacity-100 hover:opacity-100 focus:outline-none focus:ring-2 
         focus:border-lightblue bg-white transition-all duration-300"
       />
       

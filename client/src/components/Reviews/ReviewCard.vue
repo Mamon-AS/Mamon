@@ -6,11 +6,38 @@
     </div>
     <div class="flex justify-between items-end my-2">
       <div class="flex items-center">
-        <div class="stars-outer">
+        <div class="stars-outer relative">
           <div class="stars-inner" :style="{ width: stars }"></div>
           <div class="stars-background"></div>
+          <i class="fa-solid fa-circle-info absolute top-0 right-0 text-sm" style="color: #096191; margin-top: -1rem; margin-right: -0.75rem;"
+            @click="showInfoModal = !showInfoModal"></i>
         </div>
       </div>
+
+      <!-- Information Modal -->
+      <div v-if="showInfoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+          <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+              <i class="fa-solid fa-circle-info text-blue-600"></i>
+            </div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Stjernekartet</h3>
+            <ul class="mt-2 px-7 py-3 text-center space-y-4 text-md text-gray-900">
+              <li>⭐<br>Anbefales virkelig ikke.</li>
+              <li>⭐⭐<br>Litt dårligere enn hva jeg forventet.</li>
+              <li>⭐⭐⭐<br>Som forventet - Fornøyd. Dette er normalen, og 3-5 stjerner indikerer et godt kjøp.</li>
+              <li>⭐⭐⭐⭐<br>Litt bedre enn hva jeg forventet.</li>
+              <li>⭐⭐⭐⭐⭐<br>Anbefales!</li>
+            </ul>
+            <div class="items-center px-4 py-3">
+              <button id="ok-btn" @click="showInfoModal = false" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Information Modal END -->
       <p class="text-sm">
         {{ FormatDate(reviewItems._createdAt) }}
       </p> 
@@ -163,6 +190,7 @@ export default {
     ]);
     const showReactionModal = ref(false); 
     const showAllComments = ref(false);
+    const showInfoModal = ref(false);
     let ignoreFirstClick = false;
     
     // Computed property to get unique emojis
@@ -333,7 +361,8 @@ export default {
     toggleModal,
     uniqueEmojis,
     isUserReactedEmoji,
-    showAllComments
+    showAllComments,
+    showInfoModal,
   };
     
   },
@@ -412,4 +441,4 @@ width: 100%;
   right: 12.5rem;
 }
 
-</style>../Comments/Comment.vue
+</style>
