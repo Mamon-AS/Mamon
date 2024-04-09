@@ -101,13 +101,12 @@
             :displayName="comment.displayName"
             :text="comment.text"
             :createdAt="comment.createdAt"
-            :replies="comment.replies"
             :commentId="comment.commentId"
             :highlightCommentId="highlightCommentId"
           />
         </div>
         <button v-if="reviewItems.comments.length > 2" @click="showAllComments = true" class="text-gray-500 mx-auto block mt-4 px-4 py-2 rounded hover:bg-gray-100 focus:outline-none">
-        Les alle kommentarene ({{ reviewItems.comments.length - 2 }} flere)
+        Les alle {{ additionalItemsCount }} kommentarer og svar
       </button>
       </template>
       <template v-else>
@@ -206,6 +205,20 @@ export default {
     const isUserReactedEmoji = (emojiValue) => {
       return userReaction.value?.emoji === emojiValue;
     };
+
+    // Total comments
+    const additionalItemsCount = computed(() => {
+      const totalComments = props.reviewItems.comments.length;
+
+      const totalReplies = props.reviewItems.comments.reduce((sum, comment) => {
+        return sum + (comment.replies ? comment.replies.length : 0);
+      }, 0);
+
+      const initiallyShown = 2; 
+      const totalItems = totalComments + totalReplies - initiallyShown;
+
+      return totalItems > 0 ? totalItems : 0;
+    });
 
 
     watch(currentUser, (newUser) => {
@@ -363,6 +376,7 @@ export default {
     isUserReactedEmoji,
     showAllComments,
     showInfoModal,
+    additionalItemsCount,
   };
     
   },
