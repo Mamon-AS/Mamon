@@ -19,9 +19,7 @@ export default {
       state.reviewItems.push(newReview);
     },
     SET_TOTAL_REVIEWS(state, total_reviews) {
-      console.log("total_reviews ", total_reviews);
       state.total_reviews = total_reviews;
-      console.log("state.total_reviews ", state.total_reviews);
     },
     SET_REVIEWS_ERROR(state, error) {
       state.reviewItems = { error };
