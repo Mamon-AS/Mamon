@@ -30,16 +30,30 @@ export default {
         description: 'ID of the user who wrote the review',
         validation: Rule => Rule.required().error('Missing user ID')
       }, 
-      {name: 'userName',
+      {
+      name: 'userName',
       title: 'User Name',
       type: 'string',
       description: 'Name of the user who wrote the review',
-    }, 
+     }, 
       {
         name: 'reviewedImage',
         title: 'Image of Reviewed Item',
         type: 'image',
         description: 'Taken from metadata of the URL or maybe prisjakt, who knows',
+      },
+      {
+        name: 'website',
+        title: 'Website',
+        type: 'string',
+        description: 'Website where the item was reviewed',
+      },
+      {
+        name: 'url',
+        title: 'URL',
+        type: 'url',
+        description: 'URL of the item being reviewed',
+        validation: Rule => Rule.required().error('Missing URL')
       }
     ]
   }

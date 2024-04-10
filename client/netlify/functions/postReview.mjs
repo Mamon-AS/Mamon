@@ -39,8 +39,11 @@ async function uploadImageToSanity(imageUrl) {
     if (event.httpMethod !== 'POST') {
       return { statusCode: 405, body: 'Method Not Allowed' };
     }
+    if (!event.body) {
+      return { statusCode: 400, body: 'Bad Request' };
+    }
     try {
-        const { reviewedItem, rating, userId, userName, fetchedTitle, fetchedImage, reviewedItemDescription } = JSON.parse(event.body);
+        const { reviewedItem, rating, userId, userName, fetchedTitle, fetchedImage, reviewedItemDescription, fetchedWebsite, url } = JSON.parse(event.body);
         const uploadedImageAsset = await uploadImageToSanity(fetchedImage);
         
         const imageReference = {
@@ -60,6 +63,8 @@ async function uploadImageToSanity(imageUrl) {
             userName: userName,
             description: reviewedItemDescription,
             reviewedImage: imageReference,
+            website: fetchedWebsite,
+            url: url
           });
 
           const sanityReviewId = createdReview._id;
@@ -69,7 +74,9 @@ async function uploadImageToSanity(imageUrl) {
             userName: userName,
             reviewedItem: fetchedTitle,
             rating:rating,
-            description: reviewedItemDescription
+            description: reviewedItemDescription,
+            website: fetchedWebsite,
+            url: url
           });
           return {
             statusCode: 200,

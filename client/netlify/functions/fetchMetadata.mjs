@@ -9,6 +9,7 @@ exports.handler = async (event) => {
         const body = response.data;
         const $ = cheerio.load(body);
 
+        const website = $('meta[property="og:site_name"]').attr('content')
         const title = $('meta[property="og:title"]').attr('content') || $('title').text();
         const imageUrl = $('meta[property="og:image"]').attr('content')
 
@@ -25,8 +26,10 @@ exports.handler = async (event) => {
                 'Access-Control-Allow-Origin': '*' 
             },
             body: JSON.stringify({
-              title,
-              image: `data:${imageResponse.headers['content-type']};base64,${Buffer.from(imageResponse.data).toString('base64')}`
+                website,
+                url,
+                title,
+                image: `data:${imageResponse.headers['content-type']};base64,${Buffer.from(imageResponse.data).toString('base64')}`
           })
         };
     } catch (error) {

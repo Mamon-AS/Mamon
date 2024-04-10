@@ -14,7 +14,7 @@
               <div class="flex flex-col mb-4 sm:mb-0 sm:mr-4">
                 <a class="title font-medium no-underline">{{ user.name }}</a > 
               <div class="flex flex-col">
-                  <span class="subtitle text-slate-500">{{ user.bio ? user.bio : user.name + ' har ikke skrevet en bio enda 🤫' }}</span> 
+                  <span class="subtitle text-slate-500">{{ user.bio }}</span> 
                 </div>
               </div>
             </div>
@@ -36,7 +36,6 @@
     users: Array,
   });
   const router = useRouter();
-
   const navigate = (userId) => navigateToProfile(router, userId);
 
   

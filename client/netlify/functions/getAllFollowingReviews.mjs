@@ -95,7 +95,17 @@ exports.handler = async (event) => {
       });
     }
 
-    const hasMoreReviews = reviews.length > limit;
+    // const hasMoreReviews = reviews.length > limit; chilling with this one until its needed
+
+    const yourReviewsRef = db.collection('reviews').where('userId', '==', userId);
+    const yourReviewsSnapshot = await yourReviewsRef.get();
+
+    let yourReviews = [];
+    yourReviewsSnapshot.forEach(doc => {
+      yourReviews.push(doc.data());
+    });
+
+    reviews = [...yourReviews, ...reviews];
 
     // Extract all unique user IDs from comments and replies
     let userIds = new Set();
