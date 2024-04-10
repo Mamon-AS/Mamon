@@ -56,9 +56,9 @@ export default {
   },
 
   actions: {
-    async SubmitReview({ commit, dispatch }, { reviewedItem, rating, userId, userName, fetchedTitle, fetchedImage, reviewedItemDescription }) {
+    async SubmitReview({ commit, dispatch }, { reviewedItem, rating, userId, userName, fetchedTitle, fetchedImage, reviewedItemDescription, fetchedWebsite, url }) {
       try {
-         const response = await axios.post(`/.netlify/functions/postReview`, { reviewedItem, rating, userId, userName, fetchedTitle, fetchedImage, reviewedItemDescription });
+         const response = await axios.post(`/.netlify/functions/postReview`, { reviewedItem, rating, userId, userName, fetchedTitle, fetchedImage, reviewedItemDescription, fetchedWebsite, url });
          if (response.status === 200) {
           const newReview = (response.data);
           commit('APPEND_REVIEW', newReview);

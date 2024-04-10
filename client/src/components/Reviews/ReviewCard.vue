@@ -45,9 +45,12 @@
 
     <div class="content-wrapper">
       <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
-      <h3 class="text-lg md:text-2xl font-bold"> {{ (reviewItems.reviewedItem.length > 30 ? reviewItems.reviewedItem.slice(0,30) + '...' : reviewItems.reviewedItem) }}</h3>
+      <h3 class="text-lg md:text-2xl font-bold text-center">
+        <a :href="reviewItems.url" class="hover:text-blue-600 underline" target="_blank" rel="noopener noreferrer">{{ reviewItems.website }}</a>
+      </h3>
+      <h3 class="text-lg md:text-2xl font-bold text-center"> {{ (reviewItems.reviewedItem.length > 30 ? reviewItems.reviewedItem.slice(0,30) + '...' : reviewItems.reviewedItem) }}</h3>
       
-      <p class="md:text-lg mb-4">
+      <p class="md:text-lg mb-4 text-center">
         {{ reviewItems.description }}
       </p>
     </div> 
