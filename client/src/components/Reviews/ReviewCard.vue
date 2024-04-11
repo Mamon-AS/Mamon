@@ -46,9 +46,13 @@
     <div class="content-wrapper">
       <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
       <h3 class="text-lg md:text-2xl font-bold text-center">
-        <a :href="reviewItems.url" class="hover:text-blue-600 underline" target="_blank" rel="noopener noreferrer">{{ reviewItems.website }}</a>
+        {{ reviewItems.website }}
       </h3>
-      <h3 class="text-lg md:text-2xl font-bold text-center"> {{ (reviewItems.reviewedItem.length > 30 ? reviewItems.reviewedItem.slice(0,30) + '...' : reviewItems.reviewedItem) }}</h3>
+      <h3 class="text-lg md:text-2xl font-bold text-center"> 
+        <a :href="reviewItems.url" class="hover:text-blue-600 underline" target="_blank" rel="noopener noreferrer"> 
+          {{ (reviewItems.reviewedItem.length > 30 ? reviewItems.reviewedItem.slice(0,30) + '...' : reviewItems.reviewedItem) }} 
+        </a>
+      </h3>
       
       <p class="md:text-lg mb-4 text-center">
         {{ reviewItems.description }}
@@ -56,64 +60,52 @@
     </div> 
 
     <div class="border-t border-gray-800"></div>
-
+    
     <!-- Emoji section -->
     <div class="flex items-end relative ml-2">
       <template v-if="uniqueEmojis.length > 0">
         <span v-for="emoji in uniqueEmojis"
                     :key="emoji.value" 
-                    :class="['emoji', 'cursor-pointer', { 'userReactedEmoji ': isUserReactedEmoji(emoji.value) }]" 
+                    :class="['emoji', 'cursor-pointer', 'topp', { 'userReactedEmoji ': isUserReactedEmoji(emoji.value) }]" 
                     @click="toggleModal('listOfReactions')">
           {{ emoji.value }} 
         </span>
       </template>
       <template v-else>
-        <span class="emoji cursor-pointer" @click="toggleModal('listOfReactions')">👍</span>
+        <span class="emoji cursor-pointer p-2" @click="toggleModal('listOfReactions')">👍</span> 
       </template>
       
-      <!-- Reaction Modal, shown conditionally -->
-      <div v-if="showReactionModal" class="reaction-modal absolute bottom-full mb-2 bg-white rounded-lg p-2 shadow-lg transform -translate-x-1/2 left-1/2">
-        <span class="absolute bottom-6 closeRightCross p-4 cursor-pointer shadow-xs" @click="showReactionModal = false"><i class="fa-regular fa-x"></i></span>
-        <div class="flex justify-around">
-          <span v-for="emoji in emojis" class="emoji text-2xl cursor-pointer mx-1"
-                      :key="emoji.value"
-                      @click="sendReaction(emoji, reviewItems._id, reviewItems.userId); showReactionModal = false;">
-            {{ emoji.value }}
-          </span>
+        <!-- Reaction Modal, shown conditionally -->
+        <div v-if="showReactionModal" class="reaction-modal absolute bottom-full mb-2 bg-white rounded-lg p-2 shadow-lg transform -translate-x-1/2 left-1/2">
+          <span class="absolute bottom-6 closeRightCross p-4 cursor-pointer shadow-xs" @click="showReactionModal = false"><i class="fa-regular fa-x"></i></span>
+          <div class="flex justify-around">
+            <span v-for="emoji in emojis" class="emoji text-2xl cursor-pointer mx-1"
+                        :key="emoji.value"
+                        @click="sendReaction(emoji, reviewItems._id, reviewItems.userId); showReactionModal = false;">
+              {{ emoji.value }}
+            </span>
+          </div>
         </div>
-      </div>
-      <!-- Reaction Modal END -->
+        <!-- Reaction Modal END -->
 
-      <p class="text-xs cursor-pointer hover:underline "  @click="toggleModal('listOfUsers')">
+      <p class="cursor-pointer hover:underline mb-2 "  @click="toggleModal('listOfUsers')">
         <template v-if="reactionsCount > 0">
           {{ reactionsCount }} 
         </template>
+        Liker
       </p>
-    
+      <button @click="toggleModal('commentForm')" class="items-center p-2 rounded hover:bg-gray-200 focus:outline-none ml-2">
+        <i class="fas fa-comment-dots ml-2"></i> 
+        {{ additionalItemsCount ? additionalItemsCount: ''}} Kommentarer
+      </button>
+
     </div>
     <!-- Emoji section END -->
 
     <!-- Comment Section -->
+    <div v-show="showCommentForm" class="transition-opacity duration-500 ease-in-out" :class="{'opacity-0': !showCommentForm, 'opacity-100': showCommentForm}">
     <div v-if="reviewItems.comments && reviewItems.comments.length > 0" class="comments-container">
-      <template v-if="!showAllComments">
-        <div class="bottom-full bg-white rounded-lg mt-4" v-for="(comment, index) in reviewItems.comments.slice(0, 2)" :key="index">
-          <Comment
-            :reviewId="reviewItems._id"
-            :userId="comment.userId"
-            :photoUrl="comment.photoUrl"
-            :displayName="comment.displayName"
-            :text="comment.text"
-            :createdAt="comment.createdAt"
-            :commentId="comment.commentId"
-            :highlightCommentId="highlightCommentId"
-          />
-        </div>
-        <button v-if="reviewItems.comments.length > 2" @click="showAllComments = true" class="text-gray-500 mx-auto block mt-4 px-4 py-2 rounded hover:bg-gray-100 focus:outline-none">
-        Les alle {{ additionalItemsCount }} kommentarer og svar
-      </button>
-      </template>
-      <template v-else>
-        <div class="bottom-full bg-white rounded-lg mt-4" v-for="(comment, index) in reviewItems.comments" :key="comment.commentId">
+        <div class="bottom-full bg-white rounded-lg mt-4" v-for="(comment, index) in reviewItems.comments" :key="index">
           <Comment
             :reviewId="reviewItems._id"
             :userId="comment.userId"
@@ -126,15 +118,16 @@
             :highlightCommentId="highlightCommentId"
           />
         </div>
-      </template>
+    </div> 
 
       <CommentForm 
         :reviewId="reviewItems._id"
         :reviewerUserId="reviewItems.userId"
         :reviewerPhotoUrl="photoUrl"
-        :formPlaceholder="!(reviewItems.comments?.length) ? 'Bli den første til å kommentere' : undefined"
+        :formPlaceholder="!reviewItems.comments?.length ? 'Bli den første til å kommentere' : 'Legg til en kommentar'"
       />
     </div>
+  
     <!-- Comment Section END--> 
   
 
@@ -191,8 +184,8 @@ export default {
       { value: '😎', clicked: false }
     ]);
     const showReactionModal = ref(false); 
-    const showAllComments = ref(false);
     const showInfoModal = ref(false);
+    const showCommentForm = ref(false);
     let ignoreFirstClick = false;
     
     // Computed property to get unique emojis
@@ -211,14 +204,16 @@ export default {
 
     // Total comments
     const additionalItemsCount = computed(() => {
+      if (!props.reviewItems.comments || !Array.isArray(props.reviewItems.comments)) {
+        return 0; 
+      }
       const totalComments = props.reviewItems.comments.length;
 
       const totalReplies = props.reviewItems.comments.reduce((sum, comment) => {
         return sum + (comment.replies ? comment.replies.length : 0);
       }, 0);
 
-      const initiallyShown = 2; 
-      const totalItems = totalComments + totalReplies - initiallyShown;
+      const totalItems = totalComments + totalReplies;
 
       return totalItems > 0 ? totalItems : 0;
     });
@@ -321,6 +316,9 @@ export default {
     else if (modalName === 'listOfUsers') {
       showListOfUsersModal.value == false ? showListOfUsersModal.value = true : showListOfUsersModal.value = false;
     }
+    else if (modalName === 'commentForm') {
+      showCommentForm.value == false ? showCommentForm.value = true : showCommentForm.value = false;
+    } 
 
   };
 
@@ -377,15 +375,18 @@ export default {
     toggleModal,
     uniqueEmojis,
     isUserReactedEmoji,
-    showAllComments,
     showInfoModal,
     additionalItemsCount,
+    showCommentForm,
   };
     
   },
 }
 </script>
 <style>
+.topp {
+  transform: translateY(-10px); 
+}
 .stars-outer {
     position: relative;
     display: inline-block;
@@ -430,15 +431,15 @@ width: 100%;
   transform: scale(1.1);
 }
 
-
 .userReactedEmoji {
   display: inline-flex; 
+  margin-right: 0.8rem;
   align-items: center; 
   justify-content: center; 
-  transform: translateY(-0.5rem) scale(1.1);
+  transform: translateY(-0.5rem) scale(1.6);
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, color 0.3s ease-in-out;
-  color: #4ade80; 
-  box-shadow: 0 0 5px #4ade80 inset, 0 0 5px #4ade80; 
+  color: #f1ee09; 
+  box-shadow: 0 0 5px #cdda22 inset, 0 0 5px #cddf2b; 
   border-radius: 50%; 
 }
 
