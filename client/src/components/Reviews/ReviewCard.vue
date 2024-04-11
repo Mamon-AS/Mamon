@@ -59,24 +59,29 @@
       </p>
     </div> 
 
-    <div class="border-t border-gray-800"></div>
     
     <!-- Emoji section -->
-    <div class="flex items-end relative ml-2">
+    <div class="flex items-center relative ml-2">
       <template v-if="uniqueEmojis.length > 0">
         <span v-for="emoji in uniqueEmojis"
                     :key="emoji.value" 
                     :class="['emoji', 'cursor-pointer', 'topp', { 'userReactedEmoji ': isUserReactedEmoji(emoji.value) }]" 
-                    @click="toggleModal('listOfReactions')">
+                    >
           {{ emoji.value }} 
         </span>
+        <div class="flex justify-between flex-grow">
+        <p v-if="reactionsCount" class="flex cursor-pointer hover:underline mb-2" @click="toggleModal('listOfUsers')">
+          {{ reactionsCount }} Liker
+        </p>
+          <!-- Spacer element to maintain space between when one element is not rendered -->
+        <div v-if="!reactionsCount && additionalItemsCount"></div>
+        <p v-if="additionalItemsCount" class="mb-2 cursor-pointer hover:underline" @click="toggleModal('commentForm')">
+          {{ additionalItemsCount }} Kommentarer
+        </p>
+        </div>
       </template>
-      <template v-else>
-        <span class="emoji cursor-pointer p-2" @click="toggleModal('listOfReactions')">👍</span> 
-      </template>
-      
         <!-- Reaction Modal, shown conditionally -->
-        <div v-if="showReactionModal" class="reaction-modal absolute bottom-full mb-2 bg-white rounded-lg p-2 shadow-lg transform -translate-x-1/2 left-1/2">
+        <div v-if="showReactionModal" class="reaction-modal absolute mb-2 bg-white rounded-lg p-2 shadow-lg transform ">
           <span class="absolute bottom-6 closeRightCross p-4 cursor-pointer shadow-xs" @click="showReactionModal = false"><i class="fa-regular fa-x"></i></span>
           <div class="flex justify-around">
             <span v-for="emoji in emojis" class="emoji text-2xl cursor-pointer mx-1"
@@ -88,18 +93,19 @@
         </div>
         <!-- Reaction Modal END -->
 
-      <p class="cursor-pointer hover:underline mb-2 "  @click="toggleModal('listOfUsers')">
-        <template v-if="reactionsCount > 0">
-          {{ reactionsCount }} 
-        </template>
-        Liker
-      </p>
-      <button @click="toggleModal('commentForm')" class="items-center p-2 rounded hover:bg-gray-200 focus:outline-none ml-2">
-        <i class="fas fa-comment-dots ml-2"></i> 
-        {{ additionalItemsCount ? additionalItemsCount: ''}} Kommentarer
-      </button>
 
     </div>
+    <div class="border-t border-gray-800"></div>
+    
+      <div class="flex justify-between flex-grow">
+        <button @click="toggleModal('listOfReactions')" class="p-2 hover:bg-blue-200 focus:outline-none rounded ml-2">
+          <i class="fa-regular fa-thumbs-up"></i>
+        </button>
+        <button @click="toggleModal('commentForm')" class="p-2 rounded hover:bg-blue-200 focus:outline-none ml-2">
+          <i class="fas fa-comment-dots ml-2"></i> 
+        Kommenter
+        </button>
+      </div>
     <!-- Emoji section END -->
 
     <!-- Comment Section -->
@@ -385,7 +391,7 @@ export default {
 </script>
 <style>
 .topp {
-  transform: translateY(-10px); 
+  transform: translateY(-4px); 
 }
 .stars-outer {
     position: relative;
@@ -424,11 +430,11 @@ width: 100%;
 }
 
 .emoji {
-  transition: transform 0.1s ease-in-out;
+  transition: transform 0.2s ease-in-out;
 }
 
 .emoji:hover {
-  transform: scale(1.1);
+  transform: scale(2.2);
 }
 
 .userReactedEmoji {
@@ -436,7 +442,7 @@ width: 100%;
   margin-right: 0.8rem;
   align-items: center; 
   justify-content: center; 
-  transform: translateY(-0.5rem) scale(1.6);
+  transform: translateY(-1rem) scale(1.7);
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, color 0.3s ease-in-out;
   color: #f1ee09; 
   box-shadow: 0 0 5px #cdda22 inset, 0 0 5px #cddf2b; 
