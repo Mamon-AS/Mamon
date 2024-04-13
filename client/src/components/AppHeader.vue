@@ -52,7 +52,7 @@
     <div v-if="isLoggedIn" class="ml-auto flex items-end">
       <!-- People You May Know -->
       <HeaderItem to="/suggestions">
-        <div class="px-2">
+        <div class="px-2 mb-1">
           <i class="fa-solid fa-user-group" style="color: #ffffff;"></i>
           <p class="hidden md:block md:ml-2"></p>
         </div>
@@ -119,7 +119,7 @@ export default {
 },
   setup(props) {
     let ignoreNextOutsideClick = false;
-    const defaultPhotoUrl = '/images/frosk.png';
+    const defaultPhotoUrl = '/images/blank_profile.jpg';
     const auth = getAuth();
     const searchQuery = ref('');
     const searchResults = ref([]);

@@ -16,7 +16,7 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 const bucket = admin.storage().bucket();
-const defaultPhotoUrl = '/images/frosk.png';
+const defaultPhotoUrl = '/images/blank_profile.jpg';
 
 const getFollowingData = async (userId) => {
     const followingRef = db.collection(`users/${userId}/following`);

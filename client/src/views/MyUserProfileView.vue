@@ -33,7 +33,7 @@ export default {
 
     setup() {
         const auth = getAuth();
-        const defaultPhotoUrl = '/images/frosk.png';
+        const defaultPhotoUrl = '/images/blank_profile.jpg';
         const photoUrl = vueRef(auth.currentUser?.photoURL || defaultPhotoUrl);
         const name = vueRef(auth.currentUser?.displayName);
         const store = useStore();
