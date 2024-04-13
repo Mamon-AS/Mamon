@@ -16,7 +16,7 @@ if (admin.apps.length === 0) {
 }
 
 const bucket = admin.storage().bucket();
-const defaultPhotoUrl = '/images/frosk.png'; 
+const defaultPhotoUrl = '/images/blank_profile.jpg'; 
 
 const db = admin.firestore();
 

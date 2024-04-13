@@ -100,6 +100,7 @@
       <div class="flex justify-between flex-grow">
         <button @click="toggleModal('listOfReactions')" class="p-2 hover:bg-blue-200 focus:outline-none rounded ml-2">
           <i class="fa-regular fa-thumbs-up"></i>
+          Lik
         </button>
         <button @click="toggleModal('commentForm')" class="p-2 rounded hover:bg-blue-200 focus:outline-none ml-2">
           <i class="fas fa-comment-dots ml-2"></i> 
@@ -356,7 +357,7 @@ export default {
       })
       .catch((error) => {
         console.log("File does not exist or could not fetch the download URL:", error);
-        photoUrl.value = '/images/frosk.png'; 
+        photoUrl.value = '/images/blank_profile.jpg'; 
       });
       window.addEventListener('click', handleClickOutside);
   })

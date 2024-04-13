@@ -15,7 +15,7 @@ if (!admin.apps.length) {
 }
 
 const bucket = admin.storage().bucket();
-const defaultPhotoUrl = '/images/frosk.png';
+const defaultPhotoUrl = '/images/blank_profile.jpg';
 
 exports.handler = async (event) => {
     console.log("Fetching user data...")
