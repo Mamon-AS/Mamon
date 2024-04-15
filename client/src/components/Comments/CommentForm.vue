@@ -5,7 +5,7 @@
       class="textarea w-full p-2 border rounded-l-md border-gray-300" rows="3"
       style="border-top-left-radius: 0.375rem; border-bottom-left-radius: 0.375rem;">
 		</textarea>
-    <button @click="postComment(commentText, (reply ? 'reply' : 'add'), notificationUserId, parentCommentId)"
+    <button @click="postComment(commentText, (reply ? 'reply' : 'add'), parentCommentId)"
             class="submit-btn bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-700">
       <span v-if="!isSending">Send</span>
       <span v-else>Sender...</span>
@@ -27,25 +27,25 @@ import { useStore } from 'vuex';
 
 const props = defineProps({
   reviewId: String,
-  reviewerUserId: String,
+  notificationUserId: String,
   reviewedImage: String,
   reviewerName: String,
   reviewerPhotoUrl: String,
   parentCommentId: String,
   formPlaceholder: {type: String, default: 'Kommentér'},
   reply: {type: Boolean, default: false},
-  notificationUserId: {type: String, default: null},
 });
 
 const store = useStore();
 const currentUser = ref(null);
 const commentText = ref('');
-const showCommentForm = ref(false);
 const isSending = ref(false); // Track if a comment is being sent
 
 getAuth().onAuthStateChanged(user => {
       currentUser.value = user;
     });
+    console.log("Lol");
+    console.log(props.notificationUserId)
 
 const postComment = async (text, action, notificationUserId, parentCommentId = null, commentId = null)  => {
   if (isSending.value) return;
@@ -60,7 +60,7 @@ const postComment = async (text, action, notificationUserId, parentCommentId = n
     action, 
     commentId, 
     parentCommentId,
-    notificationUserId: notificationUserId
+    notificationUserId: props.notificationUserId
   };
   
   try {

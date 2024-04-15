@@ -122,25 +122,27 @@ exports.handler = async (event) => {
                 }
             }
         }
-
+       
         await reviewRef.update({ comments, totalComments });
-        if (action === 'add' || action === 'reply') {
-            const notificationMessage = action === 'add' ? 
-                `${displayName} kommenterte "${text}" på din anmeldelse.` : 
-                `${displayName} svarte med "${text}" på din kommentar.`;
+        if(userId !== notificationUserId) {
+            if (action === 'add' || action === 'reply') {
+                const notificationMessage = action === 'add' ? 
+                    `${displayName} kommenterte "${text}" på din anmeldelse.` : 
+                    `${displayName} svarte med "${text}" på din kommentar.`;
 
-            const notificationData = {
-                userId: reviewDoc.data().userId,
-                type: 'comment',
-                message: notificationMessage,
-                seen: false,
-                timestamp: admin.firestore.FieldValue.serverTimestamp(),
-                reviewId: reviewId,
-                notificationUserId: notificationUserId,
-                commentId: newOrReplyCommentId
-            };
-        
-            await db.collection('notifications').add(notificationData);
+                const notificationData = {
+                    userId: reviewDoc.data().userId,
+                    type: 'comment',
+                    message: notificationMessage,
+                    seen: false,
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                    reviewId: reviewId,
+                    notificationUserId: notificationUserId,
+                    commentId: newOrReplyCommentId
+                };
+            
+                await db.collection('notifications').add(notificationData);
+            }
         }
         return {
             statusCode: 200,
