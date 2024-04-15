@@ -80,31 +80,23 @@
         </p>
         </div>
       </template>
-        <!-- Reaction Modal, shown conditionally -->
-        <div v-if="showReactionModal" class="reaction-modal absolute mb-2 bg-white rounded-lg p-2 shadow-lg transform ">
-          <span class="absolute bottom-6 closeRightCross p-4 cursor-pointer shadow-xs" @click="showReactionModal = false"><i class="fa-regular fa-x"></i></span>
-          <div class="flex justify-around">
-            <span v-for="emoji in emojis" class="emoji text-2xl cursor-pointer mx-1"
-                        :key="emoji.value"
-                        @click="sendReaction(emoji, reviewItems._id, reviewItems.userId); showReactionModal = false;">
-              {{ emoji.value }}
-            </span>
-          </div>
-        </div>
-        <!-- Reaction Modal END -->
-
 
     </div>
     <div class="border-t border-gray-800"></div>
     
       <div class="flex justify-between flex-grow">
-        <button @click="toggleModal('listOfReactions')" class="p-2 hover:bg-blue-200 focus:outline-none rounded ml-2">
-          <i class="fa-regular fa-thumbs-up"></i>
-          Lik
-        </button>
+        <div class="p-2 hover:bg-blue-200 focus:outline-none rounded ml-2 transition-transform">
+          <i @click="toggleModal('listOfReactions')" class="fa-regular fa-thumbs-up mr-2 cursor-pointer"></i>
+          <span v-if="showReactionModal" v-for="emoji in emojis" class="emoji text-l cursor-pointer mx-1"
+                      :key="emoji.value"
+                      @click="sendReaction(emoji, reviewItems._id, reviewItems.userId);">
+            {{ emoji.value }}
+          </span>
+          <span v-else @click="toggleModal('listOfReactions')" class="cursor-pointer">Lik</span>
+        </div>
         <button @click="toggleModal('commentForm')" class="p-2 rounded hover:bg-blue-200 focus:outline-none ml-2">
           <i class="fas fa-comment-dots ml-2"></i> 
-        Kommenter
+          Kommenter
         </button>
       </div>
     <!-- Emoji section END -->
@@ -267,8 +259,8 @@ export default {
         if (response.status >= 200 && response.status < 300) {
           // Successfully posted the reaction, update the local state
           userReaction.value = { emoji: selectedEmoji.value, displayName: currentUser.value.displayName };
-
           await getReactions(reviewId);
+          showReactionModal = false;
         } else {
           throw new Error(`HTTP error! Status: ${response.status}`);
          } 
@@ -435,7 +427,7 @@ width: 100%;
 }
 
 .emoji:hover {
-  transform: scale(2.2);
+  transform: scale(1.05);
 }
 
 .userReactedEmoji {
@@ -460,10 +452,6 @@ width: 100%;
   50% {
     transform: translateY(-0.25rem) scale(1.5); 
   }
-}
-
-.closeRightCross {
-  right: 12.5rem;
 }
 
 </style>
