@@ -44,8 +44,6 @@ const isSending = ref(false); // Track if a comment is being sent
 getAuth().onAuthStateChanged(user => {
       currentUser.value = user;
     });
-    console.log("Lol");
-    console.log(props.notificationUserId)
 
 const postComment = async (text, action, notificationUserId, parentCommentId = null, commentId = null)  => {
   if (isSending.value) return;
