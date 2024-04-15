@@ -121,7 +121,7 @@
 
       <CommentForm 
         :reviewId="reviewItems._id"
-        :reviewerUserId="reviewItems.userId"
+        :notificationUserId="reviewItems.userId"
         :reviewerPhotoUrl="photoUrl"
         :formPlaceholder="!reviewItems.comments?.length ? 'Bli den første til å kommentere' : 'Legg til en kommentar'"
       />

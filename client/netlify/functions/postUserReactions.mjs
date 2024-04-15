@@ -70,21 +70,21 @@ exports.handler = async (event) => {
                 totalReactions += 1;
             }
             await reviewRef.update({ reactions, totalReactions });
-         
-            const notificationMessage = `${displayName} reagerte med ${emoji} på din anmeldelse.` 
+            if(userId !== notificationUserId) {
+                const notificationMessage = `${displayName} reagerte med ${emoji} på din anmeldelse.` 
 
-            const notificationData = {
-                userId: userId,
-                type: 'reaction',
-                message: notificationMessage,
-                seen: false,
-                timestamp: admin.firestore.FieldValue.serverTimestamp(),
-                reviewId: reviewId,
-                notificationUserId: notificationUserId
-            };
-            
+                const notificationData = {
+                    userId: userId,
+                    type: 'reaction',
+                    message: notificationMessage,
+                    seen: false,
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                    reviewId: reviewId,
+                    notificationUserId: notificationUserId
+                };
+                
                 await db.collection('notifications').add(notificationData);
-            
+            }
         }
 
         return {
