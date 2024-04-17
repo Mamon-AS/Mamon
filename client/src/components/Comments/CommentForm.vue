@@ -5,7 +5,7 @@
       class="textarea w-full p-2 border rounded-l-md border-gray-300" rows="3"
       style="border-top-left-radius: 0.375rem; border-bottom-left-radius: 0.375rem;">
 		</textarea>
-    <button @click="postComment(commentText, (reply ? 'reply' : 'add'), parentCommentId)"
+    <button @click="postComment(commentText, (reply ? 'reply' : 'add'))"
             class="submit-btn bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-700">
       <span v-if="!isSending">Send</span>
       <span v-else>Sender...</span>
@@ -45,7 +45,7 @@ getAuth().onAuthStateChanged(user => {
       currentUser.value = user;
     });
 
-const postComment = async (text, action, notificationUserId, parentCommentId = null, commentId = null)  => {
+const postComment = async (text, action, notificationUserId, commentId = null)  => {
   if (isSending.value) return;
   
   isSending.value = true;
@@ -57,7 +57,7 @@ const postComment = async (text, action, notificationUserId, parentCommentId = n
     displayName: currentUser.value.displayName,
     action, 
     commentId, 
-    parentCommentId,
+    parentCommentId: props.parentCommentId,
     notificationUserId: props.notificationUserId
   };
   

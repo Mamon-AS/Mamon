@@ -82,6 +82,7 @@ exports.handler = async (event) => {
         }
         let { comments = [], totalComments = 0 } = reviewDoc.data();
         comments = Array.isArray(comments) ? comments : [];
+
         if (action === 'delete') {
             comments = comments.map(comment => {
                 // If the comment itself is the target
@@ -105,7 +106,6 @@ exports.handler = async (event) => {
         } else {
             if (parentCommentId) {
                 newOrReplyCommentId = uuidv4();
-                console.log(newOrReplyCommentId, 'newOrReplyCommentId')
                 const parentCommentIndex = comments.findIndex(comment => comment.commentId === parentCommentId);
                 if (parentCommentIndex !== -1) {
                     comments[parentCommentIndex].replies = Array.isArray(comments[parentCommentIndex].replies) ? comments[parentCommentIndex].replies : [];
