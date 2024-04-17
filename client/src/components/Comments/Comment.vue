@@ -75,7 +75,6 @@ const props = defineProps({
 const router = useRouter();
 const showReplyInput = ref(false);
 const showReplyToReplyInput = ref(null);
-const replyText = ref('');
 const currentUser = ref(null);
 const currentUserId = ref(null);
 const store = useStore();
@@ -91,31 +90,6 @@ watch(currentUser, (newValue) => {
   }
 });
 
-
-const postReply = async (notificationUserId) => {
-  const text = replyText.value.trim();
-  if (!text) return;
-  const action = 'reply';
-  const reviewId = props.reviewId;
-  const commentId = props.commentId;
-   try {
-      await store.dispatch('reviews/postComment', {
-        action,
-        commentId,
-        text,
-        reviewId,
-        parentCommentId: commentId,
-        userId: currentUser.value.uid,
-        displayName: currentUser.value.displayName,
-        notificationUserId: notificationUserId
-     });
-       replyText.value = '';
-      showReplyInput.value = false;
-      showReplyToReplyInput.value = null;
-    } catch (error) {
-      console.error("Error posting reply:", error);
-     }
-};
 const deleteComment = async (commentId) => {
   const action = 'delete';
   const reviewId = props.reviewId;
