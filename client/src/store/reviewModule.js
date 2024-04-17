@@ -218,7 +218,7 @@ export default {
             const count_query = `count(*[_type == "review" && _id == "${review.sanityReviewId}"])`;
             countPromises.push(sanity.fetch(count_query));
             const sanityReviewDetails = await sanity.fetch(sanityQuery);
-            console.log("sanityReviewDetails ", sanityReviewDetails);
+
             if (sanityReviewDetails.length > 0) {
               const sanityReview = sanityReviewDetails[0];
               review._updatedAt = sanityReview._updatedAt;

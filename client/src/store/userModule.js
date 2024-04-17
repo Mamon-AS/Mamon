@@ -93,9 +93,9 @@ export default {
             try {
                 const response = await axios.post(`/.netlify/functions/markNotificationAsRead`, notificationId);
                 commit('SET_LOADING', false);
-                if (response.status === 200) {
-                    commit('REMOVE_NOTIFICATION', notificationId);
-                }
+                // if (response.status === 200) {
+                //     commit('REMOVE_NOTIFICATION', notificationId);
+                // }
             } catch (error) {
                 console.error('Error marking notification as read:', error);
                 commit('SET_ERROR', error);
