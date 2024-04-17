@@ -86,7 +86,7 @@
     
       <div class="flex justify-between flex-grow">
         <div class="p-2 hover:bg-blue-200 focus:outline-none rounded ml-2 transition-transform">
-          <i @click="toggleModal('listOfReactions')" class="fa-regular fa-thumbs-up mr-2 cursor-pointer"></i>
+          <i @click="toggleModal('listOfReactions')" class="fa-regular fa-thumbs-up mr-2 cursor-pointer reaction-modal"></i>
           <span v-if="showReactionModal" v-for="emoji in emojis" class="emoji text-l cursor-pointer mx-1"
                       :key="emoji.value"
                       @click="sendReaction(emoji, reviewItems._id, reviewItems.userId);">
@@ -260,7 +260,7 @@ export default {
           // Successfully posted the reaction, update the local state
           userReaction.value = { emoji: selectedEmoji.value, displayName: currentUser.value.displayName };
           await getReactions(reviewId);
-          showReactionModal = false;
+          showReactionModal.value = false;
         } else {
           throw new Error(`HTTP error! Status: ${response.status}`);
          } 

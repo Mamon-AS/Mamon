@@ -1,20 +1,21 @@
 <template>
   <header 
     :class="[
-      'flex w-full items-center justify-between p-4 z-50 fixed top-0 left-0  transition-all duration-300', 
+      'flex w-full items-center justify-between lg:p-2 md:p-1 z-50 fixed top-0 left-0  transition-all duration-300', 
       { 'bg-mamonblue': !searchResults.length > 0 },
       { 'bg-blue-500 h-20 md:h-32': searchResults.length > 0 },
     ]"
     :style="showSearchField ? { position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100 } : {}"
   >
     <!-- ICONS BEGIN -->
-    <div class="flex items-end">
-      <a href="/" class="ml-2 lg:ml-5 mt-4">
-        <!-- Mobilinio and pæds-->
-        <img src="/images/High_Resolution_Image_3.jpg" alt="Logo" class="h-6 lg:hidden"/>
-        <!-- large screens and up -->
-        <img src="/images/Transparent_Image_11_cropped.png" alt="Logo" class="hidden lg:block lg:h-8 w-auto logo"/>
-
+    <div class="flex items-center">
+      <a href="/" class="ml-2 lg:ml-5 mb-3 mr-2">
+        <img 
+          src="/images/Transparent_Image_11_cropped.png" 
+          alt="Logo" 
+          class="h-8 w-auto logo"
+          v-show="windowWidth > 768 || !inputFocused"
+        />
       </a>
 
       <input
@@ -23,6 +24,8 @@
         ref="searchField"
         type="search"
         placeholder="Søk..."
+        @focus="inputFocused = true"
+        @blur="inputFocused = false"
         class="px-2 py-1 lg:ml-8 mr-2 text-xs border border-gray-300 rounded-md shadow-sm opacity-50 w-20 focus:w-auto focus:opacity-100 hover:opacity-100 focus:outline-none focus:ring-2 
         focus:border-lightblue bg-white transition-all duration-300"
       />
@@ -37,7 +40,6 @@
 
     </div>
     <!-- ICONS END -->
-
     <div v-show="searchResults.length > 0" class="absolute top-[calc(50%+theme(spacing.12))] left-0 w-full bg-white shadow-lg z-50">
       <ul>
         <li v-for="user in searchResults" :key="user.userId" class="p-2 hover:bg-gray-100">
@@ -49,12 +51,11 @@
         </li>
       </ul>
     </div>
-    <div v-if="isLoggedIn" class="ml-auto flex items-end">
+    <div v-if="isLoggedIn" class="flex items-center">
       <!-- People You May Know -->
       <HeaderItem to="/suggestions">
-        <div class="px-2 mb-1">
+        <div class="px-2">
           <i class="fa-solid fa-user-group" style="color: #ffffff;"></i>
-          <p class="hidden md:block md:ml-2"></p>
         </div>
       </HeaderItem>
       <!-- Notification Bell -->
@@ -127,7 +128,9 @@ export default {
     const showSearchField = ref(false);
     const store = useStore();
     const vueRouter = useRouter();
- 
+    const inputFocused = ref(false);
+    const windowWidth = ref(window.innerWidth);
+
     const modalIsActive = computed({
         get: () => store.getters['utils/modalIsActive'],
         set: (value) => {
@@ -233,10 +236,16 @@ export default {
           }
         });
       });
+      const handleResize = () => {
+        windowWidth.value = window.innerWidth;
+      };
+  
+  window.addEventListener('resize', handleResize);
 
     onBeforeUnmount(() => {
       document.removeEventListener('keydown', onEscapePress);
       document.removeEventListener('click', onClickOutside);
+      window.removeEventListener('resize', handleResize);
     });
     
     
@@ -254,6 +263,8 @@ export default {
       openModal,
       closeModal,
       userID,
+      inputFocused,
+      windowWidth
     };
   },
 };
