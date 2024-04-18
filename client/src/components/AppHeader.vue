@@ -9,11 +9,11 @@
   >
     <!-- ICONS BEGIN -->
     <div class="flex items-center">
-      <a href="/" class="ml-2 lg:ml-5 mb-3 mr-2">
+      <a href="/" class="ml-2 lg:ml-5 mr-2">
         <img 
           src="/images/Transparent_Image_11_cropped.png" 
           alt="Logo" 
-          class="h-8 w-auto logo"
+          class="h-6 lg:h-auto max-h-8 lg:max-h-10 w-auto logo"
           v-show="windowWidth > 768 || !inputFocused"
         />
       </a>
