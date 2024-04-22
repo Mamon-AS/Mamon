@@ -37,6 +37,9 @@
         </div>
       </HeaderItem>
     
+    <!-- Not logged in stuff-->
+      <!-- How do you do this with components <a href=#please -->
+    <!-- End of not logged in stuff -->
 
     </div>
     <!-- ICONS END -->

@@ -7,8 +7,16 @@
                <ReviewCardView />
            </div>
            <div v-else>
-               <GetStarted />
-           </div>
+              <GetStarted />
+              <header class="bg-purple-900 text-white text-center py-4 rounded-t-md mt-2">
+                <h2 class="text-xl font-semibold">Slik fungerer det</h2>
+              </header>
+              <HowItWorks />
+              <div class="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 mt-5"> 
+                <ContactUs />
+                <Team />
+              </div>
+          </div>
          </template>
          <div v-if="loading" class="flex justify-center items-center">
           <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
@@ -24,12 +32,18 @@
  import { getAuth, onAuthStateChanged } from "firebase/auth";
  import { ref, onMounted } from 'vue';
  import ReviewCardView from '../views/ReviewCardView.vue';
- import GetStarted from '../components/GetStarted.vue';
- 
+ import GetStarted from '../components/Frontpage/GetStarted.vue';
+ import ContactUs from "../components/Frontpage/ContactUs.vue";
+ import Team from "../components/Frontpage/Team.vue";
+ import HowItWorks from "../components/Frontpage/HowItWorks.vue";
+
  export default {
    components: {
      ReviewCardView,
-     GetStarted
+     GetStarted,
+     ContactUs,
+     Team,
+     HowItWorks,
    },
  
    setup() {
