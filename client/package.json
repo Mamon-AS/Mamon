@@ -9,9 +9,9 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@mailchimp/mailchimp_transactional": "^1.0.59",
     "@sanity/client": "^4.0.1",
     "@sanity/image-url": "^1.0.2",
-    "@sendgrid/mail": "^8.1.3",
     "@yeger/vue-masonry-wall": "^5.0.8",
     "autoprefixer": "^10.4.13",
     "axios": "^1.6.5",

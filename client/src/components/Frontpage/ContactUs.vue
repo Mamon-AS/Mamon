@@ -20,6 +20,10 @@
           <label for="message" class="block text-sm font-medium text-gray-700">Melding</label>
           <textarea id="message" v-model="message" rows="4" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required></textarea>
         </div>
+        <!-- <div>
+          <input type="checkbox" id="newsletter" v-model="newsletterOptIn" />
+          <label for="newsletter" class="text-sm text-gray-700 ml-2">Jeg ønsker å melde meg på nyhetsbrevet!</label>
+        </div> -->
         <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Send</button>
             <!-- Notification Area -->
         <div v-if="showSuccessMessage" class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800" role="alert">
@@ -40,7 +44,7 @@
   const email = ref('');
   const message = ref('');
   const phone = ref('');
-
+  // const newsletterOptIn = ref(false);
   const showSuccessMessage = ref(false);
   const showErrorMessage = ref(false);
   
@@ -49,7 +53,8 @@
       name: name.value,
       email: email.value,
       message: message.value,
-      phone: phone.value
+      phone: phone.value,
+      // newsletter: newsletterOptIn.value
     };
     axios.post('/.netlify/functions/sendEmail', contactDetails)
     .then(() => {
@@ -58,6 +63,7 @@
       email.value = '';
       message.value = '';
       phone.value = '';
+      // newsletterOptIn.value = '';
       setTimeout(() => {
       showSuccessMessage.value = false;
     }, 3000);
