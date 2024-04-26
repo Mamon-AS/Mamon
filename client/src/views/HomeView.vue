@@ -1,31 +1,35 @@
 <template>
-  <main class="home-page flex flex-col justify-between min-h-screen">
-       <div class="flex-grow">
-         <!-- Only show content if not loading -->
-         <template v-if="!loading">
-           <div v-if="isLoggedIn">
-               <ReviewCardView />
-           </div>
-           <div v-else>
-              <GetStarted />
-              <header class="bg-purple-900 text-white text-center py-4 rounded-t-md mt-2">
-                <h2 class="text-xl font-semibold">Slik fungerer det</h2>
-              </header>
-              <HowItWorks />
-              <div class="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 mt-5"> 
-                <ContactUs />
-                <Team />
-              </div>
+  <div class="flex-grow">
+    <!-- Only show content if not loading -->
+    <template v-if="!loading">
+      <div v-if="isLoggedIn">
+          <ReviewCardView />
+      </div>
+      <div v-else>
+        <GetStarted />
+        <header class="bg-mamonblue text-white text-center py-4 rounded-t-md mt-2">
+          <h2 class="text-xl font-semibold">Slik fungerer det</h2>
+        </header>
+        <HowItWorks />
+        <div class="mt-5 lg:flex lg:justify-center lg:items-center">
+          <div class="lg:flex lg:flex-col lg:justify-center lg:items-center lg:space-y-4">
+            <ContactUs />
           </div>
-         </template>
-         <div v-if="loading" class="flex justify-center items-center">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+          <div class="lg:flex lg:flex-col lg:justify-center lg:items-center lg:space-y-4">
+            <Team />
+          </div>
         </div>
-       </div>
-         <footer class="text-center">
-             <p>© {{ new Date().getFullYear() }} Mamon. All rights reserved.</p>
-         </footer>
- </main>
+      </div>
+</template>
+
+      <div v-if="loading" class="flex justify-center items-center">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+  </div>
+    <footer class="text-center">
+        <p>© {{ new Date().getFullYear() }} Mamon. All rights reserved.</p>
+    </footer>
+
  </template>
  
  <script>

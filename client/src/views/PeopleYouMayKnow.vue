@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center">
+  <div class="flex flex-col items-center justify-center mt-7">
     <h1 class="text-3xl font-bold text-center">Folk du kanskje kjenner</h1>
     <div v-if="peopleYouMayKnow.length === 0">
       <p class="text-center mt-4">Ingen foreslåtte kontakter for øyeblikket.</p>

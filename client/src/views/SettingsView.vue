@@ -1,6 +1,6 @@
 <template>
-    <div class="max-w-4xl mx-auto p-6">
-      <h1 class="text-2xl font-semibold mb-6">Innstillinger</h1>
+    <div class="max-w-4xl mx-auto p-6 mt-7">
+      <h1 class="text-2xl font-semibold mb-6 text-center">Innstillinger</h1>
   
       <div class="space-y-4">
 

@@ -1,5 +1,5 @@
 <template>
-  <main class="flex justify-center items-center min-h-screen-43">
+  <main class="flex justify-center items-center min-h-screen-43 mt-7">
     <section class="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto">
       <div class="text-center">
          <div v-if="isLoading" role="status" class="flex justify-center mt-7">

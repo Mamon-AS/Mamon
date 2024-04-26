@@ -1,6 +1,6 @@
 <template>
     <div class="container mx-auto px-4">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+      <div class="grid grid-cols-1 md:grid-cols-1 gap-4 text-center">
         <div v-for="member in teamMembers" :key="member.id" class="p-4 border rounded-lg shadow-lg">
           <h3 class="text-lg font-semibold">{{ member.name }}</h3>
           <p>{{ member.role }}</p>

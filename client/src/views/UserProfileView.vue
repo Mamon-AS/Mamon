@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-4">
+  <div class="container mx-auto p-4 mt-7">
     <UserProfile
       :userId="userId"
       :photoUrl="userProfile.photoUrl"
