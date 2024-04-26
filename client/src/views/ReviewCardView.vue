@@ -1,4 +1,5 @@
 <template>
+  <main class="home-page flex flex-col justify-between min-h-screen mt-7">
   <div class="container mx-auto p-4">
     <div v-if="loading" class="flex justify-center items-center">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
@@ -21,6 +22,7 @@
       </template>
     </div>
   </div>
+</main>
 </template>
 
 <script>

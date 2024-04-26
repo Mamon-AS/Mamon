@@ -1,6 +1,5 @@
 <template>
-
-    <div class="p-4 max-w-md mx-auto">
+    <div class="p-4 max-w-md mx-auto mt-7">
       <form @submit.prevent="submitReview">
         <div class="mb-4">
           <label for="reviewedItem" class="block text-gray-700 text-sm font-bold mb-2">Lim inn:</label>

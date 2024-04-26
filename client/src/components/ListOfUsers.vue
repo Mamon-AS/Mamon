@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mt-12">
       <div v-if="users && users.length">
       <p class="text-center text-gray-600 mt-4">
         {{ users.length }} {{ users.length === 1 ? 'bruker' : 'brukere' }}
