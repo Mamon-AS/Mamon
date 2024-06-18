@@ -3,13 +3,13 @@
     <!-- Text Content Section -->
     <div class="flex-grow space-y-5 mb-4 lg:mb-0 lg:flex-grow-0 lg:flex-[2] p-12 rounded-lg shadow-lg bg-white">
       <h1 class="text-5xl font-bold text-purple-900 text-center lg:text-left">
-        lorem ipsum<br>
+        Bli med<br>
       </h1>
       <p class="text-lg text-purple-700 text-center lg:text-left">
-        eiusmod tempor incididunt ut labore <br> exercitation ullamco laboris nisi
+        Tips venner om gode kjøp du har gjort og la deg inspirere av dine venners kjøp
       </p>
       <div class="text-center lg:text-left">
-        <router-link to="/register" class="bg-mamonblue text-white py-3 px-6 rounded-full text-lg">
+        <router-link to="/register" class="bg-mamonblue text-white py-3 px-6 lg:px-3 rounded-full text-lg">
           Logg inn
         </router-link>
       </div>

@@ -8,10 +8,10 @@
         <!-- Text Content Section -->
         <div class="md:flex-2 md:order-2 space-y-5 md:bg-white md:p-12 md:rounded-lg md:shadow-lg">
           <h1 class="text-5xl font-bold text-purple-900 text-center md:text-left">
-            bedriften lorem ipsum
+            La kundene fortelle om deg
           </h1>
           <p class="text-lg text-purple-700 text-center md:text-left">
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Fornøyde kunder som forteller videre om gode kjøp er bra butikk
           </p>
         </div>
       </div>
