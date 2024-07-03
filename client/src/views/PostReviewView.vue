@@ -1,11 +1,13 @@
 <template>
-    <div class="p-4 max-w-md mx-auto mt-7">
-      <form @submit.prevent="submitReview">
+     <div class="p-4 max-w-md mx-auto mt-7" v-if="!reviewExists">
+      <form @submit.prevent="submitReview"> 
         <div class="mb-4">
-          <label for="reviewedItem" class="block text-gray-700 text-sm font-bold mb-2">Lim inn:</label>
-          <input type="text" id="reviewedItem" v-model="review.reviewedItem" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-        </div>
-  
+        <label for="reviewedItem" class="block text-gray-700 text-sm font-bold mb-2">Produkt:</label>
+        <input type="text" id="reviewedItem" v-model="review.reviewedItem" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" readonly>
+      </div> 
+      <div class="mb-4" v-if="review.reviewedItem">
+        <img :src="review.itemImage" alt="Item Image" class="w-full h-auto rounded">
+      </div>
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2">Stjerner:</label>
           <div class="flex items-center">
@@ -42,18 +44,11 @@
             </div>
           </div>
         </div>
-        
         <!-- Information Modal END -->
+
         <div class="mb-4">
           <label for="reviewedItemDescription" class="block text-gray-700 text-sm font-bold mb-2 mt-3">Noe mer på hjertet? 💓</label>
           <textarea id="reviewedItemDescription"  v-model="review.reviewedItemDescription" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
-        </div>
-        <div class="metadata-preview text-center text-gray-700 text-lg font-light">
-          <p> {{ review.fetchedWebsite }}</p>
-          <p> {{ review.fetchedTitle }}</p>
-            <div v-if="review.fetchedImage">
-              <img :src="review.fetchedImage" alt="Fetched Image" />
-            </div>
         </div>
       </div>
   
@@ -63,48 +58,101 @@
           </button>
         </div>
 
-
         <div v-if="loading" class="flex justify-center items-center">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-        </div>
-
-        <div v-else-if="review.submissionStatus === 'success'" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
-          <span class="font-medium">Anmeldelse registrert!</span> Har du lyst til å legge til en til? 😊
-        </div>
-        <div v-else-if="review.submissionStatus === 'error'" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-          <span class="font-medium">Ops!</span> Noe gikk galt, Martin har kanskje svaret.
-        </div>
-  
-      </form>
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+      <div v-else-if="review.submissionStatus === 'exists'" class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400" role="alert">
+        <span class="font-medium">Du har allerede vurdert dette produktet!</span>
+      </div>
+      <div v-else-if="review.submissionStatus === 'success'" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+        <span class="font-medium">Anmeldelse registrert!</span> Har du lyst til å legge til en til? 😊
+      </div>
+      <div v-else-if="review.submissionStatus === 'error'" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+        <span class="font-medium">Ops!</span> Noe gikk galt, Martin har kanskje svaret.
+      </div>
+    </form>
+  </div>
+  <div v-else class="p-4 max-w-md mx-auto mt-7 text-center text-red-600">
+    <p>Du har allerede vurdert dette produktet!</p>
+  </div>
+   <div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold text-center mb-4">Se hva andre har skrevet:</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <ReviewCard v-for="item in posts" :key="item.reviewId" :reviewItems="item" />
     </div>
+  </div>
+</template>
 
-  </template>
-  
-  <script>
-import { ref, reactive, onMounted, watch } from 'vue';
+<script>
+import { ref, reactive, onMounted, computed } from 'vue';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import axios from 'axios';
 import { useStore } from 'vuex';
+import axios from 'axios';
+
+import ReviewCard from '../components/Reviews/ReviewCard.vue';
 
 export default {
+  components: {
+    ReviewCard,
+  },
   setup() {
     const review = reactive({
       reviewedItem: '',
+      itemImage: '',
       rating: null,
       userId: '',
-      userName : '',
-      fetchedWebsite: '',
-      fetchedTitle: '',
-      fetchedImage: '',
+      userName: '',
       reviewedItemDescription: '',
       submissionStatus: null,
     });
+
+    const reviewItems = ref([]);
+    const posts = computed(() => store.getters['reviews/reviewItems']);
 
     const store = useStore();
     const hoverIndex = ref(0);
     const user = ref(null);
     const loading = ref(false);
     const showInfoModal = ref(false);
+    const reviewExists = ref(false);
+
+    const fetchReviewDetails = async (token) => {
+      try {
+        const response = await axios.post(`/.netlify/functions/getReviewDetails`, { token });
+
+        if (response.data.success) {
+          review.reviewedItem = response.data.reviewedItem;
+          review.itemImage = response.data.itemImage;
+          review.website = response.data.website;
+          review.url = response.data.url;
+
+          const reviewCheckResponse = await axios.post(`/.netlify/functions/checkReviewExists`, { userId: review.userId, reviewedItem: review.reviewedItem });
+
+          if (reviewCheckResponse.data.exists) {
+            reviewExists.value = true;
+          } else {
+            reviewExists.value = false;
+          }
+        } else {
+          console.error('Invalid token');
+        }
+      } catch (error) {
+        console.error('Error fetching review details:', error);
+      }
+    };
+
+    const fetchReviews = async (userId) => {
+      loading.value = true;
+      try {
+        let payload = { limit: 4, userId };
+        const response = await store.dispatch('reviews/FetchAllFollowingReviews', payload);
+        reviewItems.value = response.data.reviews;
+      } catch (error) {
+        console.error(error);
+      } finally {
+        loading.value = false;
+      }
+    };
 
     onMounted(() => {
       const auth = getAuth();
@@ -113,6 +161,12 @@ export default {
           user.value = currentUser;
           review.userId = currentUser.uid;
           review.userName = currentUser.displayName;
+          fetchReviews(review.userId);
+          const urlParams = new URLSearchParams(window.location.search);
+          const token = urlParams.get('token');
+          if (token) {
+            fetchReviewDetails(token);
+          }
         } else {
           alert('Du må være innlogga!');
         }
@@ -127,69 +181,37 @@ export default {
       hoverIndex.value = star;
     };
 
-    const fetchMetadata = async () => {
-      if (!review.reviewedItem) {
-        alert('Please enter a URL');
-        return;
-      }
-
-      try {
-        console.log('Fetching metadata for', review.reviewedItem);
-        const response = await axios.post(`/.netlify/functions/fetchMetadata`, {
-          url: review.reviewedItem,
-        });
-        const metadata = response.data;
-        review.fetchedWebsite = metadata.website;
-        review.url = metadata.url;
-        review.fetchedTitle = metadata.title;
-        review.fetchedImage = metadata.image;
-      } catch (error) {
-        console.error('Error fetching metadata:', error);
-      }
-    };
     const resetReviewForm = () => {
       review.reviewedItem = '';
       review.rating = null;
       review.reviewedItemDescription = '';
-      review.fetchedWebsite = '';
-      review.fetchedTitle = '';
-      review.fetchedImage = '';
     };
 
     const submitReview = async () => {
       loading.value = true;
-       const result = await store.dispatch('reviews/SubmitReview', review);
-      console.log(review);
-       loading.value = false;
-       if (result.success) {
-         review.submissionStatus = 'success';
-          resetReviewForm(); 
-       } else {
-         review.submissionStatus = 'error';
-       }
-     };
-
-    watch(() => review.reviewedItem, (newVal, oldVal) => {
-      if (newVal && newVal !== oldVal) {
-        fetchMetadata();
+      const result = await store.dispatch('reviews/SubmitReview', review);
+      loading.value = false;
+      if (result.success) {
+        review.submissionStatus = 'success';
+        resetReviewForm();
+      } else {
+        review.submissionStatus = 'error';
       }
-    });
-    
+    };
 
-    return { 
-      review, 
-      hoverIndex, 
-      user, 
-      loading, 
-      setRating, 
-      hoverRating, 
-      fetchMetadata,
+    return {
+      review,
+      reviewItems,
+      posts,
+      hoverIndex,
+      user,
+      loading,
+      setRating,
+      hoverRating,
       submitReview,
       showInfoModal,
+      reviewExists,
     };
   },
 };
 </script>
-
-
-  
