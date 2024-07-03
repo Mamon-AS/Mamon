@@ -56,22 +56,21 @@ export default {
   },
 
   actions: {
-    async SubmitReview({ commit, dispatch }, { reviewedItem, rating, userId, userName, fetchedTitle, fetchedImage, reviewedItemDescription, fetchedWebsite, url }) {
-      try {
-         const response = await axios.post(`/.netlify/functions/postReview`, { reviewedItem, rating, userId, userName, fetchedTitle, fetchedImage, reviewedItemDescription, fetchedWebsite, url });
-         if (response.status === 200) {
-          const newReview = (response.data);
-          commit('APPEND_REVIEW', newReview);
-          dispatch('invalidateReviewCaches', userId)
-
+    async SubmitReview({ commit, dispatch }, { reviewedItem, rating, userId, userName, itemImage, reviewedItemDescription, website, url }) {
+       try {
+          const response = await axios.post(`/.netlify/functions/postReview`, { reviewedItem, rating, userId, userName, itemImage, reviewedItemDescription, website, url });
+          if (response.status === 200) {
+           const newReview = (response.data);
+           commit('APPEND_REVIEW', newReview);
+           dispatch('invalidateReviewCaches', userId)
           return { success: true, message: 'Review submitted successfully' };
-        } else {
-          return { success: false, message: 'Failed to submit review' };
-        }
-      } catch (error) {
-        console.error("Error submitting review:", error);
-        return { success: false, message: 'Failed to submit review' };
-      }
+         } else {
+           return { success: false, message: 'Failed to submit review' };
+         }
+       } catch (error) {
+         console.error("Error submitting review:", error);
+         return { success: false, message: 'Failed to submit review' };
+       }
   },
 
   async FetchPersonalReviews({ commit }, userId) {
@@ -189,22 +188,20 @@ export default {
     
   async FetchAllFollowingReviews({ commit }, payload) {
     const { limit, userId } = payload;
-
     const cacheKey = `allFollowingReviewsCache_${userId}`;
     const cachedData = localStorage.getItem(cacheKey);
-
      if (cachedData) {
        const { timestamp, data } = JSON.parse(cachedData);
        if (Date.now() - timestamp < 3600000) { 
            commit('SET_REVIEWS', data.reviewItems);
            commit('SET_TOTAL_REVIEWS', data.totalReviews);
+           console.log("Using cached reviews");
            return;
        } else {
            console.log("ALL following reviews cache expired, fetching new data");
            localStorage.removeItem(cacheKey); // Remove expired cache
          }
      }
-    
     try {
       console.log("fetching new data");
       const response = await axios.post(`/.netlify/functions/getAllFollowingReviews`, { userId, limit });

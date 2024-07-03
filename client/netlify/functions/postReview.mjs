@@ -43,8 +43,8 @@ async function uploadImageToSanity(imageUrl) {
       return { statusCode: 400, body: 'Bad Request' };
     }
     try {
-        const { reviewedItem, rating, userId, userName, fetchedTitle, fetchedImage, reviewedItemDescription, fetchedWebsite, url } = JSON.parse(event.body);
-        const uploadedImageAsset = await uploadImageToSanity(fetchedImage);
+        const { reviewedItem, rating, userId, userName, itemImage, reviewedItemDescription, website, url } = JSON.parse(event.body);
+        const uploadedImageAsset = await uploadImageToSanity(itemImage);
         
         const imageReference = {
             _type: 'image',
@@ -57,13 +57,13 @@ async function uploadImageToSanity(imageUrl) {
           
         const createdReview = await sanity.create({
             _type: 'review',
-            reviewedItem: fetchedTitle,
+            reviewedItem: reviewedItem,
             rating: rating,
             userId: userId,
             userName: userName,
             description: reviewedItemDescription,
             reviewedImage: imageReference,
-            website: fetchedWebsite,
+            website: website,
             url: url
           });
 
@@ -72,10 +72,10 @@ async function uploadImageToSanity(imageUrl) {
             sanityReviewId: sanityReviewId,
             userId: userId,
             userName: userName,
-            reviewedItem: fetchedTitle,
+            reviewedItem: reviewedItem,
             rating:rating,
             description: reviewedItemDescription,
-            website: fetchedWebsite,
+            website: website,
             url: url
           });
           return {
