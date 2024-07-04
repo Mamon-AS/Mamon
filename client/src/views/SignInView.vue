@@ -1,5 +1,5 @@
 <template>
-  <div class="register-form max-w-md mx-auto ">
+  <div class="register-form max-w-md mx-auto mt-10">
     <h1 class="text-3xl font-bold mb-6 text-center">Logg inn</h1>
     <form>
       <div class="mb-4">

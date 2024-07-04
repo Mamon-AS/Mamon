@@ -1,9 +1,10 @@
 <template>
-  <header 
+ <header 
     :class="[
-      'flex w-full items-center justify-between lg:p-2 md:p-1 z-50 fixed top-0 left-0  transition-all duration-300', 
-      { 'bg-mamonblue': !searchResults.length > 0 },
-      { 'bg-blue-500 h-20 md:h-32': searchResults.length > 0 },
+      'flex items-center justify-between p-1 z-50 fixed top-0 left-1/2 transform -translate-x-1/2 transition-all duration-300 rounded-lg mt-3', 
+      'w-full md:w-6/12', 
+      { 'bg-mamonheader': !searchResults.length > 0 },
+      { 'bg-blue-500 h-10 md:h-16': searchResults.length > 0 },
     ]"
     :style="showSearchField ? { position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100 } : {}"
   >
@@ -13,7 +14,7 @@
         <img 
           src="/images/Transparent_Image_11_cropped.png" 
           alt="Logo" 
-          class="h-6 lg:h-auto max-h-8 lg:max-h-10 w-auto logo"
+          class="h-3 lg:h-auto max-h-4 lg:max-h-5 w-auto logo"
           v-show="windowWidth > 768 || !inputFocused"
         />
       </a>
@@ -43,7 +44,7 @@
 
     </div>
     <!-- ICONS END -->
-    <div v-show="searchResults.length > 0" class="absolute top-[calc(50%+theme(spacing.12))] left-0 w-full bg-white shadow-lg z-50">
+    <div v-show="searchResults.length > 0" class="absolute top-[calc(50%+theme(spacing.6))] left-0 w-full bg-white shadow-lg z-50">
       <ul>
         <li v-for="user in searchResults" :key="user.userId" class="p-2 hover:bg-gray-100">
           <span style="text-decoration:underline; cursor:pointer;" @click="navigate(user.userId)">
@@ -67,7 +68,7 @@
       />
       <!-- Profile Photo and Dropdown -->
       <div @click="toggleModal" class="cursor-pointer">
-      <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-12 h-12 border-4 mr-2 cursor-pointer border-white">
+      <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-6 h-6 border-2 mr-2 cursor-pointer border-white">
     </div>
     
     <!-- WHEN YOU CLICK USER PROFILE BEGIN -->
@@ -95,10 +96,7 @@
       Logg inn
     </router-link>
     <!-- WHEN YOU CLICK USER PROFILE END -->
-
   </header>
-  
-  
 </template>
 
 <script>

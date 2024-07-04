@@ -3,24 +3,20 @@
     <!-- Only show content if not loading -->
     <template v-if="!loading">
       <div v-if="isLoggedIn">
-          <ReviewCardView />
+        <ReviewCardView />
       </div>
-      <div v-else>
+      <div v-else class="bg-custom-gradient-2">
         <GetStarted />
-        <header class="bg-mamonblue text-white text-center py-4 rounded-t-md mt-2">
-          <h2 class="text-xl font-semibold">Slik fungerer det</h2>
-        </header>
-        <HowItWorks />
-        <div class="mt-5 lg:flex lg:justify-center lg:items-center">
-          <div class="lg:flex lg:flex-col lg:justify-center lg:items-center lg:space-y-4">
+        <div class="flex flex-col lg:flex-row lg:justify-center lg:space-x-4 lg:space-y-0 space-y-4 max-w-screen-lg mx-auto">
+          <div class="flex-1 lg:max-w-md">
             <ContactUs />
           </div>
-          <div class="lg:flex lg:flex-col lg:justify-center lg:items-center lg:space-y-4">
+          <div class="flex-1 max-w-md">
             <Team />
           </div>
         </div>
       </div>
-</template>
+    </template>
 
       <div v-if="loading" class="flex justify-center items-center">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
