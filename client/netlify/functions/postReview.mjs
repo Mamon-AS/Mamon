@@ -39,9 +39,12 @@ async function uploadImageToSanity(imageUrl) {
     if (event.httpMethod !== 'POST') {
       return { statusCode: 405, body: 'Method Not Allowed' };
     }
+    if (!event.body) {
+      return { statusCode: 400, body: 'Bad Request' };
+    }
     try {
-        const { reviewedItem, rating, userId, userName, fetchedTitle, fetchedImage, reviewedItemDescription } = JSON.parse(event.body);
-        const uploadedImageAsset = await uploadImageToSanity(fetchedImage);
+        const { reviewedItem, rating, userId, userName, itemImage, reviewedItemDescription, website, url } = JSON.parse(event.body);
+        const uploadedImageAsset = await uploadImageToSanity(itemImage);
         
         const imageReference = {
             _type: 'image',
@@ -54,12 +57,14 @@ async function uploadImageToSanity(imageUrl) {
           
         const createdReview = await sanity.create({
             _type: 'review',
-            reviewedItem: fetchedTitle,
+            reviewedItem: reviewedItem,
             rating: rating,
             userId: userId,
             userName: userName,
             description: reviewedItemDescription,
             reviewedImage: imageReference,
+            website: website,
+            url: url
           });
 
           const sanityReviewId = createdReview._id;
@@ -67,13 +72,15 @@ async function uploadImageToSanity(imageUrl) {
             sanityReviewId: sanityReviewId,
             userId: userId,
             userName: userName,
-            reviewedItem: fetchedTitle,
+            reviewedItem: reviewedItem,
             rating:rating,
-            description: reviewedItemDescription
+            description: reviewedItemDescription,
+            website: website,
+            url: url
           });
           return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Review submitted successfully' }),
+            body: JSON.stringify(createdReview),
           };
 
     } catch (error) {

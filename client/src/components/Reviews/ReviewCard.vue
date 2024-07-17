@@ -1,16 +1,43 @@
 <template>
-  <div class="relative rounded-lg p-4 pt-6 m-2 mt-4 justify-between border-solid border-4 border-mamonblue text-left">
+  <div class="relative rounded-lg p-4 pt-6 m-2 mt-4 justify-between border-solid border-4 border-mamonblue text-left mt-7">
     <div class="flex absolute -top-4 -left-2 pr-1 pb-1 mb-1 bg-white" @click="navigate(reviewItems.userId)">
       <img c v-if="photoUrl" :src="photoUrl" alt="Profile picture" class="object-cover rounded-full w-10 h-10 border-4 border-mamonblue mr-2 cursor-pointer"/>
       <span class="cursor-pointer hover:underline">{{ reviewItems.userName ? reviewItems.userName : "Anonym"}}</span>
     </div>
     <div class="flex justify-between items-end my-2">
       <div class="flex items-center">
-        <div class="stars-outer">
+        <div class="stars-outer relative">
           <div class="stars-inner" :style="{ width: stars }"></div>
           <div class="stars-background"></div>
+          <i class="fa-solid fa-circle-info absolute top-0 right-0 text-sm" style="color: #096191; margin-top: -1rem; margin-right: -0.75rem;"
+            @click="showInfoModal = !showInfoModal"></i>
         </div>
       </div>
+
+      <!-- Information Modal -->
+      <div v-if="showInfoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+          <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+              <i class="fa-solid fa-circle-info text-blue-600"></i>
+            </div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Stjernekartet</h3>
+            <ul class="mt-2 px-7 py-3 text-center space-y-4 text-md text-gray-900">
+              <li>⭐<br>Anbefales virkelig ikke.</li>
+              <li>⭐⭐<br>Litt dårligere enn hva jeg forventet.</li>
+              <li>⭐⭐⭐<br>Som forventet - Fornøyd. Dette er normalen, og 3-5 stjerner indikerer et godt kjøp.</li>
+              <li>⭐⭐⭐⭐<br>Litt bedre enn hva jeg forventet.</li>
+              <li>⭐⭐⭐⭐⭐<br>Anbefales!</li>
+            </ul>
+            <div class="items-center px-4 py-3">
+              <button id="ok-btn" @click="showInfoModal = false" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Information Modal END -->
       <p class="text-sm">
         {{ FormatDate(reviewItems._createdAt) }}
       </p> 
@@ -18,74 +45,88 @@
 
     <div class="content-wrapper">
       <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
-      <h3 class="text-lg md:text-2xl font-bold"> {{ (reviewItems.reviewedItem.length > 30 ? reviewItems.reviewedItem.slice(0,30) + '...' : reviewItems.reviewedItem) }}</h3>
+      <h3 class="text-lg md:text-2xl font-bold text-center">
+        {{ reviewItems.website }}
+      </h3>
+      <h3 class="text-lg md:text-2xl font-bold text-center"> 
+        <a :href="reviewItems.url" class="hover:text-blue-600 underline" target="_blank" rel="noopener noreferrer"> 
+          {{ (reviewItems.reviewedItem.length > 30 ? reviewItems.reviewedItem.slice(0,30) + '...' : reviewItems.reviewedItem) }} 
+        </a>
+      </h3>
       
-      <p class="md:text-lg mb-4">
+      <p class="md:text-lg mb-4 text-center">
         {{ reviewItems.description }}
       </p>
     </div> 
 
-    <div class="border-t border-gray-800"></div>
-
+    
     <!-- Emoji section -->
-    <div class="flex items-end relative ml-2">
+    <div class="flex items-center relative ml-2">
       <template v-if="uniqueEmojis.length > 0">
         <span v-for="emoji in uniqueEmojis"
                     :key="emoji.value" 
-                    :class="['emoji', 'cursor-pointer', { 'userReactedEmoji ': isUserReactedEmoji(emoji.value) }]" 
-                    @click="toggleModal('listOfReactions')">
+                    :class="['emoji', 'cursor-pointer', 'topp', { 'userReactedEmoji ': isUserReactedEmoji(emoji.value) }]" 
+                    >
           {{ emoji.value }} 
         </span>
+        <div class="flex justify-between flex-grow">
+        <p v-if="reactionsCount" class="flex cursor-pointer hover:underline mb-2" @click="toggleModal('listOfUsers')">
+          {{ reactionsCount }} Liker
+        </p>
+          <!-- Spacer element to maintain space between when one element is not rendered -->
+        <div v-if="!reactionsCount && additionalItemsCount"></div>
+        <p v-if="additionalItemsCount" class="mb-2 cursor-pointer hover:underline" @click="toggleModal('commentForm')">
+          {{ additionalItemsCount }} Kommentarer
+        </p>
+        </div>
       </template>
-      <template v-else>
-        <span class="emoji cursor-pointer" @click="toggleModal('listOfReactions')">👍</span>
-      </template>
-      
-      <!-- Reaction Modal, shown conditionally -->
-      <div v-if="showReactionModal" class="reaction-modal absolute bottom-full mb-2 bg-white rounded-lg p-2 shadow-lg transform -translate-x-1/2 left-1/2">
-        <span class="absolute bottom-6 closeRightCross p-4 cursor-pointer shadow-xs" @click="showReactionModal = false"><i class="fa-regular fa-x"></i></span>
-        <div class="flex justify-around">
-          <span v-for="emoji in emojis" class="emoji text-2xl cursor-pointer mx-1"
+
+    </div>
+    <div class="border-t border-gray-800"></div>
+    
+      <div class="flex justify-between flex-grow">
+        <div class="p-2 hover:bg-blue-200 focus:outline-none rounded ml-2 transition-transform">
+          <i @click="toggleModal('listOfReactions')" class="fa-regular fa-thumbs-up mr-2 cursor-pointer reaction-modal"></i>
+          <span v-if="showReactionModal" v-for="emoji in emojis" class="emoji text-l cursor-pointer mx-1"
                       :key="emoji.value"
-                      @click="sendReaction(emoji, reviewItems._id, reviewItems.userId); showReactionModal = false;">
+                      @click="sendReaction(emoji, reviewItems._id, reviewItems.userId);">
             {{ emoji.value }}
           </span>
+          <span v-else @click="toggleModal('listOfReactions')" class="cursor-pointer">Lik</span>
         </div>
+        <button @click="toggleModal('commentForm')" class="p-2 rounded hover:bg-blue-200 focus:outline-none ml-2">
+          <i class="fas fa-comment-dots ml-2"></i> 
+          Kommenter
+        </button>
       </div>
-      <!-- Reaction Modal END -->
-
-      <p class="text-xs cursor-pointer hover:underline "  @click="toggleModal('listOfUsers')">
-        <template v-if="reactionsCount > 0">
-          {{ reactionsCount }} 
-        </template>
-      </p>
-    
-    </div>
     <!-- Emoji section END -->
 
     <!-- Comment Section -->
+    <div v-show="showCommentForm" class="transition-opacity duration-500 ease-in-out" :class="{'opacity-0': !showCommentForm, 'opacity-100': showCommentForm}">
     <div v-if="reviewItems.comments && reviewItems.comments.length > 0" class="comments-container">
-      <div class="bottom-full bg-white rounded-lg mt-4" v-for="comment in reviewItems.comments" :key="comment.commentId">
-        <CommentItem
-          :reviewId="reviewItems._id"
-          :userId="comment.userId"
-          :photoUrl="comment.photoUrl"
-          :displayName="comment.displayName"
-          :text="comment.text"
-          :createdAt="comment.createdAt"
-          :replies="comment.replies"
-          :commentId="comment.commentId"
-        />
-      </div>
-    </div>
-    <div class="rounded-lg border mt-2 shadow-sm hover:shadow-lg transition-shadow duration-200 ease-in-out p-2">
+        <div class="bottom-full bg-white rounded-lg mt-4" v-for="(comment, index) in reviewItems.comments" :key="index">
+          <Comment
+            :reviewId="reviewItems._id"
+            :userId="comment.userId"
+            :photoUrl="comment.photoUrl"
+            :displayName="comment.displayName"
+            :text="comment.text"
+            :createdAt="comment.createdAt"
+            :replies="comment.replies"
+            :commentId="comment.commentId"
+            :highlightCommentId="highlightCommentId"
+          />
+        </div>
+    </div> 
+
       <CommentForm 
         :reviewId="reviewItems._id"
-        :reviewerUserId="reviewItems.userId"
+        :notificationUserId="reviewItems.userId"
         :reviewerPhotoUrl="photoUrl"
-        :formPlaceholder="!(reviewItems.comments?.length) ? 'Bli den første til å kommentere' : undefined"
+        :formPlaceholder="!reviewItems.comments?.length ? 'Bli den første til å kommentere' : 'Legg til en kommentar'"
       />
     </div>
+  
     <!-- Comment Section END--> 
   
 
@@ -108,19 +149,20 @@ import axios from 'axios';
 import {FormatDate, CreateURL, navigateToProfile} from '../../utils'
 import ListOfUsers from '../ListOfUsers.vue';
 import CommentForm from '../Comments/CommentForm.vue';
-import CommentItem from '../Comments/CommentItem.vue';
+import Comment from '../Comments/Comment.vue';
 
 export default {
   props: {
     reviewItems: {
       type: Object,
       required: true
-    }
+    },
+    highlightCommentId: String,
   },
   components: {
     ListOfUsers,
     CommentForm,
-    CommentItem,
+    Comment,
   },
 
   setup(props) {
@@ -141,9 +183,10 @@ export default {
       { value: '😎', clicked: false }
     ]);
     const showReactionModal = ref(false); 
+    const showInfoModal = ref(false);
+    const showCommentForm = ref(false);
     let ignoreFirstClick = false;
     
-
     // Computed property to get unique emojis
     const uniqueEmojis = computed(() => {
       const allReactions = [...Object.values(reactions.value), userReaction.value].filter(Boolean);
@@ -158,12 +201,26 @@ export default {
       return userReaction.value?.emoji === emojiValue;
     };
 
+    // Total comments
+    const additionalItemsCount = computed(() => {
+      if (!props.reviewItems.comments || !Array.isArray(props.reviewItems.comments)) {
+        return 0; 
+      }
+      const totalComments = props.reviewItems.comments.length;
+
+      const totalReplies = props.reviewItems.comments.reduce((sum, comment) => {
+        return sum + (comment.replies ? comment.replies.length : 0);
+      }, 0);
+
+      const totalItems = totalComments + totalReplies;
+
+      return totalItems > 0 ? totalItems : 0;
+    });
+
 
     watch(currentUser, (newUser) => {
       if (newUser) {
         getReactions(props.reviewItems._id);
-      } else {
-        console.log("Waiting for user login...");
       }
     }, { immediate: true });
 
@@ -202,8 +259,8 @@ export default {
         if (response.status >= 200 && response.status < 300) {
           // Successfully posted the reaction, update the local state
           userReaction.value = { emoji: selectedEmoji.value, displayName: currentUser.value.displayName };
-
           await getReactions(reviewId);
+          showReactionModal.value = false;
         } else {
           throw new Error(`HTTP error! Status: ${response.status}`);
          } 
@@ -256,8 +313,11 @@ export default {
       showReactionModal.value == false ? showReactionModal.value = true : showReactionModal.value = false;
     }
     else if (modalName === 'listOfUsers') {
-      showListOfUsersModal.value == false ? showReactionModal.value = true : showReactionModal.value = false;
+      showListOfUsersModal.value == false ? showListOfUsersModal.value = true : showListOfUsersModal.value = false;
     }
+    else if (modalName === 'commentForm') {
+      showCommentForm.value == false ? showCommentForm.value = true : showCommentForm.value = false;
+    } 
 
   };
 
@@ -289,7 +349,7 @@ export default {
       })
       .catch((error) => {
         console.log("File does not exist or could not fetch the download URL:", error);
-        photoUrl.value = '/images/frosk.png'; 
+        photoUrl.value = '/images/blank_profile.jpg'; 
       });
       window.addEventListener('click', handleClickOutside);
   })
@@ -314,12 +374,18 @@ export default {
     toggleModal,
     uniqueEmojis,
     isUserReactedEmoji,
+    showInfoModal,
+    additionalItemsCount,
+    showCommentForm,
   };
     
   },
 }
 </script>
 <style>
+.topp {
+  transform: translateY(-4px); 
+}
 .stars-outer {
     position: relative;
     display: inline-block;
@@ -357,22 +423,22 @@ width: 100%;
 }
 
 .emoji {
-  transition: transform 0.1s ease-in-out;
+  transition: transform 0.2s ease-in-out;
 }
 
 .emoji:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
-
 
 .userReactedEmoji {
   display: inline-flex; 
+  margin-right: 0.8rem;
   align-items: center; 
   justify-content: center; 
-  transform: translateY(-0.5rem) scale(1.1);
+  transform: translateY(-1rem) scale(1.7);
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, color 0.3s ease-in-out;
-  color: #4ade80; 
-  box-shadow: 0 0 5px #4ade80 inset, 0 0 5px #4ade80; 
+  color: #f1ee09; 
+  box-shadow: 0 0 5px #cdda22 inset, 0 0 5px #cddf2b; 
   border-radius: 50%; 
 }
 
@@ -386,10 +452,6 @@ width: 100%;
   50% {
     transform: translateY(-0.25rem) scale(1.5); 
   }
-}
-
-.closeRightCross {
-  right: 12.5rem;
 }
 
 </style>

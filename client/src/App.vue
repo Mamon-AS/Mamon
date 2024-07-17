@@ -1,6 +1,8 @@
 <template>
   <AppHeader :is-logged-in=isLoggedIn :site-settings=settings />
-  <SidebarNav :is-logged-in=isLoggedIn />
+  <div class="pt-8"> 
+      <slot></slot> 
+    </div>
   <router-view/>
 </template>
 
@@ -8,7 +10,7 @@
 import { onMounted, ref } from 'vue';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import AppHeader from './components/AppHeader.vue'
-import SidebarNav from './components/SidebarNav.vue';
+
 import sanity from './client';
 
 const isLoggedIn = ref(false);
@@ -33,7 +35,6 @@ export default {
   },
   components: {
     AppHeader,
-    SidebarNav
   }
 }
 
@@ -48,7 +49,7 @@ export default {
 }
 
 main {
-  @apply mx-auto max-w-6xl my-8 px-4;
+  @apply mx-auto max-w-6xl px-4;
   .user {
     @apply bg-white shadow-md rounded-lg p-8;
     h1 {

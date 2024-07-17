@@ -1,8 +1,8 @@
 <template>
-  <header 
+ <header 
     :class="[
       'flex items-center justify-between p-1 z-50 fixed top-0 left-1/2 transform -translate-x-1/2 transition-all duration-300 rounded-lg mt-3', 
-      'w-full md:w-6/12', 
+      'w-full md:w-6/12',
       { 'bg-[rgba(9,97,145,0.9)]': !searchResults.length > 0 },
       { 'bg-blue-500 h-10 md:h-16': searchResults.length > 0 },
     ]"
@@ -19,31 +19,32 @@
         />
       </a>
 
-      <button ref="toggleButton" @click="toggleSearchField" class="mx-2 lg:mx-5 px-2 rounded text-white hover:bg-lightblue focus:bg-lightblue">
-        <i class="fa-solid fa-magnifying-glass fa-l lg:fa-xl" style="color: #ffffff;"></i>     
-      </button>
+      <input
+        v-show="isLoggedIn"
+        v-model="searchQuery"
+        ref="searchField"
+        type="search"
+        placeholder="Søk..."
+        @focus="inputFocused = true"
+        @blur="inputFocused = false"
+        class="px-2 py-1 lg:ml-8 mr-2 text-xs border border-gray-300 rounded-md shadow-sm opacity-50 w-20 focus:w-auto focus:opacity-100 hover:opacity-100 focus:outline-none focus:ring-2 
+        focus:border-lightblue bg-white transition-all duration-300"
+      />
       
-      <HeaderItem to="/review">
+      <HeaderItem to="/review" v-show="isLoggedIn">
         <div class="flex flex-col md:flex-row items-center px-2 py-1 md:py-0">
           <i class="fa-solid fa-feather lg:fa-xl" style="color: #ffffff;"></i>
           <p class="hidden md:block md:ml-2">Anmeld</p>
         </div>
       </HeaderItem>
     
-      <input
-        v-model="searchQuery"
-        v-show="showSearchField"
-        ref="searchField"
-        type="search"
-        placeholder="Søk..."
-        class="absolute top-full left-0 mt-2 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 
-        focus:border-lightblue bg-white transition-all duration-300"
-        style="z-index: 101;"
-      />
+    <!-- Not logged in stuff-->
+      <!-- How do you do this with components <a href=#please -->
+    <!-- End of not logged in stuff -->
+
     </div>
     <!-- ICONS END -->
-
-    <div v-show="searchResults.length > 0" class="absolute top-full left-0 mt-12 w-full bg-white shadow-lg z-50">
+    <div v-show="searchResults.length > 0" class="absolute top-[calc(50%+theme(spacing.6))] left-0 w-full bg-white shadow-lg z-50">
       <ul>
         <li v-for="user in searchResults" :key="user.userId" class="p-2 hover:bg-gray-100">
           <span style="text-decoration:underline; cursor:pointer;" @click="navigate(user.userId)">
@@ -54,14 +55,20 @@
         </li>
       </ul>
     </div>
-    <div v-if="isLoggedIn" class="ml-auto flex items-end">
+    <div v-if="isLoggedIn" class="flex items-center">
+      <!-- People You May Know -->
+      <HeaderItem to="/suggestions">
+        <div class="px-2">
+          <i class="fa-solid fa-user-group" style="color: #ffffff;"></i>
+        </div>
+      </HeaderItem>
       <!-- Notification Bell -->
       <UserNotifications 
         :userId="userID"
       />
       <!-- Profile Photo and Dropdown -->
       <div @click="toggleModal" class="cursor-pointer">
-      <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-12 h-12 border-4 mr-2 cursor-pointer border-white">
+      <img :src="photoUrl" alt="Profile photo" class="object-cover rounded-full w-6 h-6 border-2 mr-2 cursor-pointer border-white">
     </div>
     
     <!-- WHEN YOU CLICK USER PROFILE BEGIN -->
@@ -89,10 +96,7 @@
       Logg inn
     </router-link>
     <!-- WHEN YOU CLICK USER PROFILE END -->
-
   </header>
-  
-  
 </template>
 
 <script>
@@ -113,11 +117,11 @@ export default {
   components: {
     HeaderItem,
     Modal,
-    UserNotifications
+    UserNotifications,
 },
   setup(props) {
     let ignoreNextOutsideClick = false;
-    const defaultPhotoUrl = '/images/frosk.png';
+    const defaultPhotoUrl = '/images/blank_profile.jpg';
     const auth = getAuth();
     const searchQuery = ref('');
     const searchResults = ref([]);
@@ -125,7 +129,9 @@ export default {
     const showSearchField = ref(false);
     const store = useStore();
     const vueRouter = useRouter();
- 
+    const inputFocused = ref(false);
+    const windowWidth = ref(window.innerWidth);
+
     const modalIsActive = computed({
         get: () => store.getters['utils/modalIsActive'],
         set: (value) => {
@@ -190,6 +196,7 @@ export default {
       }
     };
     async function searchUsers(query) {
+      query = query.toLowerCase().replace(/\b\w/g, match => match.toUpperCase());
       try {
         const response = await axios.post(`/.netlify/functions/fetchUsers`, {
           query:query
@@ -202,7 +209,10 @@ export default {
       }
 
     
-    const navigate = (userId) => navigateToProfile(vueRouter, userId);
+    const navigate = (userId) => {
+      closeSearch(); 
+      navigateToProfile(vueRouter, userId); 
+    };
     
 
     watch(searchQuery, (newValue, oldValue) => {
@@ -227,10 +237,16 @@ export default {
           }
         });
       });
+      const handleResize = () => {
+        windowWidth.value = window.innerWidth;
+      };
+  
+  window.addEventListener('resize', handleResize);
 
     onBeforeUnmount(() => {
       document.removeEventListener('keydown', onEscapePress);
       document.removeEventListener('click', onClickOutside);
+      window.removeEventListener('resize', handleResize);
     });
     
     
@@ -248,6 +264,8 @@ export default {
       openModal,
       closeModal,
       userID,
+      inputFocused,
+      windowWidth
     };
   },
 };

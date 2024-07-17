@@ -68,6 +68,7 @@ exports.handler = async (event) => {
         const reviewDoc = await reviewRef.get();
 
         const createdAt = new Date();
+        let newOrReplyCommentId = null;
 
         if (!reviewDoc.exists) {
             return {
@@ -81,6 +82,7 @@ exports.handler = async (event) => {
         }
         let { comments = [], totalComments = 0 } = reviewDoc.data();
         comments = Array.isArray(comments) ? comments : [];
+
         if (action === 'delete') {
             comments = comments.map(comment => {
                 // If the comment itself is the target
@@ -103,39 +105,44 @@ exports.handler = async (event) => {
             }).filter(comment => comment !== null); 
         } else {
             if (parentCommentId) {
+                newOrReplyCommentId = uuidv4();
                 const parentCommentIndex = comments.findIndex(comment => comment.commentId === parentCommentId);
                 if (parentCommentIndex !== -1) {
                     comments[parentCommentIndex].replies = Array.isArray(comments[parentCommentIndex].replies) ? comments[parentCommentIndex].replies : [];
-                    comments[parentCommentIndex].replies.push({ commentId: uuidv4(), text, displayName, userId, createdAt });
+                    comments[parentCommentIndex].replies.push({ commentId: newOrReplyCommentId, text, displayName, userId, createdAt });
                 }
             } else {
                 const existingCommentIndex = comments.findIndex(comment => comment.commentId === commentId && comment.userId === userId);
                 if (existingCommentIndex !== -1) {
                     comments[existingCommentIndex].text = text;
                 } else {
-                    comments.push({ commentId: uuidv4(), text, displayName, userId, createdAt });
+                    newOrReplyCommentId = uuidv4();
+                    comments.push({ commentId: newOrReplyCommentId, text, displayName, userId, createdAt });
                     totalComments += 1;
                 }
             }
         }
-
+       
         await reviewRef.update({ comments, totalComments });
-        if (action === 'add' || action === 'reply') {
-            const notificationMessage = action === 'add' ? 
-                `${displayName} kommenterte "${text}" på din anmeldelse.` : 
-                `${displayName} svarte med "${text}" på din kommentar.`;
+        if(userId !== notificationUserId) {
+            if (action === 'add' || action === 'reply') {
+                const notificationMessage = action === 'add' ? 
+                    `${displayName} kommenterte "${text}" på din anmeldelse.` : 
+                    `${displayName} svarte med "${text}" på din kommentar.`;
 
-            const notificationData = {
-                userId: reviewDoc.data().userId,
-                type: 'comment',
-                message: notificationMessage,
-                seen: false,
-                timestamp: admin.firestore.FieldValue.serverTimestamp(),
-                reviewId: reviewId,
-                notificationUserId: notificationUserId
-            };
-        
-            await db.collection('notifications').add(notificationData);
+                const notificationData = {
+                    userId: reviewDoc.data().userId,
+                    type: 'comment',
+                    message: notificationMessage,
+                    seen: false,
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                    reviewId: reviewId,
+                    notificationUserId: notificationUserId,
+                    commentId: newOrReplyCommentId
+                };
+            
+                await db.collection('notifications').add(notificationData);
+            }
         }
         return {
             statusCode: 200,

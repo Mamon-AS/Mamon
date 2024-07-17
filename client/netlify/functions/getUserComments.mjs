@@ -16,14 +16,13 @@ if (admin.apps.length === 0) {
 }
 
 const bucket = admin.storage().bucket();
-const defaultPhotoUrl = '/images/frosk.png'; 
+const defaultPhotoUrl = '/images/blank_profile.jpg'; 
 
 const db = admin.firestore();
 
 exports.handler = async (event) => {
   try {
     const { reviewId } = JSON.parse(event.body);
-    console.log('Fetching comments... for reviewId:', reviewId);
     log('Fetching comments... for reviewId:', reviewId);
     if (!reviewId) {
       return {

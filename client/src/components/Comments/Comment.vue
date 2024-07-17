@@ -1,7 +1,7 @@
 <template>
   <!-- Main comment -->
-  <div class="comment-item p-4 border-b border-gray-200">
-    <div class="author flex items-end mb-2" @click="navigate(props.userId)">
+  <div class="comment-item p-4 border-b border-gray-200" :class="{'highlight-background': props.commentId === props.highlightCommentId}" >
+    <div class="author flex items-end mb-2" @click="navigate(props.userId)" >
       <img :src="props.photoUrl" alt="Profile picture" class="object-cover rounded-full w-10 h-10 border-4 border-gray-800 mr-2 cursor-pointer"/>
       <span class="hover:underline cursor-pointer">{{ props.displayName }}</span>
     </div>
@@ -14,8 +14,13 @@
     </div>
     <!-- Reply input field -->
     <div v-if="showReplyInput" class="mt-2">
-      <textarea v-model="replyText" placeholder="Skriv et svar.." class="textarea w-full p-2 border rounded-md border-gray-300"></textarea>
-      <button @click="postReply" class="submit-btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 mt-2">Svar</button>
+      <CommentForm
+        :reviewId="props.reviewId"
+        :parentCommentId="props.commentId"
+        :formPlaceholder="'Svar til ' + props.displayName + '..'"
+        :reply="true"
+        :notificationUserId="props.userId"
+      />
     </div>
   </div>
 
@@ -32,8 +37,13 @@
         <span class="reply-link text-blue-500 cursor-pointer ml-4" @click="showReplyToReplyInput = reply.commentId">Svar</span>
         <span v-if="reply.userId === currentUserId" class="delete-link text-red-500 cursor-pointer ml-4" @click="deleteComment(reply.commentId)">Slett</span>
         <div v-if="showReplyToReplyInput === reply.commentId" class="mt-2">
-            <textarea v-model="replyText" placeholder="Skriv et svar.." class="textarea w-full p-2 border rounded-md border-gray-300"></textarea>
-            <button @click="postReply(reply.userId)" class="submit-btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 mt-2">Svar</button>
+          <CommentForm
+            :reviewId="props.reviewId"
+            :parentCommentId="props.commentId"
+            :formPlaceholder="'Svar til ' + props.displayName + '..'"
+            :reply="true"
+            :notificationUserId="props.userId"
+          />
         </div>
       </div>
     </div>
@@ -41,12 +51,14 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from 'vue';
+import { defineProps, ref, watch, onMounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAuth } from 'firebase/auth';
 import { useStore } from 'vuex';
 
 import { navigateToProfile, timeStampToDate  } from '../../utils/';
+
+import CommentForm from './CommentForm.vue';
 
 const props = defineProps({
   reviewId: String,
@@ -57,12 +69,12 @@ const props = defineProps({
   createdAt: Object,
   replies: Array,
   commentId: String,
+  highlightCommentId: String,
 });
 
 const router = useRouter();
 const showReplyInput = ref(false);
 const showReplyToReplyInput = ref(null);
-const replyText = ref('');
 const currentUser = ref(null);
 const currentUserId = ref(null);
 const store = useStore();
@@ -78,32 +90,6 @@ watch(currentUser, (newValue) => {
   }
 });
 
-
-const postReply = async (notificationUserId) => {
-  const text = replyText.value.trim();
-  console.log(notificationUserId);
-  if (!text) return;
-  const action = 'reply';
-  const reviewId = props.reviewId;
-  const commentId = props.commentId;
-   try {
-      await store.dispatch('reviews/postComment', {
-        action,
-        commentId,
-        text,
-        reviewId,
-        parentCommentId: commentId,
-        userId: currentUser.value.uid,
-        displayName: currentUser.value.displayName,
-        notificationUserId: notificationUserId
-     });
-       replyText.value = '';
-      showReplyInput.value = false;
-      showReplyToReplyInput.value = null;
-    } catch (error) {
-      console.error("Error posting reply:", error);
-     }
-};
 const deleteComment = async (commentId) => {
   const action = 'delete';
   const reviewId = props.reviewId;
@@ -123,4 +109,24 @@ const deleteComment = async (commentId) => {
     console.error("Error deleting comment:", error);
   }
 };
+
+
+onMounted(async () => {
+    await nextTick();
+    if (props.commentId === props.highlightCommentId) {
+      const element = document.querySelector(`.highlight-background`);
+      if (element) {
+        console.log("I am finna scroll");
+        element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  });
+
+
 </script>
+<style>
+.highlight-background {
+  background-color: #f0f9ff; 
+  border-color: #bfdbfe; 
+}
+</style>
