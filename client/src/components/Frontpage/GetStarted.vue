@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col lg:flex-row rounded-md p-12 items-center justify-center min-h-screen bg-gray-50">
+  <div class="flex flex-col rounded-md p-12 items-center justify-center">
     <!-- Text Content Section -->
-    <div class="flex-grow mb-4 lg:mb-0 lg:flex-grow-0 p-12 absolute top-10">
-      <h1 class="mb-6 border-y text-3xl font-bold [border-image:linear-gradient(to_right,transparent,theme(colors.slate.300/.8),transparent)1] md:text-6xl text-center">
+    <div class="flex-grow mb-4 lg:mb-0 lg:flex-grow-0 pt-12">
+      <h1 class="mb-6 border-y text-3xl font-bold p-6 [border-image:linear-gradient(to_right,transparent,theme(colors.slate.300/.8),transparent)1] md:text-6xl text-center">
         Anmeldelser
         <br class="max-lg:hidden">
         du kan stole på
@@ -14,7 +14,7 @@
               text-white shadow hover:bg-[length:100%_150%] sm:mb-0 sm:w-auto">
             Logg inn
           </router-link>
-          <a class="btn w-full bg-white text-gray-800 shadow hover:bg-gray-50 sm:ml-4 sm:w-auto" href="#0">
+          <a class="btn w-full bg-white text-gray-800 shadow hover:bg-gray-50 hover:text-white ml-4 sm:w-auto" href="#0">
             Lær Mer
           </a>
         </div>
@@ -22,10 +22,10 @@
     </div>
 
     <!-- Carousel Section -->
-    <div class="relative w-full max-w-4xl mx-auto mt-24 lg:mt-48">
+    <div class="relative w-full max-w-4xl mx-auto mt-6 lg:mt-6">
       <div class="overflow-hidden rounded-lg shadow-lg h-64">
         <div
-          class="flex transition-transform duration-700 ease-in-out"
+          class="flex transition-transform duration-1000 ease-in-out"
           :style="{ transform: `translateX(-${currentSlide * 100 / slides.length}%)`, width: `${slides.length * 100}%` }"
         >
           <div v-for="(slide, index) in slides" :key="index" class="w-full h-64 flex flex-col items-center justify-center text-white text-2xl font-bold p-4" :class="slide.bgColor">
@@ -37,15 +37,15 @@
         </div>
       </div>
       <div class="absolute inset-0 flex items-center justify-between p-4">
-        <button @click="prevSlide" class="bg-gray-800 bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75">
+        <button @click="prevSlide" class="bg-gray-800 bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 w-[40px]">
           &#10094;
         </button>
-        <button @click="nextSlide" class="bg-gray-800 bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75">
+        <button @click="nextSlide" class="bg-gray-800 bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 w-[40px]">
           &#10095;
         </button>
       </div>
       <div class="flex justify-center mt-4">
-        <span v-for="(slide, index) in slides" :key="index" class="h-2 w-2 bg-gray-400 rounded-full mx-1" :class="{ 'bg-blue-500': currentSlide === index }"></span>
+        <span v-for="(slide, index) in slides" :key="index" class="h-2 w-2 rounded-full mx-1" :class="{ 'bg-blue-500': currentSlide === index, 'bg-gray-400': currentSlide !== index }"></span>
       </div>
     </div>
   </div>
@@ -74,7 +74,7 @@ const prevSlide = () => {
 };
 
 onMounted(() => {
-  slideInterval = setInterval(nextSlide, 3000);
+  slideInterval = setInterval(nextSlide, 10000);
 });
 
 onBeforeUnmount(() => {

@@ -2,8 +2,8 @@
  <header 
     :class="[
       'flex items-center justify-between p-1 z-50 fixed top-0 left-1/2 transform -translate-x-1/2 transition-all duration-300 rounded-lg mt-3', 
-      'w-full md:w-6/12', 
-      { 'bg-mamonheader': !searchResults.length > 0 },
+      'w-full md:w-6/12',
+      { 'bg-[rgba(9,97,145,0.9)]': !searchResults.length > 0 },
       { 'bg-blue-500 h-10 md:h-16': searchResults.length > 0 },
     ]"
     :style="showSearchField ? { position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100 } : {}"
@@ -14,7 +14,7 @@
         <img 
           src="/images/Transparent_Image_11_cropped.png" 
           alt="Logo" 
-          class="h-3 lg:h-auto max-h-4 lg:max-h-5 w-auto logo"
+          class="h-auto max-h-5 w-auto logo"
           v-show="windowWidth > 768 || !inputFocused"
         />
       </a>
@@ -91,7 +91,7 @@
     </div>
     <router-link v-if="!isLoggedIn"
             :to="`/sign-in`" 
-            class="bg-lightblue text-white border border-lightblue hover:bg-white hover:border-mamonblue hover:text-mamonblue py-1 px-4 ml-4 rounded transition" 
+            class="text-white hover:bg-lightblue focus:bg-lightblue py-1 px-4 ml-4 rounded transition" 
             >
       Logg inn
     </router-link>

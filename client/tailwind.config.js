@@ -21,8 +21,7 @@ module.exports = {
         'teal': '#a7f3d0',
         'lime': '#86efac',
         'sky': '#5eead4',
-        'mamonblue': '#096191', 
-        'mamonheader': 'rgba(9, 97, 145, 0.8)',    
+        'mamonblue': '#096191' 
       },
       minWidth: {
         'custom-600': '600px',
