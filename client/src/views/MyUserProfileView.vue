@@ -66,7 +66,6 @@ export default {
 
             try {
                 const snapshot = await uploadBytes(fileRef, file);
-                console.log('Uploaded a blob or file!');
                 const downloadURL = await getDownloadURL(snapshot.ref);
                 await updateUserProfile(downloadURL);
             } catch (error) {
@@ -83,7 +82,6 @@ export default {
             console.error('Error updating profile picture:', error);
             }
         };
-
         return {
             photoUrl,
             name,

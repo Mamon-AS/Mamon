@@ -44,7 +44,7 @@
     </div>
 
     <div class="content-wrapper">
-      <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
+
       <h3 class="text-lg md:text-2xl font-bold text-center">
         {{ reviewItems.website }}
       </h3>
@@ -58,7 +58,7 @@
         {{ reviewItems.description }}
       </p>
     </div> 
-
+      <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
     
     <!-- Emoji section -->
     <div class="flex items-center relative ml-2">
