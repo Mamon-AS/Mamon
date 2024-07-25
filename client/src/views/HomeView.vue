@@ -7,6 +7,7 @@
       </div>
       <div v-else>
         <GetStarted />
+        <HowItWorks />
         <div class="flex flex-col lg:flex-row lg:justify-center lg:space-x-4 lg:space-y-0 space-y-4 max-w-screen-lg mx-auto">
           <div class="flex-1 lg:max-w-md">
             <ContactUs />

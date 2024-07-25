@@ -5,16 +5,18 @@
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
     </div>
     <div v-else>
-      <template v-if="posts.length > 0">
-        <MasonryWall :items="posts" :cols="{ default: 3, 1100: 3, 700: 2, 500: 1 }" :gutter="24">
+      <template v-if="reviews.length > 0">
+        <MasonryWall :items="reviews"  :ssr-columns="1" :column-width="600"  :gutter="24">
           <template v-slot:default="{ item }">
-            <ReviewCard :reviewItems="item" />
+            <ReviewCard :reviewItems="item" :key="item.sanityReviewId" />
           </template>
         </MasonryWall>
-        <button v-if="$store.state.reviews.total_reviews > posts.length"
+
+
+        <button v-if="$store.state.reviews.total_reviews > reviews.length"
                 @click="$store.dispatch('reviews/LoadReviews', 8)"
                 class="btn mt-8">
-          Les mer ({{ $store.state.reviews.total_reviews - posts.length }})
+          Les mer ({{ $store.state.reviews.total_reviews - reviews.length }})
         </button>
       </template>
       <template v-else>
@@ -40,7 +42,7 @@ export default {
   
   setup() {
     const store = useStore();
-    const posts = computed(() => store.getters['reviews/reviewItems']);
+    const reviews = computed(() => store.getters['reviews/reviewItems']);
     const auth = getAuth();
     const userId = ref(null);
     const loading = ref(false);
@@ -81,9 +83,8 @@ export default {
       });
     });
 
-
     return {
-      posts,
+      reviews,
       loading
     };
   }
