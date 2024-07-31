@@ -43,22 +43,19 @@
       </p> 
     </div>
 
-    <div class="content-wrapper">
-
-      <h3 class="text-lg md:text-2xl font-bold text-center">
-        {{ reviewItems.website }}
-      </h3>
-      <h3 class="text-lg md:text-2xl font-bold text-center"> 
-        <a :href="reviewItems.url" class="hover:text-blue-600 underline" target="_blank" rel="noopener noreferrer"> 
-          {{ (reviewItems.reviewedItem.length > 30 ? reviewItems.reviewedItem.slice(0,30) + '...' : reviewItems.reviewedItem) }} 
-        </a>
-      </h3>
+    <h3 class="text-lg md:text-2xl font-bold mt-4">
+      {{ reviewItems.website }}
+    </h3>
       
-      <p class="md:text-lg mb-4 text-center">
-        {{ reviewItems.description }}
-      </p>
-    </div> 
+    <p class="md:text-lg mb-4">
+      {{ reviewItems.description }}
+    </p>
+
+    <a :href="reviewItems.url" class="md:text-lg underline" target="_blank" rel="noopener noreferrer">
       <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
+       Gå til {{ (reviewItems.reviewedItem.length > 30 ? reviewItems.reviewedItem.slice(0,30) + '...' : reviewItems.reviewedItem) }} 
+    </a>
+
     
     <!-- Emoji section -->
     <div class="flex items-center relative ml-2">
