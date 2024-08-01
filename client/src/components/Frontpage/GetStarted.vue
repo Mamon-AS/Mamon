@@ -14,9 +14,9 @@
               text-white shadow hover:bg-[length:100%_150%] sm:mb-0 sm:w-auto">
             Logg inn
           </router-link>
-          <a class="btn w-full bg-white text-gray-800 shadow hover:bg-gray-50 hover:text-white ml-4 sm:w-auto" href="#0">
+          <!-- <a class="btn w-full bg-white text-gray-800 shadow hover:bg-gray-50 hover:text-white ml-4 sm:w-auto" href="#0">
             Lær Mer
-          </a>
+          </a> -->
         </div>
       </div>
     </div>

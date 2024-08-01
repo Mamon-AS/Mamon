@@ -11,14 +11,14 @@
       
       <!-- Section 2 -->
       <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
-        <h1 class="text-2xl font-bold mb-4">Kjøp noe på nett</h1>
-        <ul>
-          <li class="mb-2">Kjøp noe på nett</li>
-          <li class="mb-2">Motta kvitteringen på mail med link til Mamon</li>
-          <li class="mb-2">Klikk på linken og gi en vurdering av kjøpet</li>
-          <li class="mb-2">Del innlegget med venner og familie på Mamon, som kan gjøre samme gode kjøp som deg</li>
+        <h1 class="text-2xl font-bold mb-4">Slik fungerer det</h1>
+        <ol>
+          <li class="mb-2">1. Kjøp noe på nett</li>
+          <li class="mb-2">2. Motta kvitteringen på mail med link til Mamon</li>
+          <li class="mb-2">3. Klikk på linken og gi en vurdering av kjøpet</li>
+          <li class="mb-2">4. Del innlegget med venner og familie på Mamon, som kan gjøre samme gode kjøp som deg</li>
           <li class="mb-2">(eller unngå et dårlig kjøp)</li>
-        </ul>
+        </ol>
 
         
         <img src="/images/people.svg" alt="Illustration of people talking" class="w-full h-auto">
