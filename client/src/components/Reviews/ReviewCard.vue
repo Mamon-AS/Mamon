@@ -42,10 +42,6 @@
         {{ FormatDate(reviewItems._createdAt) }}
       </p> 
     </div>
-
-    <h3 class="text-lg md:text-2xl font-bold mt-4">
-      {{ reviewItems.website }}
-    </h3>
       
     <p class="md:text-lg mb-4">
       {{ reviewItems.description }}
@@ -53,7 +49,6 @@
 
     <a :href="reviewItems.url" class="md:text-lg underline" target="_blank" rel="noopener noreferrer">
       <img v-if="reviewItems.reviewedImage" :src="CreateURL(reviewItems.reviewedImage, 480, 320)" class="block w-full object-cover mb-4 rounded-lg" />
-       Gå til {{ (reviewItems.reviewedItem.length > 30 ? reviewItems.reviewedItem.slice(0,30) + '...' : reviewItems.reviewedItem) }} 
     </a>
 
     
