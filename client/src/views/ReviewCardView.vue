@@ -6,7 +6,7 @@
     </div>
     <div v-else>
       <template v-if="reviews.length > 0">
-        <MasonryWall :items="reviews"  :ssr-columns="2" :column-width="400"  :gutter="24">
+        <MasonryWall :items="reviews"  :ssr-columns="1" :column-width="400"  :gutter="24">
           <template v-slot:default="{ item }">
             <ReviewCard :reviewItems="item" :key="item.sanityReviewId" />
           </template>
