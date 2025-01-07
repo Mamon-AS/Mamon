@@ -28,7 +28,7 @@
           class="flex transition-transform duration-1000 ease-in-out"
           :style="{ transform: `translateX(-${currentSlide * 100 / slides.length}%)`, width: `${slides.length * 100}%` }"
         >
-          <div v-for="(slide, index) in slides" :key="index" class="w-full h-64 flex flex-col items-center justify-center text-white text-2xl font-bold p-4" :class="slide.bgColor">
+          <div v-for="(slide, index) in slides" :key="index" class="w-full h-64 flex flex-col items-center justify-center text-gray-700 text-2xl font-bold p-4" :class="slide.bgColor">
             <div class="text-center mb-4">
               {{ slide.text }}
             </div>
@@ -55,11 +55,11 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const slides = ref([
-  { text: 'Kjøp eller bestill noe på nett', icon: 'fas fa-shopping-cart', bgColor: 'bg-red-500' },
-  { text: 'Motta kvitteringen på mail med link til Mamon', icon: 'fas fa-envelope', bgColor: 'bg-blue-500' },
-  { text: 'Klikk på linken og gi en vurdering av kjøpet', icon: 'fas fa-link', bgColor: 'bg-green-500' },
-  { text: 'Del innlegget med venner og familie på Mamon, som kan gjøre samme gode kjøp som deg', icon: 'fas fa-share-alt', bgColor: 'bg-amber-300' },
-  { text: '(eller unngå et dårlig kjøp)', icon: 'fas fa-thumbs-down', bgColor: 'bg-purple-500' }
+  { text: 'Kjøp eller bestill noe på nett', icon: 'fas fa-shopping-cart', bgColor: 'bg-lightblue' },
+  { text: 'Motta kvitteringen på mail med link til Mamon', icon: 'fas fa-envelope', bgColor: 'bg-yellow' },
+  { text: 'Klikk på linken og gi en vurdering av kjøpet', icon: 'fas fa-link', bgColor: 'bg-teal' },
+  { text: 'Del innlegget med venner og familie på Mamon, som kan gjøre samme gode kjøp som deg', icon: 'fas fa-share-alt', bgColor: 'bg-lime' },
+  { text: '(eller unngå et dårlig kjøp)', icon: 'fas fa-thumbs-down', bgColor: 'bg-sky' }
 ]);
 
 const currentSlide = ref(0);
