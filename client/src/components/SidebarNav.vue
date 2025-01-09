@@ -14,7 +14,7 @@
                 </MenuItem>
                 <MenuItem v-if="isLoggedIn" to="/review">
                     <span class="material-icons mr-2 ">child_care</span>
-                    Anmeldelser
+                    Tips
                 </MenuItem> 
                 <MenuItem to="/privacy">
                     <span class="material-icons mr-2 ">lock</span>

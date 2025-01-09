@@ -34,7 +34,7 @@
       <HeaderItem to="/review" v-show="isLoggedIn">
         <div class="flex flex-col md:flex-row items-center px-2 py-1 md:py-0">
           <i class="fa-solid fa-feather lg:fa-xl" style="color: #ffffff;"></i>
-          <p class="hidden md:block md:ml-2">Anmeld</p>
+          <p class="hidden md:block md:ml-2">Tips</p>
         </div>
       </HeaderItem>
     

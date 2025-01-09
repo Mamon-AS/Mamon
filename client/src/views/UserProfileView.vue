@@ -9,7 +9,7 @@
     />
   </div>
   <div v-if="showError" class="container mx-auto p-4 text-center bg-gray-200">
-    <p>Følg {{ userProfile.name }} for å se anmeldelsene deres</p>
+    <p>Følg {{ userProfile.name }} for å se tipsene deres</p>
   </div>
 
   <div class="container mx-auto p-4">

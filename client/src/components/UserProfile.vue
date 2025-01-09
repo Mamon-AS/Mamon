@@ -24,7 +24,7 @@
         <div class="mt-2 mb-2 flex justify-center gap-4">
           <div class="text-center">
             <span class="block text-xl font-semibold">{{ reviews.length }}</span>
-            <span class="text-gray-400">anmeldelser</span>
+            <span class="text-gray-400">tips</span>
           </div>
           <router-link :to="{ name: 'followers', params: { userId: internalUserId, action:'followers' } }" class="text-center">
             <span class="block text-xl font-semibold">{{ followerCount }}</span>

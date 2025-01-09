@@ -54,7 +54,7 @@
   
         <div class="flex items-center justify-center">
           <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-            Send inn anmeldelsen
+            Publiser
           </button>
         </div>
 
@@ -65,7 +65,7 @@
         <span class="font-medium">Du har allerede vurdert dette produktet!</span>
       </div>
       <div v-else-if="review.submissionStatus === 'success'" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
-        <span class="font-medium">Anmeldelse registrert!</span> Har du lyst til å legge til en til? 😊
+        <span class="font-medium">Tips registrert!</span> Har du lyst til å legge til en til? 😊
       </div>
       <div v-else-if="review.submissionStatus === 'error'" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
         <span class="font-medium">Ops!</span> Noe gikk galt, Martin har kanskje svaret.

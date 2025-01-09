@@ -3,12 +3,12 @@
     <!-- Text Content Section -->
     <div class="flex-grow mb-4 lg:mb-0 lg:flex-grow-0 pt-12">
       <h1 class="mb-6 border-y text-3xl font-bold p-6 [border-image:linear-gradient(to_right,transparent,theme(colors.slate.300/.8),transparent)1] md:text-6xl text-center">
-        Anmeldelser
+        Ta de beste valgene
         <br class="max-lg:hidden">
-        du kan stole på
+        gjennom folk du stoler på
       </h1>
       <div class="mx-auto max-w-3xl">
-        <p class="mb-8 text-lg text-gray-700">Tips venner om gode kjøp du har gjort og la deg inspirere av dine venners kjøp.</p>
+        <p class="mb-8 text-lg text-gray-700">Del dine favorittopplevelser og kjøp – og få tips fra venner og familie som kjenner deg best.</p>
         <div class="mx-auto max-w-xs sm:flex sm:max-w-none sm:justify-center ">
           <router-link to="/register" class="btn group mb-4 w-full bg-gradient-to-t from-blue-600 to-blue-500 bg-[length:100%_100%] bg-[bottom]
               text-white shadow hover:bg-[length:100%_150%] sm:mb-0 sm:w-auto">
