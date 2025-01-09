@@ -6,7 +6,7 @@
         Del dine favorittopplevelser og kjøp
       </h1>
       <div class="mx-auto max-w-3xl">
-        <p class="mb-8 text-lg text-gray-700">Få tips fra venner og familie som kjenner deg best</p>
+        <p class="mb-8 text-lg text-gray-700 sm:flex sm:justify-center">Få tips fra venner og familie som kjenner deg best</p>
         <div class="mx-auto max-w-xs sm:flex sm:max-w-none sm:justify-center ">
           <router-link to="/register" class="btn group mb-4 w-full bg-gradient-to-t from-blue-600 to-blue-500 bg-[length:100%_100%] bg-[bottom]
               text-white shadow hover:bg-[length:100%_150%] sm:mb-0 sm:w-auto">
