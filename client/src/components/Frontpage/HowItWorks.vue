@@ -27,7 +27,7 @@
       <!-- Section 3 -->
       <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
         <h1 class="text-2xl font-bold mb-4">Bli med</h1>
-        <p class="mb-4 text-center">Tips venner om gode kjøp du har gjort og la deg inspirere av dine venners kjøp</p>
+        <p class="mb-4 text-center">Vi vet at de beste tipsene kommer fra venner, familie og kolleger – folk som forstår hva du liker. Plattformen vår samler alle de gode anbefalingene fra ditt nettverk på ett sted, slik at du alltid har en snarvei til de beste valgene.</p>
         <img src="/images/join.gif" alt="Illustration of people" class="w-full h-auto">
       </div>
       

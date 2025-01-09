@@ -127,7 +127,7 @@ exports.handler = async (event) => {
         if(userId !== notificationUserId) {
             if (action === 'add' || action === 'reply') {
                 const notificationMessage = action === 'add' ? 
-                    `${displayName} kommenterte "${text}" på din anmeldelse.` : 
+                    `${displayName} kommenterte "${text}" på ditt tips.` : 
                     `${displayName} svarte med "${text}" på din kommentar.`;
 
                 const notificationData = {
