@@ -15,8 +15,7 @@
         <ol>
           <li class="mb-2">1. Kjøp noe på nett</li>
           <li class="mb-2">2. Motta kvitteringen på mail med link til Mamon</li>
-          <li class="mb-2">3. Klikk på linken og gi en vurdering av kjøpet</li>
-          <li class="mb-2">4. Del innlegget med venner og familie på Mamon, som kan gjøre samme gode kjøp som deg</li>
+          <li class="mb-2">3. Klikk på linken og del innlegget med venner og familie på Mamon, som kan gjøre samme gode kjøp som deg</li>
           <li class="mb-2">(eller unngå et dårlig kjøp)</li>
         </ol>
 
