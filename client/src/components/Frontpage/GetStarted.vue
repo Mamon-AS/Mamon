@@ -55,8 +55,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 const slides = ref([
   { text: 'Kjøp eller bestill noe på nett', icon: 'fas fa-shopping-cart', bgColor: 'bg-lightblue' },
   { text: 'Motta kvitteringen på mail med link til Mamon', icon: 'fas fa-envelope', bgColor: 'bg-yellow' },
-  { text: 'Klikk på linken og gi en vurdering av kjøpet', icon: 'fas fa-link', bgColor: 'bg-teal' },
-  { text: 'Del innlegget med venner og familie på Mamon, som kan gjøre samme gode kjøp som deg', icon: 'fas fa-share-alt', bgColor: 'bg-lime' },
+  { text: 'Klikk på linken og del innlegget med venner og familie på Mamon, som kan gjøre samme gode kjøp som deg', icon: 'fas fa-link', bgColor: 'bg-teal' },
   { text: '(eller unngå et dårlig kjøp)', icon: 'fas fa-thumbs-down', bgColor: 'bg-sky' }
 ]);
 
