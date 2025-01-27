@@ -6,7 +6,7 @@
     </div>
     <div v-else>
       <template v-if="reviews.length > 0">
-        <div class="w-auto m-auto max-w-4xl">
+        <div class="w-auto m-auto" style="max-width: calc(100vw/2);">
           <ReviewCard v-for="review in reviews" :reviewItems="review" :key="review.sanityReviewId" />
         </div>
 
