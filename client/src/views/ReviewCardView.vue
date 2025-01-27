@@ -6,12 +6,9 @@
     </div>
     <div v-else>
       <template v-if="reviews.length > 0">
-        <MasonryWall :items="reviews"  :ssr-columns="1" :column-width="400"  :gutter="24">
-          <template v-slot:default="{ item }">
-            <ReviewCard :reviewItems="item" :key="item.sanityReviewId" />
-          </template>
-        </MasonryWall>
-
+        <div class="w-auto m-auto max-w-4xl">
+          <ReviewCard v-for="review in reviews" :reviewItems="review" :key="review.sanityReviewId" />
+        </div>
 
         <button v-if="$store.state.reviews.total_reviews > reviews.length"
                 @click="$store.dispatch('reviews/LoadReviews', 8)"
@@ -31,12 +28,10 @@
 import { onMounted, ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import MasonryWall from '@yeger/vue-masonry-wall';
 import ReviewCard from '../components/Reviews/ReviewCard.vue'
 
 export default {
   components: {
-    MasonryWall,
     ReviewCard
   },
   
