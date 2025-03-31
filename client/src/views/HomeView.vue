@@ -8,14 +8,6 @@
       <div v-else>
         <GetStarted />
         <HowItWorks />
-        <div class="flex flex-col lg:flex-row lg:justify-center lg:space-x-4 lg:space-y-0 space-y-4 max-w-screen-lg mx-auto">
-          <div class="flex-1 lg:max-w-md">
-            <ContactUs />
-          </div>
-          <div class="flex-1 max-w-md">
-            <Team />
-          </div>
-        </div>
       </div>
     </template>
 
@@ -23,8 +15,12 @@
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
       </div>
   </div>
-    <footer class="text-center">
-        <p>© {{ new Date().getFullYear() }} Mamon. All rights reserved.</p>
+    <footer class="text-center mt-8">
+      <div class="flex flex-col items-stretch lg:flex-row lg:justify-center lg:space-x-4 lg:space-y-0 space-y-4 max-w-screen-lg mx-auto mb-8">
+        <ContactUs />
+        <Team />
+      </div>
+      <p>© {{ new Date().getFullYear() }} Mamon. All rights reserved.</p>
     </footer>
 
  </template>
@@ -35,7 +31,7 @@
  import ReviewCardView from '../views/ReviewCardView.vue';
  import GetStarted from '../components/Frontpage/GetStarted.vue';
  import ContactUs from "../components/Frontpage/ContactUs.vue";
- import Team from "../components/Frontpage/Team.vue";
+ import Team from "../components/Frontpage/TeamSection.vue";
  import HowItWorks from "../components/Frontpage/HowItWorks.vue";
 
  export default {
