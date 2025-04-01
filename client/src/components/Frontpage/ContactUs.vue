@@ -1,5 +1,5 @@
 <template>
-  <div class="p-8 max-w-md mx-auto bg-white border rounded-lg shadow-lg space-y-4 lg:max-w-full custom-height ">
+  <div class="lg:w-1/2 p-8 mx-4 lg:mx-auto border rounded-lg shadow-lg space-y-4">
     <h1 class="text-center text-2xl font-bold">Kontakt oss</h1>
     <p class="text-center text-gray-500">Har du spørsmål eller tilbakemeldinger? Send oss en melding!</p>
     <p class="text-center text-gray-500"><a href="mailto:hei@mamon.no">hei@mamon.no</a></p>

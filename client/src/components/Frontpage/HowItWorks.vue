@@ -1,10 +1,10 @@
 <template>
-  <main class="flex flex-col mt-2 mb-3 bg-lightblue rounded-md p-10">
+  <main class="flex flex-col mt-2 mb-3 bg-mamonblue rounded-md p-10">
     <!-- Combined Part -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center justify-center">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch justify-center">
       
       <!-- Section 1 -->
-      <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
+      <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-between">
         <h1 class="text-2xl font-bold mb-4">La kundene fortelle om deg</h1>
         <img src="/images/business_people.svg" alt="Illustration of people talking" class="w-full h-auto mb-4">
       </div>
