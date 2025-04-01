@@ -11,13 +11,13 @@
       </div>
     </template>
 
-      <div v-if="loading" class="flex justify-center items-center">
-        <img 
-          src="/images/High_Resolution_Image_4_cropped.png" 
-          alt="Logo" 
-          class="h-auto max-h-5 w-auto logo"
-        />
-      </div>
+    <div v-if="loading" class="flex justify-center items-center">
+      <img 
+        src="/images/High_Resolution_Image_4_cropped.png" 
+        alt="Logo" 
+        class="h-auto max-h-5 w-auto logo"
+      />
+    </div>
   </div>
     <footer class="text-center mt-8">
       <div class="flex flex-col items-stretch lg:flex-row lg:justify-center lg:space-x-4 lg:space-y-0 space-y-4 max-w-screen-lg mx-auto mb-8">
