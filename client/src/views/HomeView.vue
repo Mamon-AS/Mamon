@@ -12,7 +12,11 @@
     </template>
 
       <div v-if="loading" class="flex justify-center items-center">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        <img 
+          src="/images/Transparent_Image_11_cropped.png" 
+          alt="Logo" 
+          class="h-auto max-h-5 w-auto logo"
+        />
       </div>
   </div>
     <footer class="text-center mt-8">
