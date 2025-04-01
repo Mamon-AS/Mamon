@@ -13,7 +13,7 @@
 
       <div v-if="loading" class="flex justify-center items-center">
         <img 
-          src="/images/Transparent_Image_11_cropped.png" 
+          src="/images/High_Resolution_Image_4_cropped.png" 
           alt="Logo" 
           class="h-auto max-h-5 w-auto logo"
         />
