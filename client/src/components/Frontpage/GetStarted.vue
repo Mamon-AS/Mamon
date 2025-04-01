@@ -41,8 +41,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 const slides = ref([
   { text: 'Kjøp eller bestill noe på nett', icon: 'fas fa-shopping-cart' },
   { text: 'Motta kvitteringen på mail med link til Mamon', icon: 'fas fa-envelope' },
-  { text: 'Klikk på linken og del innlegget med venner og familie på Mamon, som kan gjøre samme gode kjøp som deg', icon: 'fas fa-link'},
-  { text: '(eller unngå et dårlig kjøp)', icon: 'fas fa-thumbs-down' }
+  { text: 'Klikk på linken og del innlegget med venner og familie på Mamon, som kan gjøre samme gode kjøp som deg', icon: 'fas fa-link'}
 ]);
 
 const currentSlide = ref(0);
