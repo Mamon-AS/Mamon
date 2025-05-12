@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col mt-2 mb-3 bg-mamonblue rounded-md p-10">
+  <main class="flex flex-col mt-2 mb-3 bg-mamonblue rounded-3xl p-10">
     <!-- Combined Part -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch justify-center">
       

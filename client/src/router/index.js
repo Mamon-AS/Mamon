@@ -8,6 +8,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/', name: 'home', component: HomeView },
+    { path: '/how-it-works', name: 'how-it-works',component: () => import('../views/HowItWorksView.vue') },
     { path: '/register', name: 'register',component: () => import('../views/RegisterView.vue') },
     { path: '/user', name: 'user',component: () => import('../views/MyUserProfileView.vue'), meta: { requiresAuth: true }, props: true},
     { path: '/users/:userId', name: 'UserProfile',component: () => import('../views/UserProfileView.vue'), meta: { requiresAuth: true }, props: true},
@@ -18,6 +19,7 @@ const router = createRouter({
     { path: '/settings', name: 'settings',component: () => import('../views/SettingsView.vue'), meta: { requiresAuth: true }, props: true},
     { path: '/review/:reviewId', name: 'singleReview',component: () => import('../views/SingleReviewView.vue'), meta: { requiresAuth: true }, props: true},
     { path: '/suggestions', name: 'suggestions',component: () => import('../views/PeopleYouMayKnow.vue'), meta: { requiresAuth: true }, props: true},
+    { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('../views/NotFoundView.vue') },
   ]
 })
 
