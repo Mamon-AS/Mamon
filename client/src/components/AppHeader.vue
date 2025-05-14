@@ -84,18 +84,20 @@
     </Modal>
 
     </div>
-    <HeaderItem to="/how-it-works" v-show="!isLoggedIn">
-      <div class="flex flex-col md:flex-row items-center px-2 py-1 md:py-0">
-        <p class="hidden md:block md:ml-2">Hvordan fungerer det?</p>
-      </div>
-    </HeaderItem>
-    <router-link v-if="!isLoggedIn"
-            :to="`/sign-in`" 
-            class="text-white hover:bg-lightblue focus:bg-lightblue py-1 px-4 ml-4 rounded transition" 
-            >
-      Logg inn
-    </router-link>
-    <!-- WHEN YOU CLICK USER PROFILE END -->
+    <div class="flex items-center">
+      <router-link v-if="!isLoggedIn"
+              :to="`/how-it-works`" 
+              class="text-white hover:bg-lightblue focus:bg-lightblue py-1 px-4 ml-4 rounded transition" 
+              >
+        Hvordan fungerer det?
+      </router-link>
+      <router-link v-if="!isLoggedIn"
+              :to="`/sign-in`" 
+              class="text-white hover:bg-lightblue focus:bg-lightblue py-1 px-4 ml-4 rounded transition" 
+              >
+        Logg inn
+      </router-link>
+    </div>
   </header>
 </template>
 
