@@ -37,11 +37,6 @@
           <p class="hidden md:block md:ml-2">Tips</p>
         </div>
       </HeaderItem>
-    
-    <!-- Not logged in stuff-->
-      <!-- How do you do this with components <a href=#please -->
-    <!-- End of not logged in stuff -->
-
     </div>
     <!-- ICONS END -->
     <div v-show="searchResults.length > 0" class="absolute top-[calc(50%+theme(spacing.6))] left-0 w-full bg-white shadow-lg z-50">
@@ -89,13 +84,20 @@
     </Modal>
 
     </div>
-    <router-link v-if="!isLoggedIn"
-            :to="`/sign-in`" 
-            class="text-white hover:bg-lightblue focus:bg-lightblue py-1 px-4 ml-4 rounded transition" 
-            >
-      Logg inn
-    </router-link>
-    <!-- WHEN YOU CLICK USER PROFILE END -->
+    <div class="flex items-center">
+      <router-link v-if="!isLoggedIn"
+              :to="`/how-it-works`" 
+              class="text-white hover:bg-lightblue focus:bg-lightblue py-1 px-4 ml-4 rounded transition" 
+              >
+        Hvordan fungerer det?
+      </router-link>
+      <router-link v-if="!isLoggedIn"
+              :to="`/sign-in`" 
+              class="text-white hover:bg-lightblue focus:bg-lightblue py-1 px-4 ml-4 rounded transition" 
+              >
+        Logg inn
+      </router-link>
+    </div>
   </header>
 </template>
 

@@ -1,12 +1,11 @@
 <template>
   <div class="lg:w-1/2 p-8 mx-4 lg:mx-auto border rounded-lg shadow-lg space-y-4">
     <h1 class="text-center text-2xl font-bold">Kontakt oss</h1>
-    <p class="text-center text-gray-500">Har du spørsmål eller tilbakemeldinger? Send oss en melding!</p>
-    <p class="text-center text-gray-500"><a href="mailto:hei@mamon.no">hei@mamon.no</a></p>
-    <form @submit.prevent="submitForm" class="space-y-4">
+    <p class="text-center text-gray-500">Har du spørsmål eller tilbakemeldinger? Send oss en melding eller mail på <a href="mailto:hei@mamon.no" class="hover:underline">hei@mamon.no</a></p>
+    <form @submit.prevent="submitForm" class="space-y-4 text-left">
       <div>
-        <label for="name" class="block text-sm font-medium text-gray-700">Navn</label>
-        <input type="text" id="name" v-model="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+        <label for="name" class="text-sm font-medium text-gray-700">Navn</label>
+        <input type="name" id="name" v-model="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
       </div>
       <div>
         <label for="email" class="block text-sm font-medium text-gray-700">E-post</label>
@@ -14,7 +13,7 @@
       </div>
       <div>
         <label for="phone" class="block text-sm font-medium text-gray-700">Telefon (valgfritt)</label>
-        <input type="text" id="phone" v-model="phone" class="mt-1 block w-full px-3 py-2 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-blue-300 focus:border-blue-300" placeholder="Telefonnummer (valgfritt)">
+        <input type="phone" id="phone" v-model="phone" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
       </div>
       <div>
         <label for="message" class="block text-sm font-medium text-gray-700">Melding</label>
@@ -68,9 +67,3 @@ async function submitForm() {
     });
 }
 </script>
-<style>
-
-.custom-height {
-  height: 700px;
-}
-</style>
