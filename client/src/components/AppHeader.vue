@@ -84,14 +84,14 @@
     </Modal>
 
     </div>
-    <div class="flex items-center">
-      <router-link v-if="!isLoggedIn"
+    <div v-if="!isLoggedIn" class="flex items-center">
+      <router-link
               :to="`/how-it-works`" 
               class="text-white hover:bg-lightblue focus:bg-lightblue py-1 px-4 ml-4 rounded transition" 
               >
         Hvordan fungerer det?
       </router-link>
-      <router-link v-if="!isLoggedIn"
+      <router-link
               :to="`/sign-in`" 
               class="text-white hover:bg-lightblue focus:bg-lightblue py-1 px-4 ml-4 rounded transition" 
               >
