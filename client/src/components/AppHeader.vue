@@ -121,7 +121,7 @@ export default {
     Modal,
     UserNotifications,
 },
-  setup(props) {
+  setup() {
     let ignoreNextOutsideClick = false;
     const defaultPhotoUrl = '/images/blank_profile.jpg';
     const auth = getAuth();
@@ -217,7 +217,7 @@ export default {
     };
     
 
-    watch(searchQuery, (newValue, oldValue) => {
+    watch(searchQuery, (newValue) => {
       if (newValue.trim() !== '') {
         searchUsers(newValue);
       } else {
