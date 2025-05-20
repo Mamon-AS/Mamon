@@ -1,8 +1,6 @@
 <template>
   <AppHeader :is-logged-in=isLoggedIn :site-settings=settings />
-  <div class="pt-8"> 
-      <slot></slot> 
-    </div>
+  <slot></slot> 
   <router-view/>
 </template>
 
