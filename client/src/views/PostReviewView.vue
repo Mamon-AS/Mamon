@@ -1,5 +1,5 @@
 <template>
-     <div class="p-4 max-w-md mx-auto mt-7" v-if="!reviewExists">
+     <div class="p-4 max-w-md mx-auto mt-12" v-if="!reviewExists">
       <form @submit.prevent="submitReview"> 
         <div class="mb-4">
         <label for="reviewedItem" class="block text-gray-700 text-sm font-bold mb-2">Produkt:</label>
@@ -9,7 +9,7 @@
         <img :src="review.itemImage" alt="Item Image" class="w-full h-auto rounded">
       </div>
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2">Stjerner:</label>
+        <!-- <label class="block text-gray-700 text-sm font-bold mb-2">Stjerner:</label>
           <div class="flex items-center">
               <span v-for="star in 5" :key="star" class="cursor-pointer" @click="setRating(star)" @mouseover="hoverRating(star)" @mouseleave="hoverRating(0)">
                 <svg v-if="star <= hoverIndex || star <= review.rating" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-mamonblue" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
@@ -21,7 +21,8 @@
               </span>
               <i class="fa-solid fa-circle-info text-lg ml-2" style="color: #096191; margin-top: -1.3rem; margin-left: -0.1rem;" @click="showInfoModal = !showInfoModal"></i>
           </div>
-        <!-- Information Modal -->
+        
+          Information Modal 
         <div v-if="showInfoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div class="mt-3 text-center">
@@ -44,7 +45,7 @@
             </div>
           </div>
         </div>
-        <!-- Information Modal END -->
+        < Information Modal END -->
 
         <div class="mb-4">
           <label for="reviewedItemDescription" class="block text-gray-700 text-sm font-bold mb-2 mt-3">Noe mer på hjertet? 💓</label>
@@ -104,6 +105,8 @@ export default {
       userName: '',
       reviewedItemDescription: '',
       submissionStatus: null,
+      website: '',
+      url: ''
     });
 
     const reviewItems = ref([]);
@@ -116,28 +119,35 @@ export default {
     const showInfoModal = ref(false);
     const reviewExists = ref(false);
 
-    const fetchReviewDetails = async (token) => {
+    const loadReviewDetailsFromUrl = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const item = urlParams.get('item');
+      const image = urlParams.get('image');
+      const website = urlParams.get('website');
+      const url = urlParams.get('url');
+      const description = urlParams.get('description');
+
+      if (item) {
+        review.reviewedItem = item ? decodeURIComponent(item) : '';
+        review.itemImage = image ? decodeURIComponent(image) : '';
+        review.website = website ? decodeURIComponent(website) : '';
+        review.url = url ? decodeURIComponent(url) : '';
+        review.reviewedItemDescription = description ? decodeURIComponent(description) : '';
+      }
+    };
+
+    const checkIfReviewExists = async () => {
+      if (!review.userId || !review.reviewedItem) return;
+      
       try {
-        const response = await axios.post(`/.netlify/functions/getReviewDetails`, { token });
+        const reviewCheckResponse = await axios.post(`/.netlify/functions/checkReviewExists`, { 
+          userId: review.userId, 
+          reviewedItem: review.reviewedItem 
+        });
 
-        if (response.data.success) {
-          review.reviewedItem = response.data.reviewedItem;
-          review.itemImage = response.data.itemImage;
-          review.website = response.data.website;
-          review.url = response.data.url;
-
-          const reviewCheckResponse = await axios.post(`/.netlify/functions/checkReviewExists`, { userId: review.userId, reviewedItem: review.reviewedItem });
-
-          if (reviewCheckResponse.data.exists) {
-            reviewExists.value = true;
-          } else {
-            reviewExists.value = false;
-          }
-        } else {
-          console.error('Invalid token');
-        }
+        reviewExists.value = reviewCheckResponse.data.exists;
       } catch (error) {
-        console.error('Error fetching review details:', error);
+        console.error('Error checking review existence:', error);
       }
     };
 
@@ -162,13 +172,10 @@ export default {
           review.userId = currentUser.uid;
           review.userName = currentUser.displayName;
           fetchReviews(review.userId);
-          const urlParams = new URLSearchParams(window.location.search);
-          const token = urlParams.get('token');
-          if (token) {
-            fetchReviewDetails(token);
-          }
+          loadReviewDetailsFromUrl();
+          checkIfReviewExists();
         } else {
-          alert('Du må være innlogga!');
+          alert('Du må være innlogget!');
         }
       });
     });

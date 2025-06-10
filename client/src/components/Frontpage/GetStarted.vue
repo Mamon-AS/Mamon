@@ -1,15 +1,14 @@
 <template>
-  <div class="flex flex-col rounded-md p-12 items-center justify-center">
+  <div class="flex flex-col rounded-2xl p-12 items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50">
     <!-- Text Content Section -->
-    <div class="flex-grow mb-4 lg:mb-0 lg:flex-grow-0 py-12 border-y [border-image:linear-gradient(to_right,transparent,theme(colors.slate.300/.8),transparent)1]">
-      <h1 class="mb-6 text-3xl font-bold p-6 md:text-6xl text-center">
+    <div class="flex-grow mb-8 lg:mb-0 lg:flex-grow-0 py-12 border-y border-secondary-200">
+      <h1 class="mb-8 text-4xl font-bold p-6 md:text-6xl text-center bg-gradient-to-r from-primary-700 to-primary-500 bg-clip-text text-transparent">
         Del dine favorittopplevelser og kjøp
       </h1>
       <div class="mx-auto max-w-3xl">
-        <p class="mb-8 text-lg text-gray-700 flex justify-center">Få tips fra venner og familie som kjenner deg best</p>
-        <div class="mx-auto flex justify-center ">
-          <router-link to="/register" class="btn mb-4 px-10 w-auto bg-gradient-to-t from-mamonblue to-blue-400 bg-[length:100%_100%] bg-[bottom]
-              text-white shadow hover:bg-[length:100%_150%] sm:mb-0 sm:w-auto">
+        <p class="mb-8 text-xl text-secondary-600 flex justify-center text-center leading-relaxed">Få tips fra venner og familie som kjenner deg best</p>
+        <div class="mx-auto flex justify-center">
+          <router-link to="/register" class="btn bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white shadow-lg hover:shadow-xl px-12 py-4 text-lg font-semibold rounded-xl transition-all duration-300 transform hover:-translate-y-1">
             Logg inn
           </router-link>
         </div>
@@ -17,17 +16,17 @@
     </div>
 
     <!-- Carousel Section -->
-    <div class="relative w-full max-w-4xl mx-auto mt-6 lg:mt-6">
-      <div class="overflow-hidden rounded-lg h-64">
+    <div class="relative w-full max-w-4xl mx-auto mt-12 lg:mt-16">
+      <div class="overflow-hidden rounded-2xl h-72 bg-white shadow-xl">
         <div
           class="flex transition-transform duration-1000 ease-in-out"
           :style="{ transform: `translateX(-${currentSlide * 100 / slides.length}%)`, width: `${slides.length * 100}%` }"
         >
-          <div v-for="(slide, index) in slides" :key="index" class="w-full h-64 flex flex-col items-center justify-center text-gray-700 text-2xl font-bold p-4">
-            <div class="text-center mb-4">
-              {{ slide.text }}
+          <div v-for="(slide, index) in slides" :key="index" class="w-full h-72 flex flex-col items-center justify-center p-8">
+            <div class="text-center mb-6">
+              <p class="text-2xl font-semibold text-secondary-800">{{ slide.text }}</p>
             </div>
-            <i :class="slide.icon" class="text-4xl"></i>
+            <i :class="slide.icon" class="text-5xl text-primary-500"></i>
           </div>
         </div>
       </div>
