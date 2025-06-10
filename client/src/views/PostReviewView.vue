@@ -125,12 +125,14 @@ export default {
       const image = urlParams.get('image');
       const website = urlParams.get('website');
       const url = urlParams.get('url');
+      const description = urlParams.get('description');
 
       if (item) {
         review.reviewedItem = item ? decodeURIComponent(item) : '';
         review.itemImage = image ? decodeURIComponent(image) : '';
         review.website = website ? decodeURIComponent(website) : '';
         review.url = url ? decodeURIComponent(url) : '';
+        review.reviewedItemDescription = description ? decodeURIComponent(description) : '';
       }
     };
 
