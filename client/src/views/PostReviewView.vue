@@ -105,6 +105,8 @@ export default {
       userName: '',
       reviewedItemDescription: '',
       submissionStatus: null,
+      website: '',
+      url: ''
     });
 
     const reviewItems = ref([]);
@@ -117,28 +119,33 @@ export default {
     const showInfoModal = ref(false);
     const reviewExists = ref(false);
 
-    const fetchReviewDetails = async (token) => {
+    const loadReviewDetailsFromUrl = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const item = urlParams.get('item');
+      const image = urlParams.get('image');
+      const website = urlParams.get('website');
+      const url = urlParams.get('url');
+
+      if (item) {
+        review.reviewedItem = item ? decodeURIComponent(item) : '';
+        review.itemImage = image ? decodeURIComponent(image) : '';
+        review.website = website ? decodeURIComponent(website) : '';
+        review.url = url ? decodeURIComponent(url) : '';
+      }
+    };
+
+    const checkIfReviewExists = async () => {
+      if (!review.userId || !review.reviewedItem) return;
+      
       try {
-        const response = await axios.post(`/.netlify/functions/getReviewDetails`, { token });
+        const reviewCheckResponse = await axios.post(`/.netlify/functions/checkReviewExists`, { 
+          userId: review.userId, 
+          reviewedItem: review.reviewedItem 
+        });
 
-        if (response.data.success) {
-          review.reviewedItem = response.data.reviewedItem;
-          review.itemImage = response.data.itemImage;
-          review.website = response.data.website;
-          review.url = response.data.url;
-
-          const reviewCheckResponse = await axios.post(`/.netlify/functions/checkReviewExists`, { userId: review.userId, reviewedItem: review.reviewedItem });
-
-          if (reviewCheckResponse.data.exists) {
-            reviewExists.value = true;
-          } else {
-            reviewExists.value = false;
-          }
-        } else {
-          console.error('Invalid token');
-        }
+        reviewExists.value = reviewCheckResponse.data.exists;
       } catch (error) {
-        console.error('Error fetching review details:', error);
+        console.error('Error checking review existence:', error);
       }
     };
 
@@ -163,13 +170,10 @@ export default {
           review.userId = currentUser.uid;
           review.userName = currentUser.displayName;
           fetchReviews(review.userId);
-          const urlParams = new URLSearchParams(window.location.search);
-          const token = urlParams.get('token');
-          if (token) {
-            fetchReviewDetails(token);
-          }
+          loadReviewDetailsFromUrl();
+          checkIfReviewExists();
         } else {
-          alert('Du må være innlogga!');
+          alert('Du må være innlogget!');
         }
       });
     });
