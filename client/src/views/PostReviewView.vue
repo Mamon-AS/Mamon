@@ -1,5 +1,5 @@
 <template>
-     <div class="p-4 max-w-md mx-auto mt-7" v-if="!reviewExists">
+     <div class="p-4 max-w-md mx-auto mt-12" v-if="!reviewExists">
       <form @submit.prevent="submitReview"> 
         <div class="mb-4">
         <label for="reviewedItem" class="block text-gray-700 text-sm font-bold mb-2">Produkt:</label>
