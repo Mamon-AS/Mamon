@@ -5,7 +5,7 @@
       <span class="cursor-pointer hover:underline">{{ reviewItems.userName ? reviewItems.userName : "Anonym"}}</span>
     </div>
     <div class="flex justify-between items-end my-2">
-      <div class="flex items-center">
+      <!--<div class="flex items-center">
         <div class="stars-outer relative">
           <div class="stars-inner" :style="{ width: stars }"></div>
           <div class="stars-background"></div>
@@ -14,7 +14,7 @@
         </div>
       </div>
 
-      <!-- Information Modal -->
+       Information Modal
       <div v-if="showInfoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
           <div class="mt-3 text-center">
@@ -37,7 +37,7 @@
           </div>
         </div>
       </div>
-      <!-- Information Modal END -->
+       Information Modal END -->
       <p class="text-sm">
         {{ FormatDate(reviewItems._createdAt) }}
       </p> 
