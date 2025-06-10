@@ -9,7 +9,7 @@
         <img :src="review.itemImage" alt="Item Image" class="w-full h-auto rounded">
       </div>
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2">Stjerner:</label>
+        <!-- <label class="block text-gray-700 text-sm font-bold mb-2">Stjerner:</label>
           <div class="flex items-center">
               <span v-for="star in 5" :key="star" class="cursor-pointer" @click="setRating(star)" @mouseover="hoverRating(star)" @mouseleave="hoverRating(0)">
                 <svg v-if="star <= hoverIndex || star <= review.rating" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-mamonblue" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
@@ -21,7 +21,8 @@
               </span>
               <i class="fa-solid fa-circle-info text-lg ml-2" style="color: #096191; margin-top: -1.3rem; margin-left: -0.1rem;" @click="showInfoModal = !showInfoModal"></i>
           </div>
-        <!-- Information Modal -->
+        
+          Information Modal 
         <div v-if="showInfoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div class="mt-3 text-center">
@@ -44,7 +45,7 @@
             </div>
           </div>
         </div>
-        <!-- Information Modal END -->
+        < Information Modal END -->
 
         <div class="mb-4">
           <label for="reviewedItemDescription" class="block text-gray-700 text-sm font-bold mb-2 mt-3">Noe mer på hjertet? 💓</label>
